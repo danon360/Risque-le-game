@@ -1,4 +1,5 @@
-#include "Reader.h";
+#include "Maploader.h";
+
 class continent {
 public:
 	int number,bonus;
@@ -20,31 +21,7 @@ public:
 		return this->bonus;
 	}
 };
-class country {
-	string name;
-	int continent,ID;
-public:
-	country() {
-		name= string(" ");
-	}
-	country(int id, string nm, int cont) {
-		ID = id;
-		name = nm;
-		continent = cont;
-	}
-	string toString() {
-		return this->name;
-	}
-	int getId() {
-		return this->ID;
-	}
-	int getCont() {
-		return this->continent;
-	}
-	void addBorder(int border) {
-		cout << this->ID<< " : added border " << border << endl;
-	}
-};
+
 
 int main() {
 	ifstream* infile;

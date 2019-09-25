@@ -10,7 +10,6 @@ using namespace std;
 
 //a temporary classes
 class continent;
-class country;
 
 
 //function that when given a string loads the continents into a vector and returns it
