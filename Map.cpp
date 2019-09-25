@@ -1,15 +1,4 @@
 #include "Map.h"
-#include "MapLoader.h"
-#include "MapLoader.cpp"
-
-#include <iostream>
-#include <vector>
-#include <string>;
-
-using std::cout;
-using std::endl;
-
-# MAP CLASS FUNCTION IMPLEMENTATION---------------------------------------------------------------------- -
 
 Map::Map(int newSize, vector<country> countryList) {
 	*size = newSize;
@@ -26,20 +15,18 @@ bool Map::isConnected() {
 	return false;
 }
 
+/* Given a String name, this will return a pointer to the country that has this name.
+ */
 country* Map::findCountry(string name) {
 
 	for (int i = 0; i < allCountries->size(); ++i) {
 
-		allCountries->at(i).getName();
-
+		if (allCountries->at(i).getName().compare(name))
+			return &(allCountries->at(i));
 	}
-
 
 	return NULL;
 }
-
-
-# COUNTRY CLASS FUNCTION IMPLEMENTATION -----------------------------------------------------------------------
 
 country::country() {
 	name = &string(" ");
@@ -69,4 +56,10 @@ void country::addBorder(int border) {
 
 string country::getName() {
 	return *name;
+}
+
+void country::addAdjacentCountry(country * toAdd) {
+	if (toAdd != nullptr) {
+
+	}
 }
