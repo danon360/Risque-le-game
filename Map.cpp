@@ -29,13 +29,13 @@ country* Map::findCountry(string name) {
 }
 
 country::country() {
-	name = &string(" ");
+	name = new string("");
 }
 
 country::country(int id, string nm, int cont) {
-	ID = &id;
-	name = &nm;
-	continent = &cont;
+	ID = new int(id);
+	name = new string(nm);
+	continent = new int(cont);
 }
 
 string country::toString() {
@@ -50,8 +50,8 @@ int country::getCont() {
 	return *continent;
 }
 
-void country::addBorder(int border) {
-	cout << this->ID << " : added border " << border << endl;
+void country::addBorder(country c) {
+	cout << this->ID << " : added border " << c.getName << endl;
 }
 
 string country::getName() {

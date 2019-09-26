@@ -12,20 +12,6 @@ using std::endl;
 using std::string;
 using std::vector;
 
-class Map {
-
-public:
-	
-	int *size;
-	vector<country> * allCountries;
-	vector<Map> * continents[];
-
-	Map(int newSize, vector<country> countryList);
-	bool validateMap();
-	bool isConnected();
-	country* findCountry(string name);
-};
-
 class country {
 
 private:
@@ -40,8 +26,22 @@ public:
 	string toString();
 	int getId();
 	int getCont();
-	void addBorder(int border);
+	void addBorder(country c);
 	string getName();
 
 	void addAdjacentCountry(country * toAdd);
+};
+
+class Map {
+
+public:
+	
+	int *size;
+	vector<country> * allCountries;
+	vector<Map> * continents[];
+
+	Map(int newSize, vector<country> countryList);
+	bool validateMap();
+	bool isConnected();
+	country* findCountry(string name);
 };
