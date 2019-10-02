@@ -1,6 +1,6 @@
 #include "Map.h"
 
-Map::Map(int newSize, vector<country> countryList) {
+Map::Map(int newSize, vector<Country> countryList) {
 	*size = newSize;
 	allCountries = &countryList;
 }
@@ -17,7 +17,7 @@ bool Map::isConnected() {
 
 /* Given a String name, this will return a pointer to the country that has this name.
  */
-country* Map::findCountry(string name) {
+Country* Map::findCountry(string name) {
 
 	for (int i = 0; i < allCountries->size(); ++i) {
 
@@ -28,37 +28,37 @@ country* Map::findCountry(string name) {
 	return NULL;
 }
 
-country::country() {
+Country::Country() {
 	name = new string("");
 }
 
-country::country(int id, string nm, int cont) {
+Country::Country(int id, string nm, int cont) {
 	ID = new int(id);
 	name = new string(nm);
 	continent = new int(cont);
 }
 
-string country::toString() {
+string Country::toString() {
 	return *name;
 }
 
-int country::getId() {
+int Country::getId() {
 	return *ID;
 }
 
-int country::getCont() {
+int Country::getCont() {
 	return *continent;
 }
 
-void country::addBorder(country c) {
+void Country::addBorder(Country c) {
 	cout << this->ID << " : added border " << c.getName << endl;
 }
 
-string country::getName() {
+string Country::getName() {
 	return *name;
 }
 
-void country::addAdjacentCountry(country * toAdd) {
+void Country::addAdjacentCountry(Country * toAdd) {
 	if (toAdd != nullptr) {
 
 	}
