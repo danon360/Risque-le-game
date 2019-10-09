@@ -18,13 +18,20 @@ private:
 	string * name;
 	int * ID;
 	int * troopCount;
-	vector<Country*> * adjacentCountries;
+	vector<Country*> * neighbours;
 
 public:
+
+	// Constructor / Destructor
 	Country(string nm, int id);
 	~Country();
+	
+
+	// General utilities
 	string* toString(); // prints the default output for a country object
 	bool equals(Country * otherCountry); // 2 countries are equal if they have the same name (assuming no name duplicates at MapLoader stage)
+
+	// Setters/ Getters
 	void setName(string newName);
 	string getName();
 	void setID(int newID);
@@ -33,10 +40,9 @@ public:
 	void addToTroopCount(int toAdd);
 	void setTroopCount(int newCount);
 	int getTroopCount();
-
 	void addAdjacencyList(vector<Country* > * adjacentCountriesList);
 	vector<Country*> * getAdjacencyList();
-	void addAdjacentCountry(Country * toAdd);
+	void addCountry(Country * toAdd);
 };
 
 class Map {
@@ -44,23 +50,22 @@ class Map {
 public:
 	Map(vector<Country*> * countryList);
 	~Map();
-	void addCountriesToMap(vector<Country*> * newContinent); // adds countries to the vector and increments the number of continents
-	void addContinent(vector<Country*> * newContinent); // adds a continent to the vector and increments the number of continents
-
+	void addCountry(Country* newCountry); // adds countries to the vector and increments the number of continents
+	void addContinent(Continent * newContinent); // adds a continent to the vector and increments the number of continents
+	bool validateMap();
 
 private:
 	// Country attributes of map
-	vector<Country*> * countriesInMap;
+	vector<Country*> * countries;
 
 	// Continent attributes of map
-	int * numContinents;
-	vector<Continent*> * continentList;
+	vector<Continent*> * continents;
 	
 
 	// Utility methods
 	Country* findCountry(string name);
-	bool validateMap();
-	bool isCountryListConnected();
+	Country* findCountry(Country * countryToFind);
+	bool isMapConnected();
 	bool continentCheck();
 	
 };
@@ -69,9 +74,12 @@ private:
 class Continent {
 
 public:
-	Continent(int countryCount, vector<Country*> * countryList);
-
+	Continent();
+	Continent(vector<Country*> * countryList);
+	~Continent();
+	void addCountry(Country * newCountry);
+	Country* findCountry(string name);
+	Country* findCountry(Country * countryToFind);
 private:
-	int *numCountries;
-	vector<Country*> * allCountries;
+	vector<Country*> * countries; // the countries that are in this continent
 };

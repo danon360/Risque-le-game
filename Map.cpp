@@ -50,15 +50,15 @@ int Country::getTroopCount() {
 }
 
 void Country::addAdjacencyList(vector<Country* > * adjacentCountriesList) {
-	adjacentCountries = adjacentCountriesList;
+	neighbours = adjacentCountriesList;
 }
 
 vector<Country*> * Country::getAdjacencyList() {
-	return adjacentCountries;
+	return neighbours;
 }
 
-void Country::addAdjacentCountry(Country * toAdd) {
-	adjacentCountries->push_back(toAdd);
+void Country::addCountry(Country * toAdd) {
+	neighbours->push_back(toAdd);
 }
 
 /************************************************************************
@@ -66,13 +66,19 @@ void Country::addAdjacentCountry(Country * toAdd) {
  ***********************************************************************/
 
 Map::Map(vector<Country*> * countryList) {
-	countriesInMap = countryList;
-
+	countries = countryList;
 }
 
 Map::~Map() {
+	// intentionally left empty
+}
 
+void Map::addCountry(Country* newCountry) {
+	countries->push_back(newCountry);
+}
 
+void Map::addContinent(Continent * newContinent) {
+	continents->push_back(newContinent);
 }
 
 
@@ -80,6 +86,19 @@ Map::~Map() {
                            Continent functions
  ***********************************************************************/
 
+Continent::Continent() {
+	// intentionally left empty
+}
 
+Continent::Continent(vector<Country*> * countryList) {
+	countries = countryList;
+}
+Continent::~Continent() {
+	// intentionally left empty
+}
+
+void Continent::addCountry(Country * newCountry) {
+	countries->push_back(newCountry);
+}
 
 
