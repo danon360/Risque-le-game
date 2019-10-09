@@ -37,10 +37,10 @@ class Map {
 public:
 	
 	int *size;
-	vector<Country> * allCountries;
+	vector<Country*> * allCountries;
 	vector<Map> * continents[];
 
-	Map(int newSize, vector<Country> countryList);
+	Map(int newSize, vector<Country*> countryList);
 	bool validateMap();
 	bool isConnected();
 	Country* findCountry(string name);
