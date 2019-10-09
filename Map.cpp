@@ -1,65 +1,85 @@
 #include "Map.h"
 
-Map::Map(int newSize, vector<Country> countryList) {
-	*size = newSize;
-	allCountries = &countryList;
-}
+/************************************************************************
+                            Country functions
+ ***********************************************************************/
 
-bool Map::validateMap() {
-
-	return false;
-}
-
-bool Map::isConnected() {
-
-	return false;
-}
-
-/* Given a String name, this will return a pointer to the country that has this name.
- */
-Country* Map::findCountry(string name) {
-
-	for (int i = 0; i < allCountries->size(); ++i) {
-
-		if (allCountries->at(i).getName().compare(name))
-			return &(allCountries->at(i));
-	}
-
-	return NULL;
-}
-
-Country::Country() {
-	name = new string("");
-}
-
-Country::Country(int id, string nm, int cont) {
-	ID = new int(id);
+Country::Country(string nm, int id) {
 	name = new string(nm);
-	continent = new int(cont);
+	ID = new int(id);
+	troopCount = new int(0);
 }
 
-string Country::toString() {
-	return *name;
+Country::~Country() {
+	delete name;
+	delete ID;
+	delete troopCount;
 }
 
-int Country::getId() {
-	return *ID;
+string* Country::toString() {
+	string str = "Name: " + *name + ", ID: " + std::to_string(*ID) + ", Troops: " + std::to_string(*troopCount);
+	return &str;
 }
-
-int Country::getCont() {
-	return *continent;
+bool Country::equals(Country* otherCountry) {
+	if ((*name).compare(otherCountry->getName()) == 0)
+		return true;
 }
-
-void Country::addBorder(Country c) {
-	cout << this->ID << " : added border " << c.getName << endl;
+void Country::setName(string newName) {
+	*name = newName;
 }
-
 string Country::getName() {
 	return *name;
 }
+void Country::setID(int newID) {
+	*ID = newID;
+}
+int Country::getID() {
+	return *ID;
+}
+void Country::setTroopCount(int newTroopCount) {
+	*troopCount = newTroopCount;
+}
+void Country::addToTroopCount(int toAdd) {
+	*troopCount += toAdd;
+}
+void Country::setTroopCount(int newCount) {
+	*troopCount = newCount;
+}
+int Country::getTroopCount() {
+	return *troopCount;
+}
+
+void Country::addAdjacencyList(vector<Country* > * adjacentCountriesList) {
+	adjacentCountries = adjacentCountriesList;
+}
+
+vector<Country*> * Country::getAdjacencyList() {
+	return adjacentCountries;
+}
 
 void Country::addAdjacentCountry(Country * toAdd) {
-	if (toAdd != nullptr) {
-
-	}
+	adjacentCountries->push_back(toAdd);
 }
+
+/************************************************************************
+							   Map functions
+ ***********************************************************************/
+
+Map::Map(vector<Country*> * countryList) {
+	countriesInMap = countryList;
+
+}
+
+Map::~Map() {
+
+
+}
+
+
+/************************************************************************
+                           Continent functions
+ ***********************************************************************/
+
+
+
+
