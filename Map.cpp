@@ -1,6 +1,6 @@
 #include "Map.h"
 
-/************************************************************************2
+/************************************************************************
                             Country functions
  ***********************************************************************/
 
@@ -230,11 +230,13 @@ void Continent::addCountry(Country * newCountry) {
 }
 
 Country* Continent::findCountry(string name) {
-
+	// TODO: implement
+	return nullptr;
 }
 
 Country* Continent::findCountry(Country * countryToFind) {
-
+	// TODO: implement
+	return nullptr;
 }
 
 

@@ -99,16 +99,6 @@ private:
 		Country * country = nullptr;
 	};
 
-	int *size;
-	vector<Country*> * allCountries;
-	vector<Map> * continents[];
-
-	Map(int newSize, vector<Country*> countryList);
-	bool validateMap();
-	bool isConnected();
-	Country* findCountry(string name);
-};
-
 	// Utility methods
 	Country* findCountry(string name);
 	Country* findCountry(Country * countryToFind);
@@ -123,13 +113,3 @@ private:
 
 };
 
-public:
-	Continent();
-	Continent(vector<Country*> * countryList);
-	~Continent();
-	void addCountry(Country * newCountry);
-	Country* findCountry(string name);
-	Country* findCountry(Country * countryToFind);
-private:
-	vector<Country*> * countries; // the countries that are in this continent
-};
