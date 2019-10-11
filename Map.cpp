@@ -34,8 +34,7 @@ string Country::toString() {
 	return str;
 }
 bool Country::equals(Country* otherCountry) {
-	if ((*name).compare(otherCountry->getName()) == 0)
-		return true;
+	return (*name).compare(otherCountry->getName()) == 0;
 }
 void Country::setName(string newName) {
 	*name = newName;
@@ -220,9 +219,14 @@ Continent::~Continent() {
 void Continent::setTroopBonus(int newBonus) {
 	troopBonus = new int(newBonus);
 }
-
 int Continent::getTroopBonus() {
 	return *troopBonus;
+}
+void Continent::setName(string newName) {
+	*name = newName;
+}
+string Continent::getName() {
+	return *name;
 }
 
 void Continent::addCountry(Country * newCountry) {
