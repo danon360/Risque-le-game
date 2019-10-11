@@ -88,6 +88,17 @@ bool Country::isCountryAdjacentToMe(Country * otherCountry) {
 							   Map functions
  ***********************************************************************/
 
+
+Map::Map(map<int, Country*> * mapOfCountries) {
+	countryDictionary = mapOfCountries;
+	countries = new vector<Country*>;
+
+	for (std::map<int, Country*>::iterator it = countryDictionary->begin(); it != countryDictionary->end(); ++it) {
+		countries->push_back(it->second);
+	}
+
+}
+
 Map::Map(vector<Country*> * countryList) {
 	countries = countryList;
 }
@@ -203,13 +214,17 @@ void Map::deleteVisitedList(vector<visited*> * visitedArray) {
                            Continent functions
  ***********************************************************************/
 
-Continent::Continent(int bonusPoints) {
+Continent::Continent(int bonusPoints, int newID, string newName) {
 	*troopBonus = bonusPoints;
+	*ID = newID;
+	*name = newName;
 	countries = new vector<Country*>;
 }
 
-Continent::Continent(int bonusPoints, vector<Country*> * countryList) {
+Continent::Continent(int bonusPoints, int newID, string newName, vector<Country*> * countryList) {
 	*troopBonus = bonusPoints;
+	*ID = newID;
+	*name = newName;
 	countries = countryList;
 }
 Continent::~Continent() {
@@ -221,6 +236,12 @@ void Continent::setTroopBonus(int newBonus) {
 }
 int Continent::getTroopBonus() {
 	return *troopBonus;
+}
+void Continent::setID(int newID) {
+	*ID = newID;
+}
+int Continent::getID() {
+	return *ID;
 }
 void Continent::setName(string newName) {
 	*name = newName;

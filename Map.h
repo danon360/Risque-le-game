@@ -59,13 +59,15 @@ class Continent {
 public:
 
 	// Constructor / Destructor
-	Continent(int bonusPoints);
-	Continent(int bonusPoints, vector<Country*> * countryList);
+	Continent(int bonusPoints, int newID, string newName);
+	Continent(int bonusPoints, int newID, string newName, vector<Country*> * countryList);
 	~Continent();
 
 	// Setters/ Getters
 	void setTroopBonus(int newBonus);
 	int getTroopBonus();
+	void setID(int newID);
+	int getID();
 	void setName(string newName);
 	string getName();
 
@@ -77,6 +79,7 @@ public:
 private:
 	vector<Country*> * countries; // the countries that are in this continent
 	int * troopBonus;
+	int * ID;
 	string * name;
 
 };
@@ -84,7 +87,8 @@ private:
 class Map {
 
 public:
-
+	Map();
+	Map(map<int, Country*> *);
 	Map(vector<Country*> * countryList);
 	~Map();
 	void addCountry(Country* newCountry); // adds countries to the vector and increments the number of continents
@@ -94,8 +98,7 @@ private:
 
 	// Country attributes of map holds all countries in this map
 	vector<Country*> * countries;
-	map<string, Country*> countryDictionary;
-
+	map<int, Country*> *  countryDictionary; // <country ID, Country *>
 
 	// Continent attributes of map holds all continents (continents are a list of countries)
 	vector<Continent*> * continents;

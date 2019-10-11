@@ -70,8 +70,6 @@ void main() {
 	// Create a Map and pass it the countries vector as a list of all countries
 	Map myMap(countries);
 	
-	
-	
 	//  *** *** *** country_g is disconnected from the graph (comment out to get a connected graph) *** *** ***
 	Country * country_g = new Country("country_g", 7);
 	vector<Country * > * adjacency_country_g = new vector<Country *>;
