@@ -6,11 +6,13 @@
 #include <string>
 #include <algorithm>
 #include <vector>
+#include <map>
 
 using std::cout;
 using std::endl;
 using std::string;
 using std::vector;
+using std::map;
 
 class Country {
 
@@ -64,6 +66,8 @@ public:
 	// Setters/ Getters
 	void setTroopBonus(int newBonus);
 	int getTroopBonus();
+	void setName(string newName);
+	string getName();
 
 	void addCountry(Country * newCountry);
 	Country* findCountry(string name);
@@ -73,6 +77,7 @@ public:
 private:
 	vector<Country*> * countries; // the countries that are in this continent
 	int * troopBonus;
+	string * name;
 
 };
 
@@ -89,10 +94,13 @@ private:
 
 	// Country attributes of map holds all countries in this map
 	vector<Country*> * countries;
+	map<string, Country*> countryDictionary;
+
 
 	// Continent attributes of map holds all continents (continents are a list of countries)
 	vector<Continent*> * continents;
 	
+
 	// This struct (visited list) is used by graph methods for different traversals
 	struct visited {
 		bool isVisited = false;
