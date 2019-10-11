@@ -9,19 +9,23 @@ class Dice {
 // Public methods
 public:
     // Variables
-    int totalRolls = 0;
+    const int NUM_OF_VALUES = 6;
+    int* numOfRolls;
+    int* totalRolls;
     int* container;
-    int trackPercentage [6] = {0,0,0,0,0,0};
-  
+    int* value;
+    double* valuePercentage;
+    
+    // Constructor and Destructor
+    Dice();
+    ~Dice();
     
     // Methods
-    void rollDice(int numOfRolls);
-    void percentageTracker(int numOfRolls);
-    void sortContainer(int numOfRolls);
+    void rollDice();
+    void sortContainer();
+    void valueTracker();
+    void percentageTracker();
     void showValues();
-    
-    /*
-    void sortContainer(int* container[]);
-    void valueTracker(int* temp[]);
-    void percentageTracker(int* temp[]);*/
+    void showPercentages();
+  
 };
