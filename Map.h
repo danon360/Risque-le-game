@@ -75,7 +75,6 @@ public:
 	Country* findCountry(string name);
 	Country* findCountry(Country * countryToFind);
 
-
 private:
 	vector<Country*> * countries; // the countries that are in this continent
 	int * troopBonus;

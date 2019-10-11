@@ -215,24 +215,26 @@ void Map::deleteVisitedList(vector<visited*> * visitedArray) {
  ***********************************************************************/
 
 Continent::Continent(int bonusPoints, int newID, string newName) {
-	*troopBonus = bonusPoints;
-	*ID = newID;
-	*name = newName;
+	troopBonus = new int(bonusPoints);
+	ID = new int(newID);
+	name = new string(newName);
 	countries = new vector<Country*>;
 }
 
 Continent::Continent(int bonusPoints, int newID, string newName, vector<Country*> * countryList) {
-	*troopBonus = bonusPoints;
-	*ID = newID;
-	*name = newName;
+	troopBonus = new int(bonusPoints);
+	ID = new int(newID);
+	name = new string(newName);
 	countries = countryList;
 }
 Continent::~Continent() {
 	delete troopBonus;
+	delete ID;
+	delete name;
 }
 
 void Continent::setTroopBonus(int newBonus) {
-	troopBonus = new int(newBonus);
+	*troopBonus = newBonus;
 }
 int Continent::getTroopBonus() {
 	return *troopBonus;
