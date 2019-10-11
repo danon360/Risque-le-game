@@ -14,12 +14,12 @@ using std::vector;
 void main() {
 
 	// Create a few Countries
-	Country * country_a = new Country("country_a", 1);
-	Country * country_b = new Country("country_b", 2);
-	Country * country_c = new Country("country_c", 3);
-	Country * country_d = new Country("country_d", 4);
-	Country * country_e = new Country("country_e", 5);
-	Country * country_f = new Country("country_f", 6);
+	Country * country_a = new Country("country_a", 1, 1);
+	Country * country_b = new Country("country_b", 2, 1);
+	Country * country_c = new Country("country_c", 3, 1);
+	Country * country_d = new Country("country_d", 4, 2);
+	Country * country_e = new Country("country_e", 5, 2);
+	Country * country_f = new Country("country_f", 6, 2);
 
 	country_a->setContinentNumber(1);
 	country_b->setContinentNumber(1);
@@ -71,7 +71,7 @@ void main() {
 	Map myMap(countries);
 	
 	//  *** *** *** country_g is disconnected from the graph (comment out to get a connected graph) *** *** ***
-	Country * country_g = new Country("country_g", 7);
+	Country * country_g = new Country("country_g", 7, 3);
 	vector<Country * > * adjacency_country_g = new vector<Country *>;
 	country_g->addAdjacencyList(adjacency_country_g);
 	//countries->push_back(country_g);

@@ -27,8 +27,8 @@ private:
 public:
 
 	// Constructor / Destructor
-	Country(string nm, int id);
-	Country(string nm, int id, vector<Country*> * adjacentCountries); // with a prefilled vector
+	Country(string nm, int id, int continentNum);
+	Country(string nm, int id, int continentNum, vector<Country*> * adjacentCountries);  // with a prefilled vector
 	~Country();
 	
 	// General utilities

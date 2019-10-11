@@ -4,17 +4,19 @@
                             Country functions
  ***********************************************************************/
 
-Country::Country(string nm, int id) {
+Country::Country(string nm, int id, int continentNum) {
 	name = new string(nm);
 	ID = new int(id);
 	troopCount = new int(0);
+	continentNumber = new int(continentNum);
 	neighbours = new vector<Country*>();
 }
 
-Country::Country(string nm, int id, vector<Country*> * adjacentCountries) {
+Country::Country(string nm, int id, int continentNum, vector<Country*> * adjacentCountries) {
 	name = new string(nm);
 	ID = new int(id);
 	troopCount = new int(0);
+	continentNumber = new int(continentNum);
 	neighbours = adjacentCountries;
 }
 
@@ -22,6 +24,7 @@ Country::~Country() {
 	delete name;
 	delete ID;
 	delete troopCount;
+	delete continentNumber;
 	if (neighbours != nullptr) {
 		for (int i = 0; i < neighbours->size(); ++i)
 		delete neighbours;
