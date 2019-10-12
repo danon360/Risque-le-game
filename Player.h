@@ -1,36 +1,39 @@
 #pragma once
-#include "Dice.h"
 #include "Map.h"
-#include "Player.h"
-#include <cstdlib>
-#include <ctime>
-#include <iostream>
+#include "Dice.h"
+//#include "Cards.h"
+
 
 class Player {
     
 public:
-    // Vector that has a collection of countries
-    vector<Country*> * countriesOwned;
-    
-    
-    
-    
-    // Player Constructor
+    // Player Constructor and Destructor
     Player();
+    ~Player();
+    
+    // DICE METHODS
+    void diceObject();
+    
+    // COUNTRY METHODS
     void addCountries(Country * newCountry);
     void collectionOfCountries();
-    void collectionOfRiskCards();
-    void diceObject();
+    
+    /* CARDS METHODS
+    void addCards(Card * newCard);
+    void collectionOfRiskCards(); */
+    
+    // Game methods
     void reinforce();
     void attack();
     void fortify();
     
 private:
-    Dice myDice;
+     // Vector that has countriesOwned
+     vector<Country*> * countriesOwned;
     
+     // Dice Object
+     Dice myDice;
     
-
-    
-   
+     // vector<Card*> cardsOwned;
     
 };
