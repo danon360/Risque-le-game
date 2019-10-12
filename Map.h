@@ -22,6 +22,7 @@ private:
 	int * continentNumber;
 	int * ID;
 	int * troopCount;
+	int * ownerID;
 	vector<Country*> * neighbours;
 
 public:
