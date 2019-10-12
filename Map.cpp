@@ -103,12 +103,12 @@ UndirectedGraph::UndirectedGraph() {
 	countries = new vector<Country*>;
 	countryDictionary = nullptr;
 }
-UndirectedGraph::UndirectedGraph(map<int, Country*> * mapOfCountries) {
+UndirectedGraph::UndirectedGraph(map<int*, Country*> * mapOfCountries) {
 	countryDictionary = mapOfCountries;
 	countries = new vector<Country*>;
 
 	// populate the vector from the map
-	for (std::map<int, Country*>::iterator it = countryDictionary->begin(); it != countryDictionary->end(); ++it) {
+	for (std::map<int*, Country*>::iterator it = countryDictionary->begin(); it != countryDictionary->end(); ++it) {
 		countries->push_back(it->second);
 	}
 
@@ -238,25 +238,25 @@ Map::Map() {
 	countries = new vector<Country*>;
 	continents = new vector<Continent *>;
 }
-Map::Map(map<int, Country*> * mapOfCountries) {
+Map::Map(map<int*, Country*> * mapOfCountries) {
 	countryDictionary = mapOfCountries;
 	countries = new vector<Country*>;
 	continents = new vector<Continent *>;
 
 	// populate the vector from the map
-	for (std::map<int, Country*>::iterator it = countryDictionary->begin(); it != countryDictionary->end(); ++it) {
+	for (std::map<int*, Country*>::iterator it = countryDictionary->begin(); it != countryDictionary->end(); ++it) {
 		countries->push_back(it->second);
 	}
 
 }
 
-Map::Map(map<int, Country*> * mapOfCountries, vector<Continent*> * continentsList) {
+Map::Map(map<int*, Country*> * mapOfCountries, vector<Continent*> * continentsList) {
 	countryDictionary = mapOfCountries;
 	continents = continentsList;
 	countries = new vector<Country*>;
 
 	// populate the vector from the map
-	for (std::map<int, Country*>::iterator it = countryDictionary->begin(); it != countryDictionary->end(); ++it) {
+	for (std::map<int*, Country*>::iterator it = countryDictionary->begin(); it != countryDictionary->end(); ++it) {
 		countries->push_back(it->second);
 	}
 }
@@ -271,22 +271,22 @@ Map::~Map() {
 	// intentionally left empty: need to figure out deleting vectors properly @Daniel TS
 }
 
-Country* Map::findCountryInContinent(int countryID) {
-	for (int i = 0; i < continents->size(); ++i) {
-
-		Continent * currentContinent = continents->at(i);
-		currentContinent->findCountry(countryID);
-	}
-	return nullptr;
-}
-Country* Map::findCountryInContinent(string name) {
-
-	return nullptr;
-}
-Country* Map::findCountryInContinent(Country * countryToFind) {
-
-	return nullptr;
-}
+//Country* Map::findCountryInContinent(int countryID) {
+//	for (int i = 0; i < continents->size(); ++i) {
+//
+//		Continent * currentContinent = continents->at(i);
+//		currentContinent->findCountry(countryID);
+//	}
+//	return nullptr;
+//}
+//Country* Map::findCountryInContinent(string name) {
+//
+//	return nullptr;
+//}
+//Country* Map::findCountryInContinent(Country * countryToFind) {
+//
+//	return nullptr;
+//}
 
 void Map::addContinent(Continent* newContinent) {
 	continents->push_back(newContinent);

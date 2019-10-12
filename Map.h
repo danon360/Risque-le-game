@@ -73,7 +73,7 @@ public:
 
 	// Country attributes of map holds all countries in this map
 	vector<Country*> * countries;
-	map<int, Country*> *  countryDictionary; // <country ID, Country *>
+	map<int*, Country*> *  countryDictionary; // <country ID, Country *>
 
 	// This struct (visited list) is used by graph methods for different traversals
 	struct visited {
@@ -88,7 +88,7 @@ public:
 	bool recuriveMapCheckConnected(Country * country, vector<visited*> * visitedArray);
 	bool setCountryAsVisited(Country * country, vector<visited*> * visitedArray);
 	UndirectedGraph();
-	UndirectedGraph(map<int, Country*> *);
+	UndirectedGraph(map<int*, Country*> *);
 	UndirectedGraph(vector<Country*> * countryList);
 	~UndirectedGraph();
 	void addCountry(Country* newCountry); // adds countries to the vector and increments the number of continents
@@ -150,8 +150,8 @@ public:
 	};
 
 	Map();
-	Map(map<int, Country*> *);
-	Map(map<int, Country*> *, vector<Continent*> * continentsList);
+	Map(map<int*, Country*> *);
+	Map(map<int*, Country*> *, vector<Continent*> * continentsList);
 	Map(vector<Country*> * countryList);
 	~Map();
 
