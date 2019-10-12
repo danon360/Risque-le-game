@@ -6,11 +6,19 @@
 #include <string>
 #include <algorithm>
 #include <vector>
+#include <map>
 
 using std::cout;
 using std::endl;
 using std::string;
 using std::vector;
+using std::map;
+
+/************************************************************************
+
+							  Country Class
+
+ ***********************************************************************/
 
 class Country {
 
@@ -20,13 +28,14 @@ private:
 	int * continentNumber;
 	int * ID;
 	int * troopCount;
+	int * ownerID;
 	vector<Country*> * neighbours;
 
 public:
 
 	// Constructor / Destructor
-	Country(string nm, int id);
-	Country(string nm, int id, vector<Country*> * adjacentCountries); // with a prefilled vector
+	Country(string nm, int id, int continentNum, int ownerPlayer);
+	Country(string nm, int id, int continentNum, int ownerPlayer, vector<Country*> * adjacentCountries);  // with a prefilled vector
 	~Country();
 	
 	// General utilities
@@ -52,47 +61,20 @@ public:
 
 };
 
-class Continent {
+/************************************************************************
+
+	                      UndirectedGraph Class
+
+ ***********************************************************************/
+
+class UndirectedGraph {
 
 public:
-
-	// Constructor / Destructor
-	Continent(int bonusPoints);
-	Continent(int bonusPoints, vector<Country*> * countryList);
-	~Continent();
-
-	// Setters/ Getters
-	void setTroopBonus(int newBonus);
-	int getTroopBonus();
-
-	void addCountry(Country * newCountry);
-	Country* findCountry(string name);
-	Country* findCountry(Country * countryToFind);
-
-
-private:
-	vector<Country*> * countries; // the countries that are in this continent
-	int * troopBonus;
-
-};
-
-class Map {
-
-public:
-
-	Map(vector<Country*> * countryList);
-	~Map();
-	void addCountry(Country* newCountry); // adds countries to the vector and increments the number of continents
-	void addContinent(Continent * newContinent); // adds a continent to the vector and increments the number of continents
-
-private:
 
 	// Country attributes of map holds all countries in this map
 	vector<Country*> * countries;
+	map<int, Country*> *  countryDictionary; // <country ID, Country *>
 
-	// Continent attributes of map holds all continents (continents are a list of countries)
-	vector<Continent*> * continents;
-	
 	// This struct (visited list) is used by graph methods for different traversals
 	struct visited {
 		bool isVisited = false;
@@ -100,16 +82,86 @@ private:
 	};
 
 	// Utility methods
-	Country* findCountry(string name);
-	Country* findCountry(Country * countryToFind);
-	bool isMapConnected();
-	bool continentCheck();
 	bool areAllVisited(vector<visited*> * visitedArray); // checks the visitedArray to see if all nodes were visited
-	void deleteVisitedList(vector<visited*> * visitedArray);
-	vector<Map::visited*> * createVisitedList();
+	vector<UndirectedGraph::visited*> * createVisitedList();
 	bool isCountryVisited(Country * country, vector<visited*> * visitedArray);
 	bool recuriveMapCheckConnected(Country * country, vector<visited*> * visitedArray);
 	bool setCountryAsVisited(Country * country, vector<visited*> * visitedArray);
+	UndirectedGraph();
+	UndirectedGraph(map<int, Country*> *);
+	UndirectedGraph(vector<Country*> * countryList);
+	~UndirectedGraph();
+	void addCountry(Country* newCountry); // adds countries to the vector and increments the number of continents
+	bool isMapConnected();
+	Country* findCountry(int countryID);
+	Country* findCountry(string name);
+	Country* findCountry(Country * countryToFind);
 
 };
+
+/************************************************************************
+
+							Continent Class
+
+ ***********************************************************************/
+
+class Continent : public UndirectedGraph {
+
+private:
+
+	int * troopBonus;
+	int * ID;
+	string * name;
+
+public:
+
+	// Constructor / Destructor
+	Continent(int bonusPoints, int newID, string newName);
+	Continent(int bonusPoints, int newID, string newName, vector<Country*> * countryList);
+	~Continent();
+
+	// Setters/ Getters
+	void setTroopBonus(int newBonus);
+	int getTroopBonus();
+	void setID(int newID);
+	int getID();
+	void setName(string newName);
+	string getName();
+	void addCountryToContinent(Country * countryToAdd);
+};
+
+/************************************************************************
+
+							   Map Class
+
+ ***********************************************************************/
+
+class Map : public UndirectedGraph {
+
+public:
+
+	// Continent attributes of map holds all continents (continents are a list of countries)
+	vector<Continent*> * continents;
+
+	// This struct (visited list) is used by graph methods for different traversals
+	struct visited {
+		bool isVisited = false;
+		Country * country = nullptr;
+	};
+
+	Map();
+	Map(map<int, Country*> *);
+	Map(map<int, Country*> *, vector<Continent*> * continentsList);
+	Map(vector<Country*> * countryList);
+	~Map();
+
+	Country* findCountryInContinent(int countryID);
+	Country* findCountryInContinent(string name);
+	Country* findCountryInContinent(Country * countryToFind);
+
+	void addContinent(Continent * newContinent); // adds a continent to the vector and increments the number of continents
+	bool countryAppearsInOnlyOneContinent(); // ensures that a country belongs to only one continent
+
+};
+
 

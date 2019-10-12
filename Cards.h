@@ -1,9 +1,15 @@
 #pragma once
 
-#include "Map.h"
-#include "Player.h"
+//#include "Map.h"
+//#include "Player.h"
 #include <iostream>
 #include <string>
+#include <vector>
+
+using std::cout;
+using std::endl;
+using std::string;
+using std::vector;
 
 enum CardType {
 	INFANTRY, ARTILLERY, CAVALRY
@@ -11,16 +17,10 @@ enum CardType {
 
 class Card {
 private:
-	Country country;
 	CardType cardType;
 
 public:
-	Card(const Country& country, CardType cardType) :
-		country(country), cardType(cardType) {}
-
-	Country getCountry() const;
-
-	void setCountry(const Country& country);
+	Card(CardType cardType) : cardType (cardType) {}
 
 	CardType getCardType() const;
 
@@ -29,7 +29,7 @@ public:
 	void setCardType(CardType cardType);
 
 	friend std::ostream& operator<<(std::ostream& os, const Card& card) {
-		os << "country: " << card.country.getName() << ", type: ";
+		os << " type: ";
 		switch (card.cardType) {
 		case INFANTRY:
 			os << "infantry";
@@ -43,10 +43,13 @@ public:
 		}
 		return os;
 	}
+
+	
 };
 
 class Deck {
 private:
+
 	std::vector<Card> cards;
 
 	static int nExchanges;
@@ -54,17 +57,19 @@ private:
 public:
 	Deck() = default;
 
-	Deck(const std::vector<Card>& cards) : cards(cards) {}
+	Deck(std::vector<Card>& cards) : cards(cards) {}
 
-	Card draw(Player& player);
+	Card draw();
 
 	int nCards() const;
 
-	void loadDeck(const std::vector<Country>& countries);
+	void loadDeck(int nbDeck);
 
 	static int getNExchanges();
 
 	static void incNExchanges();
+
+	//void DisplayDeck();
 };
 
 class Hand {
@@ -73,7 +78,9 @@ private:
 
 	static int getArmies();
 
+
 public:
+
 	Hand() = default;
 
 	Hand(const std::vector<Card>& cards) : cards(cards) {}
@@ -86,5 +93,15 @@ public:
 
 	void add(const Card& card);
 
-	int exchange(const Card& card0, const Card& card1, const Card& card2);
+	int exchange();
+
+	void Display();
+
+	bool AreThreeSame(Card card_1, Card card_2, Card card_3);
+
+	bool AreThreeDifferent(Card card_1, Card card_2, Card card_3);
+
+
+	
+
 };
