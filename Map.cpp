@@ -43,7 +43,7 @@ string Country::toString() {
 }
 bool Country::equals(Country* otherCountry) {
 	// countries are equal if their names are equal (don't really care about ID after initial input)
-	return (*name).compare(otherCountry->getName()) == 0;
+	return (name->compare(otherCountry->getName()) == 0);
 }
 void Country::setName(string newName) {
 	*name = newName;
@@ -205,6 +205,28 @@ bool UndirectedGraph::areAllVisited(vector<visited*> * visitedArray) {
 	return areAllVisited;
 }
 
+Country* UndirectedGraph::findCountry(int countryID){
+	for (int i = 0; i < countries->size(); ++i) {
+		if (countries->at(i)->getID() == countryID)
+			return countries->at(i);
+	}
+	return nullptr;
+}
+Country* UndirectedGraph::findCountry(string name) {
+	for (int i = 0; i < countries->size(); ++i) {
+		if (countries->at(i)->getName().compare(name) == 0)
+			return countries->at(i);
+	}
+	return nullptr;
+}
+Country* UndirectedGraph::findCountry(Country * countryToFind) {
+	for (int i = 0; i < countries->size(); ++i) {
+		if (countries->at(i) == countryToFind)
+			return countries->at(i);
+	}
+	return nullptr;
+}
+
 /************************************************************************
 
 							   Map functions
@@ -227,43 +249,73 @@ Map::Map(map<int, Country*> * mapOfCountries) {
 	}
 
 }
+
+Map::Map(map<int, Country*> * mapOfCountries, vector<Continent*> * continentsList) {
+	countryDictionary = mapOfCountries;
+	continents = continentsList;
+	countries = new vector<Country*>;
+
+	// populate the vector from the map
+	for (std::map<int, Country*>::iterator it = countryDictionary->begin(); it != countryDictionary->end(); ++it) {
+		countries->push_back(it->second);
+	}
+}
+
 Map::Map(vector<Country*> * countryList) {
 	countryDictionary = nullptr;
 	countries = countryList;
 	continents = new vector<Continent *>;
 }
+
 Map::~Map() {
 	// intentionally left empty: need to figure out deleting vectors properly @Daniel TS
+}
+
+Country* Map::findCountryInContinent(int countryID) {
+	for (int i = 0; i < continents->size(); ++i) {
+
+		Continent * currentContinent = continents->at(i);
+		currentContinent->findCountry(countryID);
+	}
+	return nullptr;
+}
+Country* Map::findCountryInContinent(string name) {
+
+	return nullptr;
+}
+Country* Map::findCountryInContinent(Country * countryToFind) {
+
+	return nullptr;
 }
 
 void Map::addContinent(Continent* newContinent) {
 	continents->push_back(newContinent);
 }
 
-//bool Map::countryAppearsInOnlyOneContinent() {
-//
-//	for (int i = 0; i < countries->size(); ++i) {
-//
-//		Country * currentCountry = countries->at(i);
-//
-//		int foundSameCountryNTimesInContinent = 0;
-//
-//		for (int j = 0; j < continents->size(); ++j) {
-//
-//			Continent * currentContinent = continents->at(j);
-//
-//			// having a problem accessing the map's continent's countries
-//
-//			if(true /*TODO :CurrentCountry.equals(Continent country)*/)
-//				++foundSameCountryNTimesInContinent;
-//
-//			if (foundSameCountryNTimesInContinent > 1) // false if you find same country twice
-//				return false;
-//		}
-//	}
-//
-//	return true;
-//}
+bool Map::countryAppearsInOnlyOneContinent() {
+
+	for (int i = 0; i < countries->size(); ++i) {
+
+		Country * currentCountry = countries->at(i);
+
+		int foundSameCountryNTimesInContinent = 0;
+
+		for (int j = 0; j < continents->size(); ++j) {
+
+			Continent * currentContinent = continents->at(j);
+
+			// having a problem accessing the map's continent's countries
+
+			if(true /*TODO :CurrentCountry.equals(Continent country)*/)
+				++foundSameCountryNTimesInContinent;
+
+			if (foundSameCountryNTimesInContinent > 1) // false if you find same country twice
+				return false;
+		}
+	}
+
+	return true;
+}
 
 /************************************************************************
 
@@ -308,6 +360,13 @@ void Continent::setName(string newName) {
 string Continent::getName() {
 	return *name;
 }
+
+void Continent::addCountryToContinent(Country * countryToAdd) {
+	countryToAdd->setContinentNumber(*ID); // set the continent id of the country you just added to a continent
+	countries->push_back(countryToAdd);
+}
+
+
 
 
 

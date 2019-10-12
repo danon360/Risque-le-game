@@ -87,14 +87,13 @@ public:
 	bool isCountryVisited(Country * country, vector<visited*> * visitedArray);
 	bool recuriveMapCheckConnected(Country * country, vector<visited*> * visitedArray);
 	bool setCountryAsVisited(Country * country, vector<visited*> * visitedArray);
-
-public:
 	UndirectedGraph();
 	UndirectedGraph(map<int, Country*> *);
 	UndirectedGraph(vector<Country*> * countryList);
 	~UndirectedGraph();
 	void addCountry(Country* newCountry); // adds countries to the vector and increments the number of continents
 	bool isMapConnected();
+	Country* findCountry(int countryID);
 	Country* findCountry(string name);
 	Country* findCountry(Country * countryToFind);
 
@@ -128,7 +127,7 @@ public:
 	int getID();
 	void setName(string newName);
 	string getName();
-
+	void addCountryToContinent(Country * countryToAdd);
 };
 
 /************************************************************************
@@ -139,7 +138,7 @@ public:
 
 class Map : UndirectedGraph {
 
-private:
+public:
 
 	// Continent attributes of map holds all continents (continents are a list of countries)
 	vector<Continent*> * continents;
@@ -150,14 +149,19 @@ private:
 		Country * country = nullptr;
 	};
 
-public:
-
 	Map();
 	Map(map<int, Country*> *);
+	Map(map<int, Country*> *, vector<Continent*> * continentsList);
 	Map(vector<Country*> * countryList);
 	~Map();
+
+	Country* findCountryInContinent(int countryID);
+	Country* findCountryInContinent(string name);
+	Country* findCountryInContinent(Country * countryToFind);
+
 	void addContinent(Continent * newContinent); // adds a continent to the vector and increments the number of continents
 	bool countryAppearsInOnlyOneContinent(); // ensures that a country belongs to only one continent
+
 };
 
 

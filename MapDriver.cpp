@@ -67,9 +67,24 @@ int main() {
 	countries->push_back(country_e);
 	countries->push_back(country_f);
 
+	// Create a continent and add the countries to it
+	Continent * continent_1 = new Continent(10, 1, "Asia");
+	Continent * continent_2 = new Continent(10, 1, "North America");
+	continent_1->addCountryToContinent(country_a);
+	continent_1->addCountryToContinent(country_b);
+	continent_1->addCountryToContinent(country_c);
+	continent_2->addCountryToContinent(country_d);
+	continent_2->addCountryToContinent(country_e);
+	continent_2->addCountryToContinent(country_f);
+
 	// Create a Map and pass it the countries vector as a list of all countries
 	Map myMap(countries);
-	
+
+	// add the continents to the Map
+	myMap.addContinent(continent_1);
+	myMap.addContinent(continent_2);
+
+
 	//  *** *** *** country_g is disconnected from the graph (comment out to get a connected graph) *** *** ***
 	Country * country_g = new Country("country_g", 7, 3, 0);
 	vector<Country * > * adjacency_country_g = new vector<Country *>;
