@@ -1,7 +1,6 @@
 #pragma once
 
-//#include "Map.h"
-//#include "Player.h"
+
 #include <iostream>
 #include <string>
 #include <vector>
@@ -11,16 +10,16 @@ using std::endl;
 using std::string;
 using std::vector;
 
-enum CardType {
+enum CardType {                                 //enum for the types of cards 
 	INFANTRY, ARTILLERY, CAVALRY
 };
 
 class Card {
 private:
-	CardType cardType;
+	CardType* cardType;
 
 public:
-	Card(CardType cardType) : cardType (cardType) {}
+	Card(CardType* cardType) : cardType (cardType) {}
 
 	CardType getCardType() const;
 
@@ -28,9 +27,9 @@ public:
 
 	void setCardType(CardType cardType);
 
-	friend std::ostream& operator<<(std::ostream& os, const Card& card) {
+	friend std::ostream& operator<<(std::ostream& os,Card* card) {    //print the type as a string 
 		os << " type: ";
-		switch (card.cardType) {
+		switch (card->getCardType()) {
 		case INFANTRY:
 			os << "infantry";
 			break;
@@ -50,16 +49,16 @@ public:
 class Deck {
 private:
 
-	std::vector<Card> cards;
+	std::vector<Card*>* cards = new std::vector<Card*> ();  // deck is made of vector of cards 
 
-	static int nExchanges;
+	static int* nExchanges;
 
 public:
 	Deck() = default;
 
-	Deck(std::vector<Card>& cards) : cards(cards) {}
+	Deck(std::vector<Card*>* cards) : cards(cards) {}
 
-	Card draw();
+	Card* draw();
 
 	int nCards() const;
 
@@ -69,37 +68,37 @@ public:
 
 	static void incNExchanges();
 
-	//void DisplayDeck();
 };
 
 class Hand {
 private:
-	std::vector<Card> cards;
+
+	std::vector<Card*>* cards;
 
 	static int getArmies();
 
 
 public:
 
-	Hand() = default;
+	Hand();
 
-	Hand(const std::vector<Card>& cards) : cards(cards) {}
+	//Hand(std::vector<Card*>* cards) : cards(cards) {}
 
-	std::vector<Card> getCards() const;
+	std::vector<Card*>* getCards() const;
 
-	int size() const { return cards.size(); }
+	int size() const { return cards->size(); }
 
-	bool empty() const { return cards.empty(); }
+	bool empty() const { return cards->empty(); }
 
-	void add(const Card& card);
+	void add(Card* card);
 
 	int exchange();
 
 	void Display();
 
-	bool AreThreeSame(Card card_1, Card card_2, Card card_3);
+	bool AreThreeSame(Card* card_1, Card* card_2, Card* card_3);
 
-	bool AreThreeDifferent(Card card_1, Card card_2, Card card_3);
+	bool AreThreeDifferent(Card* card_1, Card* card_2, Card* card_3);
 
 
 	
