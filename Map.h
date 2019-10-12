@@ -14,6 +14,12 @@ using std::string;
 using std::vector;
 using std::map;
 
+/************************************************************************
+
+							  Country Class
+
+ ***********************************************************************/
+
 class Country {
 
 private:
@@ -28,8 +34,8 @@ private:
 public:
 
 	// Constructor / Destructor
-	Country(string nm, int id, int continentNum, int playerNum);
-	Country(string nm, int id, int continentNum, int playerNum, vector<Country*> * adjacentCountries);  // with a prefilled vector
+	Country(string nm, int id, int continentNum, int ownerPlayer);
+	Country(string nm, int id, int continentNum, int ownerPlayer, vector<Country*> * adjacentCountries);  // with a prefilled vector
 	~Country();
 	
 	// General utilities
@@ -55,7 +61,58 @@ public:
 
 };
 
-class Continent {
+/************************************************************************
+
+	                      UndirectedGraph Class
+
+ ***********************************************************************/
+
+class UndirectedGraph {
+
+public:
+
+	// Country attributes of map holds all countries in this map
+	vector<Country*> * countries;
+	map<int, Country*> *  countryDictionary; // <country ID, Country *>
+
+	// This struct (visited list) is used by graph methods for different traversals
+	struct visited {
+		bool isVisited = false;
+		Country * country = nullptr;
+	};
+
+	// Utility methods
+	bool areAllVisited(vector<visited*> * visitedArray); // checks the visitedArray to see if all nodes were visited
+	vector<UndirectedGraph::visited*> * createVisitedList();
+	bool isCountryVisited(Country * country, vector<visited*> * visitedArray);
+	bool recuriveMapCheckConnected(Country * country, vector<visited*> * visitedArray);
+	bool setCountryAsVisited(Country * country, vector<visited*> * visitedArray);
+
+public:
+	UndirectedGraph();
+	UndirectedGraph(map<int, Country*> *);
+	UndirectedGraph(vector<Country*> * countryList);
+	~UndirectedGraph();
+	void addCountry(Country* newCountry); // adds countries to the vector and increments the number of continents
+	bool isMapConnected();
+	Country* findCountry(string name);
+	Country* findCountry(Country * countryToFind);
+
+};
+
+/************************************************************************
+
+							Continent Class
+
+ ***********************************************************************/
+
+class Continent : UndirectedGraph {
+
+private:
+
+	int * troopBonus;
+	int * ID;
+	string * name;
 
 public:
 
@@ -72,37 +129,20 @@ public:
 	void setName(string newName);
 	string getName();
 
-	void addCountry(Country * newCountry);
-	Country* findCountry(string name);
-	Country* findCountry(Country * countryToFind);
-
-private:
-	vector<Country*> * countries; // the countries that are in this continent
-	int * troopBonus;
-	int * ID;
-	string * name;
-
 };
 
-class Map {
+/************************************************************************
 
-public:
-	Map();
-	Map(map<int, Country*> *);
-	Map(vector<Country*> * countryList);
-	~Map();
-	void addCountry(Country* newCountry); // adds countries to the vector and increments the number of continents
-	void addContinent(Continent * newContinent); // adds a continent to the vector and increments the number of continents
+							   Map Class
+
+ ***********************************************************************/
+
+class Map : UndirectedGraph {
 
 private:
-
-	// Country attributes of map holds all countries in this map
-	vector<Country*> * countries;
-	map<int, Country*> *  countryDictionary; // <country ID, Country *>
 
 	// Continent attributes of map holds all continents (continents are a list of countries)
 	vector<Continent*> * continents;
-	
 
 	// This struct (visited list) is used by graph methods for different traversals
 	struct visited {
@@ -110,17 +150,14 @@ private:
 		Country * country = nullptr;
 	};
 
-	// Utility methods
-	Country* findCountry(string name);
-	Country* findCountry(Country * countryToFind);
-	bool isMapConnected();
-	bool continentCheck();
-	bool areAllVisited(vector<visited*> * visitedArray); // checks the visitedArray to see if all nodes were visited
-	void deleteVisitedList(vector<visited*> * visitedArray);
-	vector<Map::visited*> * createVisitedList();
-	bool isCountryVisited(Country * country, vector<visited*> * visitedArray);
-	bool recuriveMapCheckConnected(Country * country, vector<visited*> * visitedArray);
-	bool setCountryAsVisited(Country * country, vector<visited*> * visitedArray);
+public:
 
+	Map();
+	Map(map<int, Country*> *);
+	Map(vector<Country*> * countryList);
+	~Map();
+	void addContinent(Continent * newContinent); // adds a continent to the vector and increments the number of continents
+	bool countryAppearsInOnlyOneContinent(); // ensures that a country belongs to only one continent
 };
+
 
