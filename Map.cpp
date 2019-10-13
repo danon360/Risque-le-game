@@ -43,7 +43,7 @@ string Country::toString() {
 }
 bool Country::equals(Country* otherCountry) {
 	// countries are equal if their ID's are equal
-	return (this->getID() == otherCountry->getID());
+	return (getID() == otherCountry->getID());
 }
 void Country::setName(string newName) {
 	*name = newName;
@@ -125,6 +125,10 @@ void UndirectedGraph::addCountry(Country* newCountry) {
 	countries->push_back(newCountry);
 }
 
+bool UndirectedGraph::subclassSpecificMapConnectionCheck(Country * aCountry) {
+	return true;
+}
+
 // ------------ isMapConnected() method and helpers ---------------------------------------------
 
 bool UndirectedGraph::isMapConnected() {
@@ -136,7 +140,7 @@ bool UndirectedGraph::isMapConnected() {
 	vector<UndirectedGraph::visited*> * visitedList = UndirectedGraph::createVisitedList();
 
 	Country * currentCountry = countries->at(0);
-	vector<Country*> * neighbourList = currentCountry->getAdjacencyList();
+	vector<Country*> * neighbourList = neighbourListForRecursive(currentCountry);
 
 	return recuriveMapCheckConnected(currentCountry, visitedList);
 }
@@ -152,12 +156,18 @@ bool UndirectedGraph::recuriveMapCheckConnected(Country * country, vector<visite
 
 		vector<Country *> * neighbourList = country->getAdjacencyList();
 
+		if (neighbourList->size() == 0)
+			return true;
+
 		for (int i = 0; i < neighbourList->size(); ++i) {
 
 			Country * currentNeighbour = neighbourList->at(i);
 
-			if (!isCountryVisited(currentNeighbour, visitedArray) &&
-				subclassSpecificMapConnectionCheck(country)) {
+			// cout << "Country: " << country->getName() << " || neighbour: " << currentNeighbour->getName() << endl;
+			
+			if (!isCountryVisited(currentNeighbour, visitedArray) /*&&
+				subclassSpecificMapConnectionCheck(country)*/) 
+			{
 				recuriveMapCheckConnected(currentNeighbour, visitedArray);
 			}
 		}
@@ -165,7 +175,6 @@ bool UndirectedGraph::recuriveMapCheckConnected(Country * country, vector<visite
 		// you get to then end of a row
 		return false;
 	}
-	
 
 	// TODO: Delete this return and make this function correct
 	return false;
@@ -174,8 +183,10 @@ bool UndirectedGraph::setCountryAsVisited(Country * country, vector<visited*> * 
 
 	// Find our country in visitedArray and set its visited flag to 'true'
 	for (int i = 0; i < visitedArray->size(); ++i) {
-		if (country == visitedArray->at(i)->country)
+		if (country->equals(visitedArray->at(i)->country)) {
 			visitedArray->at(i)->isVisited = true;
+			break;
+		}
 	}
 	// TODO: Delete this return and make this function correct
 	return false;
@@ -184,7 +195,7 @@ bool UndirectedGraph::isCountryVisited(Country * country, vector<visited*> * vis
 
 	// look through visitedArray to see if our country has been visited or not
 	for (int i = 0; i < visitedArray->size(); ++i) {
-		if (country == visitedArray->at(i)->country) { // find country in visited array
+		if (country->equals(visitedArray->at(i)->country)) { // find country in visited array
 			if (visitedArray->at(i)->isVisited)
 				return true;
 			else
@@ -239,6 +250,10 @@ Country* UndirectedGraph::findCountry(Country * countryToFind) {
 			return countries->at(i);
 	}
 	return nullptr;
+}
+
+vector<Country*> * UndirectedGraph::neighbourListForRecursive(Country * aCountry) {
+	return aCountry->getAdjacencyList();
 }
 
 /************************************************************************
@@ -369,6 +384,14 @@ bool Map::countryAppearsInOneAndOnlyOneContinent() {
 	return true;
 }
 
+bool Map::subclassSpecificMapConnectionCheck(Country * aCountry) {
+	return true;
+}
+
+//vector<Country*> * Map::neighbourListForRecursive(Country * aCountry) {
+//	return aCountry->getAdjacencyList();
+//}
+
 /************************************************************************
 
                            Continent functions
@@ -419,6 +442,23 @@ void Continent::addCountryToContinent(Country * countryToAdd) {
 }
 
 bool Continent::subclassSpecificMapConnectionCheck(Country * aCountry) {
-	if (findCountry(aCountry) != nullptr)
+	if (aCountry->getID() == getID())
 		return true;
+
+	return false;
 }
+
+//vector<Country*> * Continent::neighbourListForRecursive(Country * aCountry) {
+//
+//	vector<Country*> * neighbourList = new vector<Country*>;
+//
+//	for (int i = 0; i < aCountry->getAdjacencyList()->size(); ++i) {
+//
+//		if (aCountry->getContinentNumber() == this->getID()) {
+//			neighbourList->push_back(aCountry->getAdjacencyList()->at(i));
+//		}
+//
+//	}
+//
+//	return neighbourList;
+//}
