@@ -125,37 +125,47 @@ void UndirectedGraph::addCountry(Country* newCountry) {
 	countries->push_back(newCountry);
 }
 
+// ------------ isMapConnected() method and helpers ---------------------------------------------
+
 bool UndirectedGraph::isMapConnected() {
 
-	// initialize visited array with each country of the map's list and set visited flag to 'false'
-	vector<visited*> * visitedArray = createVisitedList();
-
-	bool isGraphConnected = false;
-
-	if (areAllVisited(visitedArray)) { // base case: if all Countries are visited, we return true
+	if (countries->size() == 0)
 		return true;
-	}
-	else { // check each country in list to see if it can reach all other countries
 
-		for (int i = 0; i < visitedArray->size(); ++i) {
-			isGraphConnected *= recuriveMapCheckConnected(visitedArray->at(i)->country, visitedArray);
-		}
+	// holds the Countries and a flag of whether it was visited or not
+	vector<UndirectedGraph::visited*> * visitedList = UndirectedGraph::createVisitedList();
 
+	Country * currentCountry = countries->at(0);
+	vector<Country*> * neighbourList = currentCountry->getAdjacencyList();
 
-	}
-
-	return isGraphConnected;
+	return recuriveMapCheckConnected(currentCountry, visitedList);
 }
+
 bool UndirectedGraph::recuriveMapCheckConnected(Country * country, vector<visited*> * visitedArray) {
 
-	// do this for each country in the adjacencyList of current country
-	for (int i = 0; i < country->getAdjacencyList()->size(); ++i) {
+	setCountryAsVisited(country, visitedArray);
 
-		if (!isCountryVisited(country, visitedArray)) {
-			setCountryAsVisited(country, visitedArray);
-			recuriveMapCheckConnected(country->getAdjacencyList()->at(i + 1), visitedArray);
-		}
+	if (areAllVisited(visitedArray)) { // positive base case
+		return true;
 	}
+	else {
+
+		vector<Country *> * neighbourList = country->getAdjacencyList();
+
+		for (int i = 0; i < neighbourList->size(); ++i) {
+
+			Country * currentNeighbour = neighbourList->at(i);
+
+			if (!isCountryVisited(currentNeighbour, visitedArray) &&
+				subclassSpecificMapConnectionCheck(country)) {
+				recuriveMapCheckConnected(currentNeighbour, visitedArray);
+			}
+		}
+
+		// you get to then end of a row
+		return false;
+	}
+	
 
 	// TODO: Delete this return and make this function correct
 	return false;
@@ -174,7 +184,7 @@ bool UndirectedGraph::isCountryVisited(Country * country, vector<visited*> * vis
 
 	// look through visitedArray to see if our country has been visited or not
 	for (int i = 0; i < visitedArray->size(); ++i) {
-		if (country == visitedArray->at(i)->country) {
+		if (country == visitedArray->at(i)->country) { // find country in visited array
 			if (visitedArray->at(i)->isVisited)
 				return true;
 			else
@@ -198,12 +208,16 @@ vector<UndirectedGraph::visited*> * UndirectedGraph::createVisitedList() {
 	return visitedArray;
 }
 bool UndirectedGraph::areAllVisited(vector<visited*> * visitedArray) {
-	bool areAllVisited = false;
+
 	for (int i = 0; i < visitedArray->size(); ++i) {
-		areAllVisited = visitedArray->at(i)->isVisited;
+		if (!visitedArray->at(i)->isVisited) // if at least 1 Country is not visited then return false
+			return false;
 	}
-	return areAllVisited;
+
+	return true; // if you got through the loop then all countries must have been visited.
 }
+
+// ------------ END OF: isMapConnected() method and helpers ---------------------------------------
 
 Country* UndirectedGraph::findCountry(int countryID){
 	for (int i = 0; i < countries->size(); ++i) {
@@ -254,6 +268,18 @@ Map::Map(map<int, Country*> * mapOfCountries, vector<Continent*> * continentsLis
 	countryDictionary = mapOfCountries;
 	continents = continentsList;
 	countries = new vector<Country*>;
+
+	// set continentID in each country of the continents
+	for (int i = 0; i < continents->size(); ++i) {
+
+		Continent * currentContinent = continents->at(i);
+
+		for (int j = 0; j < currentContinent->countries->size(); ++j) {
+
+			Country * currentCountry = currentContinent->countries->at(j);
+			currentCountry->setContinentNumber(currentContinent->getID());
+		}
+	}
 
 	// populate the vector from the map
 	for (std::map<int, Country*>::iterator it = countryDictionary->begin(); it != countryDictionary->end(); ++it) {
@@ -312,7 +338,7 @@ void Map::addContinent(Continent* newContinent) {
 	continents->push_back(newContinent);
 }
 
-bool Map::countryAppearsInOnlyOneContinent() {
+bool Map::countryAppearsInOneAndOnlyOneContinent() {
 
 	for (int i = 0; i < countries->size(); ++i) { // for each country in map
 
@@ -335,6 +361,9 @@ bool Map::countryAppearsInOnlyOneContinent() {
 					return false;
 			}
 		}
+
+		if (foundSameCountryNTimesInContinent != 1) // country is not in at least one continent
+			return false;
 	}
 
 	return true;
@@ -389,9 +418,7 @@ void Continent::addCountryToContinent(Country * countryToAdd) {
 	countries->push_back(countryToAdd);
 }
 
-
-
-
-
-
-
+bool Continent::subclassSpecificMapConnectionCheck(Country * aCountry) {
+	if (findCountry(aCountry) != nullptr)
+		return true;
+}

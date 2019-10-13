@@ -96,7 +96,7 @@ public:
 	Country* findCountry(int countryID);
 	Country* findCountry(string name);
 	Country* findCountry(Country * countryToFind);
-
+	bool subclassSpecificMapConnectionCheck(Country * aCountry) { return true; } // check used by isMapConnecte() => specific to each subclass 
 };
 
 /************************************************************************
@@ -128,6 +128,7 @@ public:
 	void setName(string newName);
 	string getName();
 	void addCountryToContinent(Country * countryToAdd);
+	bool subclassSpecificMapConnectionCheck(Country * aCountry); // specific check for isMapConnected() ensure continent is equal
 };
 
 /************************************************************************
@@ -160,8 +161,7 @@ public:
 	Country* findCountryInContinent(Country * countryToFind);
 
 	void addContinent(Continent * newContinent); // adds a continent to the vector and increments the number of continents
-	bool countryAppearsInOnlyOneContinent(); // ensures that a country belongs to only one continent
-
+	bool countryAppearsInOneAndOnlyOneContinent(); // ensures that a country belongs to only one continent
 };
 
 

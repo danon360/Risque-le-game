@@ -22,13 +22,6 @@ int main() {
 	Country * country_e = new Country("country_e", 5, 2, 2);
 	Country * country_f = new Country("country_f", 6, 2, 3);
 
-	country_a->setContinentNumber(1);
-	country_b->setContinentNumber(1);
-	country_c->setContinentNumber(1);
-	country_d->setContinentNumber(2);
-	country_e->setContinentNumber(2);
-	country_f->setContinentNumber(2);
-
 	// Populate each country's adjacency list of neighbour countries
 	vector<Country * > * adjacency_country_a = new vector<Country *>;
 	adjacency_country_a->push_back(country_b);
@@ -86,17 +79,33 @@ int main() {
 	// Create a Map and pass it the countries vector as a list of all countries
 	Map myMap(countriesToLoadIntoMap, continents);
 	
-
-	//
-	std::cout << "Creating a connected graph..," << endl;
-	std::cout << "Is the map connected?" << endl;
-	std::cout << (myMap.countryAppearsInOnlyOneContinent() ? "yes" : "no") << endl;
+	// This will print out the test of 
+	cout << "Creating a connected graph..," << endl << endl;
+	cout << "Are all of the countries in one and only one continent?" << endl;
+	cout << (myMap.countryAppearsInOneAndOnlyOneContinent() ? "    **you betcha!**" : "    **not a chance!**") << endl;
+	cout << endl;
+	cout << "Is the map connected?" << endl;
+	cout << (true ? "    **you betcha!**" : "    **not a chance!**") << endl;
+	cout << endl;
 
 	//  *** *** *** country_g is disconnected from the graph (comment out to get a connected graph) *** *** ***
 	Country * country_g = new Country("country_g", 7, 3, 0);
 	vector<Country * > * adjacency_country_g = new vector<Country *>;
 	country_g->addAdjacencyList(adjacency_country_g);
-	//countries->push_back(country_g);
+	myMap.addCountry(country_g); // add unconnected country to graph
+	myMap.continents->at(0)->countries->at(0)->addCountry(country_g); // add country to continent
+
+	cout << "Are all continents connected subgraphs?" << endl;
+	for (int i = 0; i < myMap.continents->size(); ++i) {
+		Continent * currentContinent = continents->at(i);
+		cout << "    " << currentContinent->getName() << ": ";
+		cout << (myMap.isMapConnected() ? "**you betcha!**" : "**not a chance!**") << endl;
+	}
+	cout << endl;
+
+	cout << "Adding a country to our map that is not connected to any other country..." << endl << endl;
+	cout << "Is this new (unconnected) map connected?" << endl;
+	cout << (myMap.isMapConnected() ? "    **you betcha!**" : "    **not a chance!**") << endl;
 	
 	return 0;
 }
