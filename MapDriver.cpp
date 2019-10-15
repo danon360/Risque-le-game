@@ -14,27 +14,16 @@ using std::vector;
 
 int main() {
 
-	Country * country_x = new Country("country_x", 1, 1, 1);
-	Country * country_y = new Country("country_y", 2, 1, 1);
-	Country * country_z = new Country("country_z", 3, 1, 1);
-	vector<Country * > * adjacency_country_x = new vector<Country *>;
-	adjacency_country_x->push_back(country_y);
-	adjacency_country_x->push_back(country_z);
-	vector<Country * > * adjacency_country_y = new vector<Country *>;
-	adjacency_country_y->push_back(country_x);
-	adjacency_country_y->push_back(country_z);
-	vector<Country * > * adjacency_country_z = new vector<Country *>;
-	adjacency_country_z->push_back(country_x);
-	adjacency_country_z->push_back(country_y);
-	country_x->addAdjacencyList(adjacency_country_x);
-	country_y->addAdjacencyList(adjacency_country_y);
-	country_z->addAdjacencyList(adjacency_country_z);
+	
+	/*  b------c
+	   / \      \
+	  a   \______d----f
+	   \        /
+        \___e__/
+	*/
 
-	vector<Country *> * countriesForContinentTest = new vector<Country *>;
-	countriesForContinentTest->push_back(country_x);
-	countriesForContinentTest->push_back(country_y);
-	countriesForContinentTest->push_back(country_z);
-	Continent * continentForTesting = new Continent(15, 5, "TestContinent", countriesForContinentTest);
+
+
 
 	// Create a few Countries
 	Country * country_a = new Country("country_a", 1, 1, 1);
@@ -93,45 +82,61 @@ int main() {
 	continent_2->addCountryToContinent(country_e);
 	continent_2->addCountryToContinent(country_f);
 
-	// Create a continent vector
+	// Create a continent vector and populate it with our continents
 	vector<Continent *> * continents = new vector<Continent *>;
 	continents->push_back(continent_1);
 	continents->push_back(continent_2);
 
 	// Create a Map and pass it the countries vector as a list of all countries
 	Map myMap(countriesToLoadIntoMap, continents);
-	
+
 	// This will print out the test of 
 	cout << "Creating a connected graph..," << endl << endl;
-	cout << "Are all of the countries in one and only one continent?" << endl;
+	cout << "Are all of the countries in one and only one continent (hint: yes)?" << endl;
 	cout << (myMap.countryAppearsInOneAndOnlyOneContinent() ? "    **you betcha!**" : "    **not a chance!**") << endl;
 	cout << endl;
-	cout << "Is the map connected?" << endl;
-	cout << (true ? "    **you betcha!**" : "    **not a chance!**") << endl;
+	cout << "Is the map connected (hint: yes)?" << endl;
+	cout << (myMap.isMapConnected() ? "    **you betcha!**" : "    **not a chance!**") << endl;
 	cout << endl;
 
 	//  *** *** *** country_g is disconnected from the graph (comment out to get a connected graph) *** *** ***
-	Country * country_g = new Country("country_g", 7, 3, 0);
-	vector<Country * > * adjacency_country_g = new vector<Country *>;
-	country_g->addAdjacencyList(adjacency_country_g);
+	Country * country_g = new Country("country_g", 7, 1, 0);
+	vector<Country * > * adjacency_country_g = new vector<Country *>; // no neighbours
+	country_g->addAdjacencyList(adjacency_country_g); // ad the empty adjacency list
 	myMap.addCountry(country_g); // add unconnected country to graph
-	myMap.continents->at(0)->countries->at(0)->addCountry(country_g); // add country to continent
-
-	//cout << "Are all continents connected subgraphs?" << endl;
-	for (int i = 0; i < myMap.continents->size(); ++i) {
-		Continent * currentContinent = continents->at(i);
-		cout << "    " << currentContinent->getName() << ": ";
-		cout << (myMap.isMapConnected() ? "**you betcha!**" : "**not a chance!**") << endl;
-	}
-	cout << endl;
+	myMap.continents->at(0)->addCountry(country_g); // add country to 1st continent
 
 	cout << "Adding a country to our map that is not connected to any other country..." << endl << endl;
-	cout << "Is this new (unconnected) map connected?" << endl;
+	cout << "Is this new map connected (hint: no)?" << endl;
 	cout << (myMap.isMapConnected() ? "    **you betcha!**" : "    **not a chance!**") << endl << endl;
+
+	// Create a continent that IS CONNECTED
+	Country * country_x = new Country("country_x", 1, 1, 1);
+	Country * country_y = new Country("country_y", 2, 1, 1);
+	Country * country_z = new Country("country_z", 3, 1, 1);
+	vector<Country * > * adjacency_country_x = new vector<Country *>;
+	adjacency_country_x->push_back(country_y);
+	adjacency_country_x->push_back(country_z);
+	vector<Country * > * adjacency_country_y = new vector<Country *>;
+	adjacency_country_y->push_back(country_x);
+	adjacency_country_y->push_back(country_z);
+	vector<Country * > * adjacency_country_z = new vector<Country *>;
+	adjacency_country_z->push_back(country_x);
+	adjacency_country_z->push_back(country_y);
+	country_x->addAdjacencyList(adjacency_country_x);
+	country_y->addAdjacencyList(adjacency_country_y);
+	country_z->addAdjacencyList(adjacency_country_z);
+	vector<Country *> * countriesForContinentTest = new vector<Country *>;
+	countriesForContinentTest->push_back(country_x);
+	countriesForContinentTest->push_back(country_y);
+	countriesForContinentTest->push_back(country_z);
+	Continent * continentForTesting = new Continent(15, 5, "TestContinent", countriesForContinentTest);
 
 	cout << "Is continent connected (hint: yes)?" << endl;
 	cout << (continentForTesting->isMapConnected() ? "    **you betcha!**" : "    **not a chance!**") << endl << endl;
 
+
+	// create a continent that is NOT connected
 	Country * country_x1 = new Country("country_x1", 1, 1, 1);
 	Country * country_y1 = new Country("country_y1", 2, 1, 1);
 	Country * country_z1 = new Country("country_z1", 3, 1, 1);
@@ -143,7 +148,6 @@ int main() {
 	country_x1->addAdjacencyList(adjacency_country_x1);
 	country_y1->addAdjacencyList(adjacency_country_y1);
 	country_z1->addAdjacencyList(adjacency_country_z1);
-
 	vector<Country *> * countriesForContinentTest_1 = new vector<Country *>;
 	countriesForContinentTest_1->push_back(country_x1);
 	countriesForContinentTest_1->push_back(country_y1);
@@ -151,7 +155,7 @@ int main() {
 
 	Continent * continentForTesting_1 = new Continent(16, 6, "TestContinent_1", countriesForContinentTest_1);
 
-	cout << "Is continent connected (hint: nope)?" << endl;
+	cout << "Is continent connected (hint: no)?" << endl;
 	cout << (continentForTesting_1->isMapConnected() ? "    **you betcha!**" : "    **not a chance!**") << endl << endl;
 
 	return 0;

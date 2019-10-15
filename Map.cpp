@@ -156,21 +156,19 @@ bool UndirectedGraph::recuriveMapCheckConnected(Country * country, vector<visite
 
 		vector<Country *> * neighbourList = country->getAdjacencyList();
 
-		if (neighbourList->size() == 0)
-			return true;
-
 		for (int i = 0; i < neighbourList->size(); ++i) {
 
 			Country * currentNeighbour = neighbourList->at(i);
 
-			// cout << "Country: " << country->getName() << " || neighbour: " << currentNeighbour->getName() << endl;
-			
 			if (!isCountryVisited(currentNeighbour, visitedArray) /*&&
 				subclassSpecificMapConnectionCheck(country)*/) 
 			{
 				recuriveMapCheckConnected(currentNeighbour, visitedArray);
 			}
 		}
+
+		if (areAllVisited(visitedArray)) // positive base case
+			return true;
 
 		// you get to then end of a row
 		return false;
