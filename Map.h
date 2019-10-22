@@ -98,6 +98,7 @@ public:
 	Country* findCountry(Country * countryToFind);
 	virtual bool subclassSpecificMapConnectionCheck(Country * aCountry); // check used by isMapConnecte() => specific to each subclass 
 	vector<Country*> * neighbourListForRecursive(Country * aCountry);
+	void printGraph();
 };
 
 /************************************************************************

@@ -97,6 +97,7 @@ int main() {
 	cout << endl;
 	cout << "Is the map connected (hint: yes)?" << endl;
 	cout << (myMap.isMapConnected() ? "    **you betcha!**" : "    **not a chance!**") << endl;
+	myMap.printGraph();
 	cout << endl;
 
 	//  *** *** *** country_g is disconnected from the graph (comment out to get a connected graph) *** *** ***
@@ -108,7 +109,9 @@ int main() {
 
 	cout << "Adding a country to our map that is not connected to any other country..." << endl << endl;
 	cout << "Is this new map connected (hint: no)?" << endl;
-	cout << (myMap.isMapConnected() ? "    **you betcha!**" : "    **not a chance!**") << endl << endl;
+	cout << (myMap.isMapConnected() ? "    **you betcha!**" : "    **not a chance!**") << endl;
+	myMap.printGraph();
+	cout << endl;
 
 	// Create a continent that IS CONNECTED
 	Country * country_x = new Country("country_x", 1, 1, 1);
@@ -133,8 +136,9 @@ int main() {
 	Continent * continentForTesting = new Continent(15, 5, "TestContinent", countriesForContinentTest);
 
 	cout << "Is continent connected (hint: yes)?" << endl;
-	cout << (continentForTesting->isMapConnected() ? "    **you betcha!**" : "    **not a chance!**") << endl << endl;
-
+	cout << (continentForTesting->isMapConnected() ? "    **you betcha!**" : "    **not a chance!**") << endl;
+	continentForTesting->printGraph();
+	cout << endl;
 
 	// create a continent that is NOT connected
 	Country * country_x1 = new Country("country_x1", 1, 1, 1);
@@ -156,7 +160,9 @@ int main() {
 	Continent * continentForTesting_1 = new Continent(16, 6, "TestContinent_1", countriesForContinentTest_1);
 
 	cout << "Is continent connected (hint: no)?" << endl;
-	cout << (continentForTesting_1->isMapConnected() ? "    **you betcha!**" : "    **not a chance!**") << endl << endl;
+	cout << (continentForTesting_1->isMapConnected() ? "    **you betcha!**" : "    **not a chance!**") << endl;
+	continentForTesting_1->printGraph();
+	cout << endl;
 
 	return 0;
 }

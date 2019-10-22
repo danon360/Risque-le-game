@@ -226,6 +226,26 @@ bool UndirectedGraph::areAllVisited(vector<visited*> * visitedArray) {
 	return true; // if you got through the loop then all countries must have been visited.
 }
 
+void UndirectedGraph::printGraph() {
+
+	// print countries and their connections
+	for (int i = 0; i < countries->size(); ++i) {
+
+		Country * currentCountry = countries->at(i);
+		vector<Country *> * currentCountryAdjacency = currentCountry->getAdjacencyList();
+
+		std::cout << currentCountry->getName() << ": ";
+
+		if (currentCountryAdjacency->size() == 0)
+			std::cout << "NO NEIGHBOURS" << std::endl;
+		else {
+			for (int j = 0; j < currentCountryAdjacency->size(); ++j)
+				std::cout << currentCountryAdjacency->at(j)->getName() << " ";
+			std::cout << std::endl;
+		}
+	}
+}
+
 // ------------ END OF: isMapConnected() method and helpers ---------------------------------------
 
 Country* UndirectedGraph::findCountry(int countryID){
