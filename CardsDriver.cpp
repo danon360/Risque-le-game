@@ -11,11 +11,11 @@ int main()
 	Deck* deck = new Deck();                   
 	deck->loadDeck(42);                        //creating a deck of cards 
 
-	cout << endl << "Cards in hands test" << endl << endl;
+	cout << endl << "Cards in hands:" << endl << endl;
 
 	Hand* hand = new Hand();                  // a pointer to a hand object
 
-	auto p1 = CardType::INFANTRY;              
+	auto p1 = CardType::ARTILLERY;              
 	auto *ptr1 = &p1;
 
 	auto p2 = CardType::ARTILLERY;
@@ -24,7 +24,7 @@ int main()
 	auto p3 = CardType::INFANTRY;
 	auto* ptr3 = &p3;
 
-	auto p4 = CardType::INFANTRY;
+	auto p4 = CardType::ARTILLERY;
 	auto* ptr4 = &p4;
 
 	auto p5 = CardType::CAVALRY;

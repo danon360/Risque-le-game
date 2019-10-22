@@ -130,7 +130,7 @@ void Dice::valueTracker() {
         cout << i+1;
         cout << " has been rolled ";
         cout << value[i];
-        cout << "times " << endl;
+        cout << " times " << endl;
     }
     
 }

@@ -15,18 +15,18 @@ CardType Card::getCardType() const {
 	return *cardType;
 }
 
-std::string Card::getCardTypeAsString() const {       
+/*std::string Card::getCardTypeAsString() const {       
 	if (*cardType == INFANTRY) return "infantry";
 	if (*cardType == ARTILLERY) return "artillery";
 	if (*cardType == CAVALRY) return "cavalry";
-}
+}*/
 
 void Card::setCardType(CardType cardType) {
 	this->cardType = new CardType(cardType);
 }
 int* Deck::nExchanges = new int(0);
 
-Card* Deck::draw() {
+Card* Deck::draw() { // the player has to draw 
 
 	std::srand(time(0));                         // a random generator to choose a card to draw from the deck 
 	int randIndex = std::rand() % cards->size();
@@ -79,10 +79,7 @@ void Hand::add(Card* card) {
 	cards->push_back(card);
 }
 
- /*Hand::Hand(std::vector<Card*>* cd) {
 
-	cards = new vector<Card*> * (cd);
-}*/
 Hand::Hand() {
 	cards = new vector<Card*>;
 }
@@ -92,16 +89,16 @@ Hand::Hand() {
 int Hand::exchange()
 {
 	int card_1, card_2, card_3;
-	cout << "Pick 3 cards to exchange" << endl             // ask the user to chose what cards he wants to exchange
-		<< "Card #1: ";
+	cout << "\nPick 3 cards to exchange" << endl             // ask the user to chose what cards he wants to exchange
+		<< "Card# 1: ";
 	cin >> card_1;
-	cout << "Card #2: ";
+	cout << "Card# 2: ";
 	cin >> card_2;
-	cout << "Card #3: ";
+	cout << "Card# 3: ";
 	cin >> card_3;
-	cout << "picked card # " << card_1 << endl
-		<< "picked card # " << card_2 << endl
-		<< "picked card # " << card_3 << endl;
+	cout << "\npicked card# " << card_1 << endl
+		<< "picked card# " << card_2 << endl
+		<< "picked card# " << card_3 << endl;
 
 	if
 		(
@@ -109,12 +106,14 @@ int Hand::exchange()
 			|| AreThreeDifferent(cards->at(card_1), cards->at(card_2), cards->at(card_3))
 			) {
 
+
+		cout << Hand::getArmies() << " Armies " << endl;
+		return Hand::getArmies();
+
 		Deck::incNExchanges();   // increment the number of exchanges each time a player exchanges
 
-		cout << Hand::getArmies() << " cards " << endl;
-		return Hand::getArmies();
 	}
-	else cout << "these cards cannot be exchanged "<<endl; 
+	else cout << "These cards cannot be exchanged "<<endl; 
 } 
 
 bool Hand::AreThreeSame(Card* card_1, Card* card_2, Card* card_3)   // a method to check if the 3 cards are the same

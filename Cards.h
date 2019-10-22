@@ -23,7 +23,7 @@ public:
 
 	CardType getCardType() const;
 
-	std::string getCardTypeAsString() const;
+	//std::string getCardTypeAsString() const;
 
 	void setCardType(CardType cardType);
 
@@ -81,8 +81,6 @@ private:
 public:
 
 	Hand();
-
-	//Hand(std::vector<Card*>* cards) : cards(cards) {}
 
 	std::vector<Card*>* getCards() const;
 
