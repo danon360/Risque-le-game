@@ -4,7 +4,6 @@
 #include <cstdlib>
 #include <ctime>
 using std::cin;
-
 using std::cout;
 using std::endl;
 using std::string;
@@ -15,18 +14,23 @@ CardType Card::getCardType() const {
 	return *cardType;
 }
 
-std::string Card::getCardTypeAsString() const {       
+Card::~Card() {
+	delete cardType;
+	cardType = NULL;
+}
+
+/*std::string Card::getCardTypeAsString() const {       
 	if (*cardType == INFANTRY) return "infantry";
 	if (*cardType == ARTILLERY) return "artillery";
 	if (*cardType == CAVALRY) return "cavalry";
-}
+}*/
 
 void Card::setCardType(CardType cardType) {
 	this->cardType = new CardType(cardType);
 }
 int* Deck::nExchanges = new int(0);
 
-Card* Deck::draw() {
+Card* Deck::draw() {          // here the player has to draw a card
 
 	std::srand(time(0));                         // a random generator to choose a card to draw from the deck 
 	int randIndex = std::rand() % cards->size();
@@ -39,6 +43,15 @@ Card* Deck::draw() {
 
 int Deck::nCards() const {
 	return cards->size();
+}
+
+Deck::~Deck() {
+
+	if (cards != nullptr) {
+		for (int i = 0; i < cards->size(); ++i)
+			delete cards;
+		cards = nullptr;
+	}
 }
 
 void Deck::loadDeck(int nbDeck) {                  // creating each card and add it to the deck 
@@ -75,33 +88,34 @@ std::vector<Card*>* Hand::getCards() const {
 	return cards;
 }
 
+
+
+
 void Hand::add(Card* card) {
 	cards->push_back(card);
 }
 
- /*Hand::Hand(std::vector<Card*>* cd) {
 
-	cards = new vector<Card*> * (cd);
-}*/
 Hand::Hand() {
 	cards = new vector<Card*>;
 }
  
-
-
 int Hand::exchange()
 {
 	int card_1, card_2, card_3;
-	cout << "Pick 3 cards to exchange" << endl             // ask the user to chose what cards he wants to exchange
-		<< "Card #1: ";
-	cin >> card_1;
-	cout << "Card #2: ";
-	cin >> card_2;
-	cout << "Card #3: ";
-	cin >> card_3;
-	cout << "picked card # " << card_1 << endl
-		<< "picked card # " << card_2 << endl
-		<< "picked card # " << card_3 << endl;
+
+	cout << "\nPick 3 cards to exchange" << endl             // ask the user to chose what cards he wants to exchange
+			<< "Card# 1: ";
+		cin >> card_1;
+		cout << "Card# 2: ";
+		cin >> card_2;
+		cout << "Card# 3: ";
+		cin >> card_3;
+		cout << "\npicked card # " << card_1 << endl
+			<< "picked card # " << card_2 << endl
+			<< "picked card # " << card_3 << endl << endl;
+
+
 
 	if
 		(
@@ -109,10 +123,11 @@ int Hand::exchange()
 			|| AreThreeDifferent(cards->at(card_1), cards->at(card_2), cards->at(card_3))
 			) {
 
+		cout << Hand::getArmies() << " Armies " << endl;
+		return Hand::getArmies();
+
 		Deck::incNExchanges();   // increment the number of exchanges each time a player exchanges
 
-		cout << Hand::getArmies() << " cards " << endl;
-		return Hand::getArmies();
 	}
 	else cout << "these cards cannot be exchanged "<<endl; 
 } 
@@ -122,8 +137,12 @@ bool Hand::AreThreeSame(Card* card_1, Card* card_2, Card* card_3)   // a method 
 	return
 		(
 			card_1->getCardType() == card_2->getCardType() &&
-			card_2->getCardType() == card_3->getCardType()
-			);
+			card_2->getCardType() == card_3->getCardType() &&
+			card_1 != card_2 &&
+			card_2 != card_3 &&
+			card_1 != card_3 
+			)
+    ;
 
 }
 

@@ -11,7 +11,7 @@ int main()
 	Deck* deck = new Deck();                   
 	deck->loadDeck(42);                        //creating a deck of cards 
 
-	cout << endl << "Cards in hands test" << endl << endl;
+	cout << endl << "Cards in hands:" << endl << endl;
 
 	Hand* hand = new Hand();                  // a pointer to a hand object
 
@@ -21,13 +21,13 @@ int main()
 	auto p2 = CardType::ARTILLERY;
 	auto* ptr2 = &p2;
 
-	auto p3 = CardType::INFANTRY;
+	auto p3 = CardType::CAVALRY;
 	auto* ptr3 = &p3;
 
 	auto p4 = CardType::INFANTRY;
 	auto* ptr4 = &p4;
 
-	auto p5 = CardType::CAVALRY;
+	auto p5 = CardType::INFANTRY;
 	auto* ptr5 = &p5;
 	                                             // creating cards 
 	Card* card1 = new Card(ptr1);
@@ -36,7 +36,7 @@ int main()
 	Card* card4 = new Card(ptr4);
 	Card* card5 = new Card(ptr5);
 
-	hand->add(card1);                           // add the cards created to the hand object
+	hand->add(card1);               // adding the cards created to the hand object
 	hand->add(card2);
 	hand->add(card3);
 	hand->add(card4);
@@ -47,9 +47,7 @@ int main()
 	cout << endl;
 
 	hand->exchange();
-
-	 
-	cout << "Cards Driver" << endl;
+	
 	return 0;
 
 

@@ -20,10 +20,11 @@ private:
 
 public:
 	Card(CardType* cardType) : cardType (cardType) {}
+	~Card();
 
 	CardType getCardType() const;
 
-	std::string getCardTypeAsString() const;
+	//std::string getCardTypeAsString() const;
 
 	void setCardType(CardType cardType);
 
@@ -58,6 +59,9 @@ public:
 
 	Deck(std::vector<Card*>* cards) : cards(cards) {}
 
+	~Deck();
+
+
 	Card* draw();
 
 	int nCards() const;
@@ -82,9 +86,9 @@ public:
 
 	Hand();
 
-	//Hand(std::vector<Card*>* cards) : cards(cards) {}
 
 	std::vector<Card*>* getCards() const;
+
 
 	int size() const { return cards->size(); }
 
