@@ -73,7 +73,7 @@ public:
 
 	// Country attributes of map holds all countries in this map
 	vector<Country*> * countries;
-	map<int*, Country*> *  countryDictionary; // <country ID, Country *>
+	map<int, Country*> *  countryDictionary; // <country ID, Country *>
 
 	// This struct (visited list) is used by graph methods for different traversals
 	struct visited {
@@ -88,7 +88,7 @@ public:
 	bool recuriveMapCheckConnected(Country * country, vector<visited*> * visitedArray);
 	bool setCountryAsVisited(Country * country, vector<visited*> * visitedArray);
 	UndirectedGraph();
-	UndirectedGraph(map<int*, Country*> *);
+	UndirectedGraph(map<int, Country*> *);
 	UndirectedGraph(vector<Country*> * countryList);
 	~UndirectedGraph();
 	void addCountry(Country* newCountry); // adds countries to the vector and increments the number of continents
@@ -96,7 +96,9 @@ public:
 	Country* findCountry(int countryID);
 	Country* findCountry(string name);
 	Country* findCountry(Country * countryToFind);
-
+	virtual bool subclassSpecificMapConnectionCheck(Country * aCountry); // check used by isMapConnecte() => specific to each subclass 
+	vector<Country*> * neighbourListForRecursive(Country * aCountry);
+	void printGraph();
 };
 
 /************************************************************************
@@ -105,7 +107,7 @@ public:
 
  ***********************************************************************/
 
-class Continent : UndirectedGraph {
+class Continent : public UndirectedGraph {
 
 private:
 
@@ -128,6 +130,8 @@ public:
 	void setName(string newName);
 	string getName();
 	void addCountryToContinent(Country * countryToAdd);
+	bool subclassSpecificMapConnectionCheck(Country * aCountry); // specific check for isMapConnected() ensure continent is equal
+	// vector<Country*> * neighbourListForRecursive(Country * aCountry);
 };
 
 /************************************************************************
@@ -136,7 +140,7 @@ public:
 
  ***********************************************************************/
 
-class Map : UndirectedGraph {
+class Map : public UndirectedGraph {
 
 public:
 
@@ -150,8 +154,8 @@ public:
 	};
 
 	Map();
-	Map(map<int*, Country*> *);
-	Map(map<int*, Country*> *, vector<Continent*> * continentsList);
+	Map(map<int, Country*> *);
+	Map(map<int, Country*> *, vector<Continent*> * continentsList);
 	Map(vector<Country*> * countryList);
 	~Map();
 
@@ -160,8 +164,9 @@ public:
 	Country* findCountryInContinent(Country * countryToFind);
 
 	void addContinent(Continent * newContinent); // adds a continent to the vector and increments the number of continents
-	bool countryAppearsInOnlyOneContinent(); // ensures that a country belongs to only one continent
-
+	bool countryAppearsInOneAndOnlyOneContinent(); // ensures that a country belongs to only one continent
+	bool subclassSpecificMapConnectionCheck(Country * aCountry);
+	// vector<Country*> * neighbourListForRecursive(Country * aCountry);
 };
 
 

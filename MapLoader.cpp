@@ -1,25 +1,5 @@
 #include "MapLoader.h";
-class continent {
-public:
-	int number,bonus;
-	string name;
 
-	continent() {
-		number = 0;
-		name = "";
-	}
-	continent(int numb, string str,int Bonus) {
-		number = numb;
-		name = str;
-		bonus = Bonus;
-	}
-	string toString() {
-		return this->name;
-	}
-	int getBonus() {
-		return this->bonus;
-	}
-};
 
 
 
@@ -31,28 +11,57 @@ public:
 	MapLoader::MapLoader(string location) {
 		fileLocation = new string(location);
 	}
-
-	void MapLoader::init() {
-		vector<continent>* contVec = new vector < continent>();
-		map<int, Country>* countryMap = new map<int, Country>();
+	 
+	Map* MapLoader::init() {
+		vector<Continent*>* contVec = new vector < Continent*>();
+		map<int, Country*>* countryMap = new map<int, Country*>();
 		string* strContinents = new string();
 		string* strCountries = new string();
 		string* strBorders = new string();
 
 		string* fileLocation = this->fileLocation;
+		bool* noError = new bool();
+		Map* map;
 
-		loadFileToStrings(fileLocation, strContinents, strCountries, strBorders);
+
+		*noError = loadFileToStrings(fileLocation, strContinents, strCountries, strBorders);
+
+		if (!*noError) {
+			//throw error
+		}
 
 		contVec = continentLoader(*strContinents);
 
-		countryMap = countryLoader(*strCountries);
-		addBorders(*strBorders, *countryMap);
+		countryMap = countryLoader(*strCountries,contVec);
 
+		addBorders(*strBorders, countryMap);
+
+		 map = new Map(countryMap,contVec);
+		
+
+		 return map;
+	}
+
+	bool verifier(string input) {
+		input = trim(input);
+		if (input.find("[continents]") == std::string::npos) {
+			std::cerr << "error, could not find continents list" << endl;
+			exit(1);
+		}
+		if (input.find("[countries]") == std::string::npos) {
+			std::cerr << "error, could not find countries list" << endl;
+			exit(1);
+		} 
+		if (input.find("[borders]") == std::string::npos) {
+			std::cerr << "error, could not find borders list" << endl;
+			exit(1);
+		}
+		
 	}
  
 	
 
-	void MapLoader::loadFileToStrings(string* fileLocation, string* continent, string* country, string* borders) {
+	bool MapLoader::loadFileToStrings(string* fileLocation, string* continent, string* country, string* borders) {
 		ifstream* infile;
 		string* indata;
 		stringstream* stream1;
@@ -71,11 +80,27 @@ public:
 			exit(1);
 		}
 
+
+
 		//loading file contents into stream
 		*stream1 << (*infile).rdbuf();
 
 		//assigning indata pointer to the newly created string containing the data of the .map file
 		indata = new string((*stream1).str());
+
+		//verifying that continents, countries, and borders and tags exist
+		if (indata->find("[continents]") == std::string::npos) {
+			std::cerr << "error, could not find borders list" << endl;
+			return false;
+		}
+		if (indata->find("[countries]") == std::string::npos) {
+			std::cerr << "error, could not find borders list" << endl;
+			return false;
+		}
+		if (indata->find("[borders]") == std::string::npos) {
+			std::cerr << "error, could not find borders list" << endl;
+			return false;
+		}
 
 		//findex the starting index of continents
 		indexContinents = new int((*indata).find("[continents]", 0));	//13 is to skip over the "[continents]" and start at the first continent right away
@@ -84,35 +109,37 @@ public:
 		//finding the starting index of borders
 		indexBorders = new int((*indata).find("[borders]", 0));
 
+		
+
 		//making sure the index reflects the actual starting position of the continents rather than the keyword [continents]
 		*indexContinents += 13;
 
 		//making sure the continents are listed first
 		if (*indexCountries <= *indexContinents || *indexBorders <= *indexContinents) {
 			cout << "erro : continents has to be the first section in the file" << endl;
-			exit(1);
+			return false;
 		}
 
 		//making sure the countries are listed before borders
 		if (*indexBorders <= *indexCountries) {
 			cout << "erro : countries have to be listed before the borders" << endl;
-			exit(1);
+			return false;
 		}
 
 		//generating a substring that would contain the list of continents
-		*continent = string((*indata).substr(*indexContinents, *indexCountries - *indexContinents));	//note that we're doin indexcountrie-indexcontinents because the 2nd parameter takes 
+		*continent = trim(string((*indata).substr(*indexContinents, *indexCountries - *indexContinents)));	//note that we're doin indexcountrie-indexcontinents because the 2nd parameter takes 
 
 		//making sure the index reflects the actual starting position of the countries rather than the keyword [countries]
 		*indexCountries += 11;																									//a character length (from the starting point) rather than an ending index
 
 		//generating a substring that would contain the list of countries
-		*country = string((*indata).substr(*indexCountries, *indexBorders - *indexCountries));
+		*country = trim(string((*indata).substr(*indexCountries, *indexBorders - *indexCountries)));
 
 		//making sure the index reflects the actual starting position of the borders rather than the keyword [borders]
 		*indexBorders += 9;
 
 		//generating a substring that would contain the list of borders
-		*borders = string((*indata).substr(*indexBorders));
+		*borders = trim(string((*indata).substr(*indexBorders)));
 
 		//closing the file stream
 		(*infile).close();
@@ -124,11 +151,11 @@ public:
 		delete(indexCountries);
 		delete(indexContinents);
 		delete(indexBorders);
-
+		return true;
 	}
+	
 
-
-	vector<continent>* MapLoader::continentLoader(string input) {
+	vector<Continent*>* MapLoader::continentLoader(string input) {
 
 		input = trim(input);
 		// pointer to keep track of the start of the line
@@ -144,7 +171,8 @@ public:
 		//int to hold the total number of continents
 		int* numOfContinents = new int(count(input.begin(), input.end(), '\n') + 1);
 		//vector tostore the continent objects in
-		vector<continent>* contVec = new vector<continent>();
+		vector<Continent*>* contVec = new vector<Continent*>();
+		
 
 		for (int i = 0; i < *numOfContinents - 1; i++) {		//-1 is importan. We want to deal with the last line seperately 
 
@@ -152,12 +180,20 @@ public:
 			*wordEnd = input.find(' ', *startLine);
 			*bonusEnd = input.find(' ', *wordEnd + 1);
 
+			//checking if the line is a comment
+			if (input.substr(*startLine, 1).compare(";") == 0) {
+				*startLine = input.find('\n', *startLine + 1);
+				continue;
+			}
+
 			//converting bonus from string to int and saving it into the bonus pointer
 			*bonus = stoi(trim(input.substr(*wordEnd, *bonusEnd - *wordEnd)));
 
 			*contName = trim(input.substr(*startLine, *wordEnd - *startLine));
 
-			(*contVec).push_back(continent(i, *contName, *bonus));
+			Continent a = Continent(*bonus, i, *contName);
+
+			(*contVec).push_back(new Continent(*bonus,i, *contName));
 
 			//recalculating startline and endline
 			*startLine = input.find('\n', *startLine + 1);
@@ -169,7 +205,7 @@ public:
 		*bonusEnd = input.find(' ', *wordEnd + 1);
 		//converting the bonus from string to int and saving it into the bonus pointer
 		*bonus = stoi(trim(input.substr(*wordEnd, *bonusEnd - *wordEnd)));
-		(*contVec).push_back(continent(*numOfContinents - 1, trim(input.substr(*startLine, *wordEnd - *startLine)), *bonus));
+		(*contVec).push_back(new Continent(*bonus ,*numOfContinents - 1, trim(input.substr(*startLine, *wordEnd - *startLine))));
 
 		//removing any unused allocations
 		(*contVec).shrink_to_fit();
@@ -186,7 +222,7 @@ public:
 	}
 
 
-	map<int, Country>* MapLoader::countryLoader(string input) {
+	map<int, Country*>* MapLoader::countryLoader(string input, vector<Continent*>* contVec) {
 
 		input = trim(input);
 		// pointer to keep track of the start of the line
@@ -205,7 +241,9 @@ public:
 		//int to hold the total number of continents
 		int* numOfCountries = new int(count(input.begin(), input.end(), '\n') + 1);
 		//map tostore the continent objects in
-		map<int, Country>* countryMap = new map<int, Country>();
+		map<int, Country*>* countryMap = new map<int, Country*>();
+		//country pointer that points to the country we wish to add to the map/vector
+		Country* addedCountry;
 
 		for (int i = 0; i < *numOfCountries - 1; i++) {		//-1 is importan. We want to deal with the last line seperately 
 
@@ -214,6 +252,11 @@ public:
 			*nameEnd = input.find(' ', *idEnd + 1);
 			*continentEnd = input.find(' ', *nameEnd + 1);
 
+			//checking if the line is a comment
+			if (input.substr(*startLine, 1).compare(";") == 0) {
+				*startLine = input.find('\n', *startLine + 1);
+				continue;
+			}
 			*ID = stoi(trim(input.substr(*startLine, *idEnd - *startLine)));
 
 			//converting the continent number from string to int and storing it in the continentNum pointer
@@ -221,9 +264,11 @@ public:
 
 			*countryName = trim(input.substr(*idEnd, *nameEnd - *idEnd));
 
+			//constructing the country object we wish to add to both the vector and map
+			addedCountry = new Country(*countryName, *ID, *continentNum, 0);
 			//loading the country and the key into the map
-			(*countryMap).emplace(*ID, Country(*ID, *countryName, *continentNum));
-
+			(*countryMap).emplace((* ID), addedCountry);
+			contVec->at(*continentNum - 1)->addCountry(addedCountry);
 			//recalculating startline
 			*startLine = input.find('\n', *startLine + 1);
 		}
@@ -240,8 +285,9 @@ public:
 		//loading the country name from the input string to its variable
 		*countryName = trim(input.substr(*idEnd, *nameEnd - *idEnd));
 		//loading the last country intothe map
-		(*countryMap).emplace(*ID, Country(*ID, *countryName, *continentNum));
+		(*countryMap).emplace((*ID), new Country(*countryName, *ID, *continentNum, 0));
 
+		contVec->at(*continentNum - 1)->addCountry(new Country(*countryName, *ID, *continentNum, 0));
 		//TODO:delete pointers
 		delete(startLine);
 		delete(idEnd);
@@ -255,7 +301,7 @@ public:
 		return countryMap;
 	}
 
-	bool MapLoader::addBorders(string input, map<int, Country> country) {
+	bool MapLoader::addBorders(string input, map<int, Country*>* country) {
 		input = trim(input);
 		//int pointer to keep track of how many lines we have
 		int* numOflines = new int(count(input.begin(), input.end(), '\n') + 1);
@@ -283,7 +329,15 @@ public:
 			*line = trim(input.substr(*startLine, *endLine - *startLine));
 			*borders = count((*line).begin(), (*line).end(), ' ');
 			*beforeNumber = (*line).find(' ');
+
+			//checking if the line is a comment
+			if (input.substr(*startLine, 1).compare(";") == 0) {
+				*startLine = input.find('\n', *startLine + 1);
+				continue;
+			}
+
 			*currentCountryId = stoi(trim((*line).substr(0, *beforeNumber)));
+
 			for (int j = 0; j < *borders; j++) {
 
 				*afterNumber = (*line).find(' ', *beforeNumber + 1);
@@ -291,7 +345,8 @@ public:
 				*borderID = stoi(trim((*line).substr(*beforeNumber, *afterNumber - *beforeNumber)));
 
 				//adding the border to the selected country
-				country.at(*currentCountryId).addBorder(country.at(*borderID));
+				//country->at(*currentCountryId).addCountry(country-> at(*borderID));
+				country->at(*currentCountryId)->addCountry(country->at(*borderID));
 				*beforeNumber = *afterNumber;
 			}
 			*startLine = *endLine;
@@ -304,7 +359,8 @@ public:
 		for (int j = 0; j < *borders; j++) {
 			*afterNumber = (*line).find(' ', *beforeNumber + 1);
 			*borderID = stoi(trim((*line).substr(*beforeNumber, *afterNumber - *beforeNumber)));
-			country.at(*currentCountryId - 1).addBorder(country.at(*borderID));
+			//country.at(*currentCountryId - 1).addBorder(country.at(*borderID));
+			country->at(*currentCountryId)->addCountry(country->at(*borderID));
 			*beforeNumber = *afterNumber;
 		}
 
