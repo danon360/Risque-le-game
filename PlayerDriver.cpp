@@ -11,14 +11,24 @@ int main() {
     // Creating player object
     Player p1;
     Player p2;
+    // Hello
     
     // Creating a bunch of countries
+<<<<<<< HEAD
     Country * country_a = new Country("country_a", 2,2,2);
     Country * country_b = new Country("country_b", 2,2,1);
     Country * country_c = new Country("country_c", 2,2,2);
     Country * country_d = new Country("country_d", 2,2,2);
     Country * country_e = new Country("country_e", 2,2,2);
     Country * country_f = new Country("country_f", 2,2,2);
+=======
+    Country * country_a = new Country("country_a", 1, 1, 1);
+    Country * country_b = new Country("country_b", 2, 1, 1);
+    Country * country_c = new Country("country_c", 3, 1, 1);
+    Country * country_d = new Country("country_d", 4, 1, 1);
+    Country * country_e = new Country("country_e", 5, 1, 1);
+    Country * country_f = new Country("country_f", 6, 1, 1);
+>>>>>>> 1ebe668530aafe099d249082006ce5a28b80ea49
     
     // Adding the countries to my vector
     p1.addCountries(country_a);
