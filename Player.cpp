@@ -1,4 +1,5 @@
 #include "Player.h"
+#include "Map.h"
 #include <iostream>
 using namespace std;
 using std::vector;
@@ -15,9 +16,9 @@ Player::~Player() {
     delete countriesOwned;
     countriesOwned = NULL;
     
-    /*
-    delete cardsOwned;
-    cardsOwned = NULL; */
+    
+   // delete cardsOwned;
+   // cardsOwned = NULL;
     
 }
 
@@ -52,8 +53,8 @@ void Player::collectionOfRiskCards() {
     for(int i = 0; i < cardsOwned->size(); ++i)
         cout <<  cardsOwned->at(i)->toString() << endl;
     cout << " " << endl;
-} */
-
+} 
+*/
 
 
 
