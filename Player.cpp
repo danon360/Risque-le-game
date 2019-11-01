@@ -8,6 +8,7 @@ using std::vector;
 // Default Constructor
 Player::Player() {
     countriesOwned = new vector<Country*>;
+    *name = " ";
     //cardsOwned = new vector<Card*>;
 	//    Hand* playerHand;
 
@@ -19,9 +20,9 @@ Player::~Player() {
     delete countriesOwned;
     countriesOwned = NULL;
     
-    /*
-    delete cardsOwned;
-    cardsOwned = NULL; */
+    
+   // delete cardsOwned;
+   // cardsOwned = NULL;
     
 }
 
@@ -120,6 +121,16 @@ void Player::diceObject() {
     myDice.rollDice();
 }
 
+void Player::attack() {
+    // Player Decides if it will attack or not = Boolean variable and a loop
+    // Select your own country (Must have 2 armies), Select neighbouring country to attack
+    // 
+    
+    
+    
+   
+ }
+
 // CARD METHODS
 // Method that adds cards
 
@@ -133,8 +144,8 @@ void Player::collectionOfRiskCards() {
     for(int i = 0; i < cardsOwned->size(); ++i)
         cout <<  cardsOwned->at(i)->toString() << endl;
     cout << " " << endl;
-} */
-
+} 
+*/
 
 
 

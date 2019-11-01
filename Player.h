@@ -1,4 +1,5 @@
 #pragma once
+#include <string>
 #include "Map.h"
 #include "Dice.h"
 #include "Cards.h"
@@ -19,9 +20,19 @@ public:
     void addCountries(Country * newCountry);
     void collectionOfCountries();
     
-    /* CARDS METHODS
-    void addCards(Card * newCard);
-    void collectionOfRiskCards(); */
+    // CARDS METHODS
+    //void addCards(Card * newCard);
+    //void collectionOfRiskCards();
+    
+    // name
+    string getName() {
+        return *name;
+    }
+    
+    void setName(string *newName) {
+        *name = *newName;
+        
+    }
     
     // Game methods
     void reinforce(Player* player);
@@ -45,4 +56,10 @@ private:
 
     // Hand object for each player
 	 Hand* playerHand;
+
+    
+    string* name;
+    
+    // vector<Card*> * cardsOwned;
+    
 };
