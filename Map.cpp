@@ -32,7 +32,9 @@ Country::~Country() {
 	delete ownerID;
 	if (neighbours != nullptr) {
 		for (int i = 0; i < neighbours->size(); ++i)
+			delete neighbours->at(i);
 		delete neighbours;
+		neighbours->clear();
 		neighbours = nullptr;
 	}
 }
