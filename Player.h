@@ -23,13 +23,13 @@ public:
     //void addCards(Card * newCard);
     //void collectionOfRiskCards();
     
-    // name
+    
     string getName() {
         return *name;
     }
     
     void setName(string *newName) {
-        *name = *newName;
+        name = newName;
         
     }
     

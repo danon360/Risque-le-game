@@ -41,8 +41,13 @@ int main() {
     p2.collectionOfCountries();
     p2.diceObject();
     
+    string *hh = new string("ANik");
     
+    p1.setName(hh);
+    cout <<  p1.getName() << endl;
     
+    delete hh;
+   hh = NULL;
     
     
     
