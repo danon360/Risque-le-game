@@ -12,7 +12,7 @@ int main() {
     Player p1;
     Player p2;
     
-    p1.attack();
+   // p1.attack();
     // Hello
     
     // Creating a bunch of countries
