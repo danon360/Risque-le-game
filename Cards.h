@@ -4,7 +4,7 @@
 #include <iostream>
 #include <string>
 #include <vector>
-
+#include "Cards.h"
 using std::cout;
 using std::endl;
 using std::string;

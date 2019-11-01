@@ -47,6 +47,9 @@ int main()
 	cout << endl;
 
 	hand->exchange();
+
+	hand->Display();
+
 	
 	return 0;
 

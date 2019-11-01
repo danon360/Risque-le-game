@@ -123,10 +123,19 @@ int Hand::exchange()
 			|| AreThreeDifferent(cards->at(card_1), cards->at(card_2), cards->at(card_3))
 			) {
 
+	/*	cards->erase(cards->begin() + card_1 );       // removing the card from the hand vector
+		cards->erase(cards->begin() + card_2 );
+		cards->erase(cards->begin() + card_3 );
+		*/
 		cout << Hand::getArmies() << " Armies " << endl;
 		return Hand::getArmies();
 
 		Deck::incNExchanges();   // increment the number of exchanges each time a player exchanges
+
+		
+	
+		
+		
 
 	}
 	else cout << "these cards cannot be exchanged "<<endl; 
