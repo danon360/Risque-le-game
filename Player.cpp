@@ -8,7 +8,7 @@ using std::vector;
 // Default Constructor
 Player::Player() {
     countriesOwned = new vector<Country*>;
-    //*name = " ";
+    name = new string();
     //cardsOwned = new vector<Card*>;
 	//    Hand* playerHand;
 
