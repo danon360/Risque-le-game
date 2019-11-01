@@ -1,4 +1,4 @@
-//#include "Cards.h"
+#include "Cards.h"
 #include "Player.h"
 #include "Dice.h"
 #include "Map.h"
@@ -40,11 +40,34 @@ int main() {
     // Player-2
     p2.collectionOfCountries();
     p2.diceObject();
+     p1.addCards(card5);
+     p1.addCards(card4);
+     p1.addCards(card1);
+     p1.addCards(card2);
+     p1.addCards(card3);
     
-    string *hh = new string("ANik");
+     Card * card5 = new Card(INFANTRY);
+     Card * card4 = new Card(ARTILLERY);
+     Card * card3 = new Card(ARTILLERY);
+     Card * card1 = new Card(INFANTRY);
+     Card * card2 = new Card(CAVALRY);
+    /*
     
-    p1.setName(hh);
-    cout <<  p1.getName() << endl;
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
     
     delete hh;
    hh = NULL;
@@ -57,39 +80,16 @@ int main() {
     
     
     
+    cout <<  p1.getName() << endl;
     
+    p1.setName(hh);
     
+    string *hh = new string("ANik");
     
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    /*
-     Card * card1 = new Card(INFANTRY);
-     Card * card2 = new Card(CAVALRY);
-     Card * card3 = new Card(ARTILLERY);
-     Card * card4 = new Card(ARTILLERY);
-     Card * card5 = new Card(INFANTRY);
-    
-     p1.addCards(card1);
-     p1.addCards(card2);
-     p1.addCards(card3);
-     p1.addCards(card4);
-     p1.addCards(card5);
      
-     p1.collectionOfRiskCards();
-     */
     cout << "Done" << endl;
+     */
+     p1.collectionOfRiskCards();
 }
 
 

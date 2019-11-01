@@ -1,12 +1,14 @@
 #include "MapLoader.h"
 
 int main() {
+
 	vector<string> locations = vector<string>();
 	
 	locations.push_back("C:\\Users\\Dan\\Dropbox\\Concordia\\7 - Fall 2019\\COMP 345 - Advance program design with C++\\RiskLocal\\Maps\\solar.map");
 	int display= 0;
 	int index =0;
 	int country = 0;
+
 	vector<Map*> maps = vector<Map*>(locations.size());
 	
 	for (int i = 0; i < locations.size();i++) {

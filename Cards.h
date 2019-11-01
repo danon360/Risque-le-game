@@ -24,8 +24,6 @@ public:
 
 	CardType getCardType() const;
 
-	//std::string getCardTypeAsString() const;
-
 	void setCardType(CardType cardType);
 
 	friend std::ostream& operator<<(std::ostream& os,Card* card) {    //print the type as a string 

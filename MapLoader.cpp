@@ -1,8 +1,5 @@
 #include "MapLoader.h";
 
-
-
-
 	string* fileLocation;
 
 	MapLoader::MapLoader() {
