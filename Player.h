@@ -1,7 +1,8 @@
 #pragma once
+#include <string>
 #include "Map.h"
 #include "Dice.h"
-#include "Cards.h"
+//#include "Cards.h"
 
 
 class Player {
@@ -20,7 +21,17 @@ public:
     
     // CARDS METHODS
     //void addCards(Card * newCard);
-    //void collectionOfRiskCards(); 
+    //void collectionOfRiskCards();
+    
+    // name
+    string getName() {
+        return *name;
+    }
+    
+    void setName(string *newName) {
+        *name = *newName;
+        
+    }
     
     // Game methods
     void reinforce();
@@ -33,6 +44,8 @@ private:
     
      // Dice Object
      Dice myDice;
+    
+    string* name;
     
     // vector<Card*> * cardsOwned;
     
