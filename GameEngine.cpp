@@ -1,7 +1,7 @@
 #include "GameEngine.h"
 
 
-GameEngine::GameEngine(string filePathToMapFolder = ".\\Maps")
+GameEngine::GameEngine(string filePathToMapFolder)
 {
 	intitializeGame(filePathToMapFolder);
 }

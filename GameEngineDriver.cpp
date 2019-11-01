@@ -11,7 +11,7 @@
 
 int main() {
 
-	
+	GameEngine game;
 
 	return 0;
 } // END OF MAIN()
