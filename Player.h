@@ -39,7 +39,6 @@ public:
     void attack(Player* player);
     void fortify();
 
-
 	vector<Country*>* getCountriesOwned();
 
 	Country selectCountry(std::vector<Country> countries);

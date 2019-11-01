@@ -71,35 +71,35 @@ int Player::selectArmiesToReinforce( Country& source, int remainingArmies) {
 
 void Player::reinforce(Player* player) {
 
-	Player player = *player;
+	//Player player = *player;
 
-	int armiesFromExchange = playerHand->exchange();
+	//int armiesFromExchange = playerHand->exchange();
 
-	int armiesFromCountry = std::max((int)countriesOwned->size() / 3, 3);
+	//int armiesFromCountry = std::max((int)countriesOwned->size() / 3, 3);
 
-	int armiesFromContinent;
+	//int armiesFromContinent;
 
-	int totalArmies = armiesFromCountry + armiesFromExchange + armiesFromContinent;
+	//int totalArmies = armiesFromCountry + armiesFromExchange + armiesFromContinent;
 
-	while (totalArmies > 0) {
+	//while (totalArmies > 0) {
 
-		// Select country to reinforce
-		std::cout << "\nYou have " << totalArmies << " remaining soldiers to add. ";
-		std::cout << "Please select the country you would like to add soldiers to.\n";
+	//	// Select country to reinforce
+	//	std::cout << "\nYou have " << totalArmies << " remaining soldiers to add. ";
+	//	std::cout << "Please select the country you would like to add soldiers to.\n";
 
-		Country country = selectCountry(&player->getCountriesOwned);
+	//	Country country = selectCountry(&player->getCountriesOwned);
 
-		// Select number of armies to reinforce for the selected country
-		int armies = selectArmiesToReinforce(country, totalArmies);
+	//	// Select number of armies to reinforce for the selected country
+	//	int armies = selectArmiesToReinforce(country, totalArmies);
 
-		for (auto& c : player->getCountriesOwned) {
-			if (c.getName() == country.getName()) {
-				c.increaseArmiesBy(armies);
-				std::cout << c.getName() << " now has " << c.getArmies() << " armies after reinforcing. " << std::endl;
-			}
-		}
-		totalArmies -= armies;
-	}
+	//	for (auto& c : player->getCountriesOwned) {
+	//		if (c.getName() == country.getName()) {
+	//			c.increaseArmiesBy(armies);
+	//			std::cout << c.getName() << " now has " << c.getArmies() << " armies after reinforcing. " << std::endl;
+	//		}
+	//	}
+	//	totalArmies -= armies;
+	//}
 
   }
 
@@ -121,7 +121,7 @@ void Player::diceObject() {
     myDice.rollDice();
 }
 
-void Player::attack() {
+void Player::attack(Player* player) {
     // Player Decides if it will attack or not = Boolean variable and a loop
     // Select your own country (Must have 2 armies), Select neighbouring country to attack
     // 
