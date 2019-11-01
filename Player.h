@@ -2,10 +2,11 @@
 #include <string>
 #include "Map.h"
 #include "Dice.h"
+#include "Cards.h"
 //#include "Cards.h"
 
 
-class Player {
+class Player  {
     
 public:
     // Player Constructor and Destructor
@@ -34,16 +35,28 @@ public:
     }
     
     // Game methods
-    void reinforce();
-    void attack();
+    void reinforce(Player* player);
+    void attack(Player* player);
     void fortify();
-    
+
+
+	vector<Country*>* getCountriesOwned();
+
+	Country selectCountry(std::vector<Country> countries);
+
+    int selectArmiesToReinforce( Country& country, int armiesRemaining);
+
+
 private:
      // Vector that has countriesOwned
      vector<Country*> * countriesOwned;
     
      // Dice Object
      Dice myDice;
+
+    // Hand object for each player
+	 Hand* playerHand;
+
     
     string* name;
     
