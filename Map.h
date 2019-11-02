@@ -36,6 +36,7 @@ public:
 	// Constructor / Destructor
 	Country(string nm, int id, int continentNum, int ownerPlayer);
 	Country(string nm, int id, int continentNum, int ownerPlayer, vector<Country*> * adjacentCountries);  // with a prefilled vector
+	Country();
 	~Country();
 	
 	// General utilities
@@ -55,6 +56,8 @@ public:
 	void addAdjacencyList(vector<Country* > * adjacentCountriesList);
 	vector<Country*> * getAdjacencyList(); // returns the list of neighbours
 	void addCountry(Country * toAdd); // adds a country to the list of neighbours
+	int getOwnerID();
+	void setOwnerID(int id);
 
 	// Utility functions
 	bool isCountryAdjacentToMe(Country * otherCountry); // 'true' if otherCountry is in this->neighbours

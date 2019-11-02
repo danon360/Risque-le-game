@@ -23,10 +23,11 @@ class GameEngine
 
 private:
 	
+	//int * currentPlayer; // index of the current player
 	int * playerCount;
 	std::vector<Player *> * gamePlayers;
 	Map * gameMap;
-	Deck * deck;
+	Deck * gameDeck;
 
 	void intitializeGame(string filePathToMapFolder);
 
@@ -37,10 +38,22 @@ private:
 	void read_directory(const std::string& name, stringvec& v);
 	string getSelectedMapPath();
 	void selectNumberOfPlayers();
-	
+	void cleanDirectoryVector(stringvec* v);
+
 public:
 
+	// constructors:
 	GameEngine(string filePathToMapFolder = ".\\Maps");
 	~GameEngine();
+
+	// getters and setters:
+	Map * getMap();
+	std::vector<Player *> * getPlayers();
+	Player * getPlayerAt(int index);
+	Deck * getDeck();
+
+	// game methods:
+	//Player * nextPlayer(); // just call this to move to the next player
+
 };
 

@@ -1,20 +1,51 @@
+
+/*
+	THIS IS GARBAGE CLASS, DO NOT MERGE! USE THE VERSION ON THE REPO!!!!
+*/
+
 #pragma once
 #include <string>
 #include "Map.h"
 #include "Dice.h"
 #include "Cards.h"
-//#include "Cards.h"
+//#include "GameEngine.h"
 
 
 class Player  {
     
+private:
+	// Vector that has countriesOwned
+	vector<Country*>* countriesOwned;
+
+	// Dice Object
+	Dice* myDice;
+
+	// Hand object for each player
+	Hand* playerHand;
+	string* name;
+	int* ID;
+
+	//GameEngine* mapGame;
+
+
 public:
     // Player Constructor and Destructor
-    Player();
+	Player();
+	Player(string * _name, int id);
+	Player(vector<Country*>* playerCountries, Dice* playerDice, Hand* hand, string* playerName);
+
     ~Player();
     
     // DICE METHODS
     void diceObject();
+
+	void setID(int* id) {
+		ID = id;
+	}
+	int* getID() {
+		return ID;
+	}
+
     
     // COUNTRY METHODS
     void addCountries(Country * newCountry);
@@ -30,36 +61,27 @@ public:
     }
     
     void setName(string *newName) {
-        name = newName;
+        *name = *newName;
         
     }
+
+	Hand* getHand();
     
     // Game methods
     void reinforce(Player* player);
     void attack(Player* player);
-    void fortify();
+    void fortify(Player* player);
 
 
 	vector<Country*>* getCountriesOwned();
 
-	Country selectCountry(std::vector<Country> countries);
+	Country* selectCountry(std::vector<Country*>* countries);
 
     int selectArmiesToReinforce( Country& country, int armiesRemaining);
 
+	int continentBonus();
 
-private:
-     // Vector that has countriesOwned
-     vector<Country*> * countriesOwned;
-    
-     // Dice Object
-     Dice myDice;
 
-    // Hand object for each player
-	 Hand* playerHand;
 
-    
-    string* name;
-    
-    // vector<Card*> * cardsOwned;
     
 };

@@ -24,6 +24,16 @@ Country::Country(string nm, int id, int continentNum, int ownerPlayer, vector<Co
 	neighbours = adjacentCountries;
 }
 
+// constructor for testing purposes
+Country::Country() {
+	name = new string("blank");
+	continentNumber = new int(0);
+	ID = new int(0);
+	troopCount = new int(0);
+	ownerID = new int(0);
+	neighbours = new vector<Country*>;
+}
+
 Country::~Country() {
 	delete name;
 	delete ID;
@@ -38,6 +48,7 @@ Country::~Country() {
 		neighbours = nullptr;
 	}
 }
+
 
 string Country::toString() {
 	string str = "Name: " + *name + ", ID: " + std::to_string(*ID) + ", Troops: " + std::to_string(*troopCount);
@@ -77,6 +88,14 @@ int Country::getTroopCount() {
 
 void Country::addAdjacencyList(vector<Country* > * adjacentCountriesList) {
 	neighbours = adjacentCountriesList;
+}
+
+int Country::getOwnerID() {
+	return *ownerID;
+}
+
+void Country::setOwnerID(int id) {
+	ownerID = new int(id);
 }
 
 vector<Country*> * Country::getAdjacencyList() {

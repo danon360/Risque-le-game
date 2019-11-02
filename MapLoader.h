@@ -3,6 +3,7 @@
 #include <map>;
 #include <regex>
 
+using std::exception;
 using std::map;
 using std::stringstream;
 using std::ifstream;
@@ -30,4 +31,13 @@ public:
 
 //trims any whitespace from both sides of the string 
 static inline string trim(string input);
+
+
+class MapLoaderException : public exception
+{
+	virtual const char* what() const throw()
+	{
+		return "Error reading .map file";
+	}
+};
 
