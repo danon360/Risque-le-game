@@ -9,6 +9,8 @@ using namespace std;
 Dice::Dice() {
     
     // Initializes totalRolls
+    maxRoll = new int();
+    container = new int[0];
     totalRolls = new int;
     *totalRolls = 0;
     
@@ -24,11 +26,15 @@ Dice::Dice() {
 Dice::~Dice() {
     
     // Delete pointers
+    delete maxRoll;
+    delete container;
     delete totalRolls;
     delete []value;
     delete []valuePercentage;
     
     // setting pointers to NULL
+    maxRoll = NULL;
+    container = NULL;
     totalRolls = NULL;
     value = NULL;
     valuePercentage = NULL;
@@ -36,7 +42,7 @@ Dice::~Dice() {
 
 
 // Implementing all the methods
-void Dice::rollDice() {
+void Dice::rollDice(int* maxRoll) {
     
     // Int variable to initialize numOfRolls
     int temp;
@@ -45,7 +51,7 @@ void Dice::rollDice() {
     cout << "How many dices do you want to roll? ";
     cin >> temp;
     
-    while (temp < 1 || temp > 3) {
+    while (temp > *maxRoll) {
         cout << "Please roll a dice from 1 to 3" << endl;
         cin >> temp;
     }
@@ -70,10 +76,6 @@ void Dice::rollDice() {
     showPercentages();
  
     cout << " " << endl;
-    
-    // Deleting the pointer container
-    delete[] container;
-    container = NULL;
     
 }
 
@@ -159,6 +161,15 @@ void Dice::showValues() {
     for(int i = 0; i < *numOfRolls; i++) {
         cout << "The value are : ";
         cout << container[i] << endl;
+    }
+}
+
+void Dice::compareDiceRolls(Dice* newDice) {
+    if(this->container[0] <= newDice->container[0]) {
+        cout << "Attacking country has lost" << endl;
+    }
+    else {
+        cout << "Defending country has lost" << endl;
     }
 }
 
