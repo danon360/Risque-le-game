@@ -11,8 +11,16 @@ Player::Player() {
     countriesOwned = new vector<Country*>;
     name = new string();
 	playerHand = new Hand; 
-	name = new string("player");
 	Dice myDice; 
+
+}
+
+Player::Player(string* _name) {
+
+	countriesOwned = new vector<Country*>;
+	name = _name;
+	playerHand = new Hand;
+	Dice myDice;
 
 }
 
@@ -114,9 +122,9 @@ void Player::reinforce(Player* player) {
 
 	int totalArmies = armiesFromCountry + armiesFromExchange + armiesFromContinent;
 
-	while (totalArmies > 0) {
+	do {
 
-	//	// Select country to reinforce
+		// Select country to reinforce
 		std::cout << "\nYou have " << totalArmies << " remaining soldiers to add. ";
 		std::cout << "Please select the country you would like to add soldiers to.\n";
 
@@ -137,7 +145,7 @@ void Player::reinforce(Player* player) {
 		totalArmies -= armies;
 
 		
-	}
+	} while (totalArmies > 0);
 
   }
   
@@ -173,20 +181,7 @@ void Player::attack(Player* player) {
  }
 
 
-// CARD METHODS
-// Method that adds cards
 
-/*
-void Player::addCards(Card *newCard) {
-    cardsOwned->push.back(*newCard);
-}
-
-// Displayed the cards that is aquired by this player
-void Player::collectionOfRiskCards() {
-    for(int i = 0; i < cardsOwned->size(); ++i)
-        cout <<  cardsOwned->at(i)->toString() << endl;
-    cout << " " << endl;
-} */
 
 
 

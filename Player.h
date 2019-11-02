@@ -3,7 +3,7 @@
 #include "Map.h"
 #include "Dice.h"
 #include "Cards.h"
-//#include "Cards.h"
+//#include "GameEngine.h"
 
 
 class Player  {
@@ -17,23 +17,27 @@ private:
 
 	// Hand object for each player
 	Hand* playerHand;
-
-
 	string* name;
+	int* ID;
+	//GameEngine* mapGame;
 
-	// vector<Card*> * cardsOwned;
 
 
 public:
     // Player Constructor and Destructor
     Player();
-
+	Player(string* _name);
 	Player(vector<Country*>* playerCountries, Dice* playerDice, Hand* hand, string* playerName);
 
     ~Player();
     
     // DICE METHODS
     void diceObject();
+
+	void setID(int* id) {
+		ID = id;
+	}
+
     
     // COUNTRY METHODS
     void addCountries(Country * newCountry);
@@ -43,13 +47,13 @@ public:
     //void addCards(Card * newCard);
     //void collectionOfRiskCards();
     
-    
+    // name
     string getName() {
         return *name;
     }
     
     void setName(string *newName) {
-        name = newName;
+        *name = *newName;
         
     }
 
@@ -58,13 +62,16 @@ public:
     // Game methods
     void reinforce(Player* player);
     void attack(Player* player);
-    void fortify();
+    void fortify(Player* player);
+
 
 	vector<Country*>* getCountriesOwned();
 
 	Country* selectCountry(std::vector<Country*>* countries);
 
     int selectArmiesToReinforce( Country& country, int armiesRemaining);
+
+	int continentBonus();
 
 
 
