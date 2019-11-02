@@ -36,6 +36,7 @@ public:
 	// Constructor / Destructor
 	Country(string nm, int id, int continentNum, int ownerPlayer);
 	Country(string nm, int id, int continentNum, int ownerPlayer, vector<Country*> * adjacentCountries);  // with a prefilled vector
+	Country();
 	~Country();
 	
 	// General utilities
