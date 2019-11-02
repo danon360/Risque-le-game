@@ -1,8 +1,5 @@
 #include "MapLoader.h";
 
-
-
-
 	string* fileLocation;
 
 	MapLoader::MapLoader() {
@@ -46,15 +43,21 @@
 		input = trim(input);
 		if (input.find("[continents]") == std::string::npos) {
 			std::cerr << "error, could not find continents list" << endl;
-			exit(1);
+			MapLoaderException ex;
+			throw ex;
+			// exit(1);
 		}
 		if (input.find("[countries]") == std::string::npos) {
 			std::cerr << "error, could not find countries list" << endl;
-			exit(1);
+			MapLoaderException ex;
+			throw ex;
+			// exit(1);
 		} 
 		if (input.find("[borders]") == std::string::npos) {
 			std::cerr << "error, could not find borders list" << endl;
-			exit(1);
+			MapLoaderException ex;
+			throw ex;
+			//exit(1);
 		}
 		
 	}
@@ -77,7 +80,9 @@
 		//making sure that the file is actually open
 		if (!(*infile).is_open()) {
 			cout << "problem with openning the map file.\nThe program will now terminate.";
-			exit(1);
+			MapLoaderException ex;
+			throw ex;
+			//exit(1);
 		}
 
 

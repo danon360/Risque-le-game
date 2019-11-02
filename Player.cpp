@@ -9,7 +9,7 @@ using std::vector;
 Player::Player() {
 
     countriesOwned = new vector<Country*>;
-    //cardsOwned = new vector<Card*>;
+    name = new string();
 	playerHand = new Hand; 
 	name = new string("player");
 	Dice myDice; 
@@ -30,11 +30,7 @@ Player::~Player() {
     
     delete countriesOwned;
     countriesOwned = NULL;
-    
-    /*
-    delete cardsOwned;
-    cardsOwned = NULL; */
-    
+   
 }
 
 Hand* Player::getHand() {
@@ -110,15 +106,17 @@ void Player::reinforce(Player* player) {
 		} while (user != 0 && user != 1); 
 	}
 
+
 	int armiesFromCountry = std::max((int)countriesOwned->size() / 3, 3);
 
 	int armiesFromContinent=0;
+
 
 	int totalArmies = armiesFromCountry + armiesFromExchange + armiesFromContinent;
 
 	while (totalArmies > 0) {
 
-		// Select country to reinforce
+	//	// Select country to reinforce
 		std::cout << "\nYou have " << totalArmies << " remaining soldiers to add. ";
 		std::cout << "Please select the country you would like to add soldiers to.\n";
 
@@ -138,17 +136,12 @@ void Player::reinforce(Player* player) {
 		}
 		totalArmies -= armies;
 
-		/*for (int i = 0; i= cntry[i]; i++) {
-			if (getName() == country->getName()) {
-				c.addToTroopCount(armies);
-				std::cout << c.getName() << " now has " << c.getArmies() << " armies after reinforcing. " << std::endl;
-			}
-		}
-		*/
+		
 	}
 
   }
   
+
 
 // COUNTRY METHODS
 // Method that adds countries
@@ -167,6 +160,18 @@ void Player::collectionOfCountries() {
 void Player::diceObject() {
     myDice->rollDice();
 }
+
+
+void Player::attack(Player* player) {
+    // Player Decides if it will attack or not = Boolean variable and a loop
+    // Select your own country (Must have 2 armies), Select neighbouring country to attack
+    // 
+    
+    
+    
+   
+ }
+
 
 // CARD METHODS
 // Method that adds cards

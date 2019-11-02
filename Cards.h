@@ -24,8 +24,6 @@ public:
 
 	CardType getCardType() const;
 
-	//std::string getCardTypeAsString() const;
-
 	void setCardType(CardType cardType);
 
 	friend std::ostream& operator<<(std::ostream& os,Card* card) {    //print the type as a string 
@@ -50,12 +48,12 @@ public:
 class Deck {
 private:
 
-	std::vector<Card*>* cards = new std::vector<Card*> ();  // deck is made of vector of cards 
+	std::vector<Card*>* cards;  // deck is made of vector of cards 
 
 	static int* nExchanges;
 
 public:
-	Deck() = default;
+	Deck() { cards = new std::vector<Card*>(); }
 
 	Deck(std::vector<Card*>* cards) : cards(cards) {}
 

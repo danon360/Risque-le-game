@@ -15,15 +15,14 @@ using std::vector;
 int main() {
 
 	
-	/*  b------c
+	/*  
+	   This is the graph that is being created in the driver and then tested.
+	    b------c
 	   / \      \
 	  a   \______d----f
 	   \        /
         \___e__/
 	*/
-
-
-
 
 	// Create a few Countries
 	Country * country_a = new Country("country_a", 1, 1, 1);
@@ -101,6 +100,15 @@ int main() {
 	cout << endl;
 
 	//  *** *** *** country_g is disconnected from the graph (comment out to get a connected graph) *** *** ***
+	/*
+	   This is the new unconnected graph (g is not connected to any other node)
+		b------c
+	   / \      \
+	  a   \______d----f
+	   \        /
+		\___e__/     g
+	*/
+	
 	Country * country_g = new Country("country_g", 7, 1, 0);
 	vector<Country * > * adjacency_country_g = new vector<Country *>; // no neighbours
 	country_g->addAdjacencyList(adjacency_country_g); // ad the empty adjacency list
