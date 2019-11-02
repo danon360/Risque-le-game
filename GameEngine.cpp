@@ -98,8 +98,7 @@ void GameEngine::makePlayers() {
 		std::cout << "Please enter player " << i+1 << "name: ";
 		string* name = new string();
 		std::cin >> *name;
-		gamePlayers->push_back(new Player(name)); // set name
-		gamePlayers->at(i)->setID(new int(i+1)); // set unique ID to each player
+		gamePlayers->push_back(new Player(name, i+1)); // set name and unique ID
 	}
 
 }

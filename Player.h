@@ -24,15 +24,14 @@ private:
 	Hand* playerHand;
 	string* name;
 	int* ID;
+
 	//GameEngine* mapGame;
 
-
-	int * ID;
 
 public:
     // Player Constructor and Destructor
 	Player();
-	Player(string * _name);
+	Player(string * _name, int id);
 	Player(vector<Country*>* playerCountries, Dice* playerDice, Hand* hand, string* playerName);
 
     ~Player();

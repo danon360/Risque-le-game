@@ -13,20 +13,12 @@ Player::Player() {
 	Dice myDice;
 }
 
-Player::Player(string * _name) {
+Player::Player(string * _name, int id) {
     countriesOwned = new vector<Country*>;
 	playerHand = new Hand; 
 	name = _name;
-	Dice myDice; 
-}
-
-Player::Player(string* _name) {
-
-	countriesOwned = new vector<Country*>;
-	name = _name;
-	playerHand = new Hand;
 	Dice myDice;
-
+	ID = new int(id);
 }
 
 Player::Player(vector<Country*>* playerCountries, Dice* playerDice, Hand* hand, string* playerName) {
