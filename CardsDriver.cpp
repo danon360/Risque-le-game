@@ -10,7 +10,7 @@ int main()
 
 	Deck* deck = new Deck();                   
 	deck->loadDeck(42);                        //creating a deck of cards 
-
+	
 	cout << endl << "Cards in hands:" << endl << endl;
 
 	Hand* hand = new Hand();                  // a pointer to a hand object

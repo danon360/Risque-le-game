@@ -8,9 +8,28 @@
 
 class Player  {
     
+private:
+	// Vector that has countriesOwned
+	vector<Country*>* countriesOwned;
+
+	// Dice Object
+	Dice* myDice;
+
+	// Hand object for each player
+	Hand* playerHand;
+
+
+	string* name;
+
+	// vector<Card*> * cardsOwned;
+
+
 public:
     // Player Constructor and Destructor
     Player();
+
+	Player(vector<Country*>* playerCountries, Dice* playerDice, Hand* hand, string* playerName);
+
     ~Player();
     
     // DICE METHODS
@@ -33,6 +52,8 @@ public:
         name = newName;
         
     }
+
+	Hand* getHand();
     
     // Game methods
     void reinforce(Player* player);
@@ -41,24 +62,11 @@ public:
 
 	vector<Country*>* getCountriesOwned();
 
-	Country selectCountry(std::vector<Country> countries);
+	Country* selectCountry(std::vector<Country*>* countries);
 
     int selectArmiesToReinforce( Country& country, int armiesRemaining);
 
 
-private:
-     // Vector that has countriesOwned
-     vector<Country*> * countriesOwned;
-    
-     // Dice Object
-     Dice myDice;
 
-    // Hand object for each player
-	 Hand* playerHand;
-
-    
-    string* name;
-    
-    // vector<Card*> * cardsOwned;
     
 };
