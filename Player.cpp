@@ -121,7 +121,7 @@ void Player::diceObject() {
     myDice.rollDice();
 }
 
-void Player::attack() {
+void Player::attack(Player* player) {
     // Player Decides if it will attack or not = Boolean variable and a loop
     // Select your own country (Must have 2 armies), Select neighbouring country to attack
     // 

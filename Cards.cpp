@@ -71,7 +71,6 @@ void Deck::incNExchanges() {
 }
 
 
-
 int Hand::getArmies() {   // calculating the armies the player gets when he exchanges 
 
 	static int* armies = new int(4);

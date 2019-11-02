@@ -38,7 +38,7 @@ private:
 	void read_directory(const std::string& name, stringvec& v);
 	string getSelectedMapPath();
 	void selectNumberOfPlayers();
-	void cleanDirectoryVector(stringvec vec);
+	void cleanDirectoryVector(stringvec* v);
 
 public:
 

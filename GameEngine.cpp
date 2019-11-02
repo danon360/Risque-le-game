@@ -47,17 +47,20 @@ void GameEngine::makeMap(string filePathToMap) {
 
 	do {
 		// create map
-		MapLoader ml(filePathToMap);
-		GameEngine::gameMap = ml.init();
+		try {
+			MapLoader ml(filePathToMap);
+			GameEngine::gameMap = ml.init();
 
-		// check if map is valid
-		isValid = GameEngine::gameMap->isMapConnected();
-		if (!isValid) {
-			std::cout << "Error: Map at " << filePathToMap << " is not connected. Please fix map file or try another map file." << std::endl;
-			delete GameEngine::gameMap;
+			// check if map is valid
+			isValid = GameEngine::gameMap->isMapConnected();
+			if (!isValid) {
+				std::cout << "Error: Map at " << filePathToMap << " is not connected. Please fix map file or try another map file." << std::endl;
+				delete GameEngine::gameMap;
+			}
 		}
-
-		// TODO check with Danny to validate map through the maploader and how to test that (ie. returns NULL???)
+		catch (exception& e) {
+			std::cout << "Problem reading map file, please fix file of try another one." << std::endl;
+		}
 
 	} while (!isValid);
 
@@ -74,6 +77,13 @@ void GameEngine::selectNumberOfPlayers() {
 	std::cout << "How many players today?" << std::endl;
 	do {
 		std::cin >> *GameEngine::playerCount;
+		while (std::cin.fail())
+		{
+			std::cout << "Invalid Entry\nEnter a number between 2 and 6" << std::endl;
+			std::cin.clear();
+			std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+			std::cin >> *GameEngine::playerCount;
+		}
 
 	} while (*GameEngine::playerCount < minPlayers || *GameEngine::playerCount > maxPlayers);
 }
@@ -110,7 +120,7 @@ string GameEngine::getSelectedMapPath() {
 	stringvec v;
 	read_directory(".\\Maps", v);
 
-	// TODO: clean vector of 'dirs' and all files not ending in '.map'
+	cleanDirectoryVector(&v);
 
 	if (v.empty()) {
 		std::cerr << "Error: no map included in specified directory" << std::endl;
@@ -125,15 +135,23 @@ string GameEngine::getSelectedMapPath() {
 		for (int i = 0; i < v.size(); ++i) {
 			std::cout << i + 1 << ": " << v.at(i) << std::endl;
 		}
-		std::cin >> userMapSelection; // TODO: validate input
 
-		if (userMapSelection < 0 || userMapSelection >= v.size()) {
+		std::cin >> userMapSelection;
+		while (std::cin.fail())
+		{
+			std::cout << "Invalid Entry\nEnter a numberic in range show above" << std::endl;
+			std::cin.clear();
+			std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+			std::cin >> userMapSelection;
+		}
+
+		if (userMapSelection < 1 || userMapSelection > v.size()) {
 			std::cout << "**Please ensure your number is between 1 and " << v.size() << " -> ";
 		}
 
-	} while (userMapSelection < 0 || userMapSelection >= v.size());
+	} while (userMapSelection < 1 || userMapSelection > v.size());
 
-	return v.at(userMapSelection);
+	return v.at(userMapSelection - 1);
 }
 
 void GameEngine::read_directory(const std::string& name, stringvec& v)
@@ -142,12 +160,17 @@ void GameEngine::read_directory(const std::string& name, stringvec& v)
 	std::filesystem::directory_iterator start(p);
 	std::filesystem::directory_iterator end;
 	std::transform(start, end, std::back_inserter(v), path_leaf_string());
-
-	// TODO: make sure that only files (not dir) are read and only vector thos that end in ".map"
 }
 
-void GameEngine::cleanDirectoryVector(stringvec) {
+// removes all entries that do not end in ".maps"
+void GameEngine::cleanDirectoryVector(stringvec* v) {
 
+	v->erase(std::remove_if(v->begin(), v->end(), [](string str) {
+				const string mapSuffix = ".map";
+				return !(str.substr(str.size() - 4, str.size()).compare(mapSuffix) == 0);
+			}), 
+			v->end()
+			);
 }
 
 Map * GameEngine::getMap() { return GameEngine::gameMap; }

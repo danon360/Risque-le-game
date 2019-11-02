@@ -24,6 +24,16 @@ Country::Country(string nm, int id, int continentNum, int ownerPlayer, vector<Co
 	neighbours = adjacentCountries;
 }
 
+// constructor for testing purposes
+Country::Country() {
+	name = new string("blank");
+	continentNumber = new int(0);
+	ID = new int(0);
+	troopCount = new int(0);
+	ownerID = new int(0);
+	neighbours = new vector<Country*>;
+}
+
 Country::~Country() {
 	delete name;
 	delete ID;
