@@ -7,12 +7,17 @@ using std::vector;
 
 // Default Constructor
 Player::Player() {
+	countriesOwned = new vector<Country*>;
+	playerHand = new Hand;
+	name = new string();
+	Dice myDice;
+}
 
+Player::Player(string * _name) {
     countriesOwned = new vector<Country*>;
-    name = new string();
 	playerHand = new Hand; 
+	name = _name;
 	Dice myDice; 
-
 }
 
 Player::Player(string* _name) {

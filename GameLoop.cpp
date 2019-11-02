@@ -10,7 +10,8 @@ int main() {
 
 
 Driver::Driver() {
-	
+
+	GameEngine ge;
 }
 
 Driver::~Driver() {

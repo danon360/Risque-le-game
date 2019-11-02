@@ -94,7 +94,12 @@ void GameEngine::makePlayers() {
 
 	// Create new players and put in vector
 	for (int i = 0; i < *GameEngine::playerCount; ++i) {
-		GameEngine::gamePlayers->push_back(new Player());
+
+		std::cout << "Please enter player " << i+1 << "name: ";
+		string* name = new string();
+		std::cin >> *name;
+		gamePlayers->push_back(new Player(name)); // set name
+		gamePlayers->at(i)->setID(new int(i+1)); // set unique ID to each player
 	}
 
 }

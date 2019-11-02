@@ -1,3 +1,8 @@
+
+/*
+	THIS IS GARBAGE CLASS, DO NOT MERGE! USE THE VERSION ON THE REPO!!!!
+*/
+
 #pragma once
 #include <string>
 #include "Map.h"
@@ -22,11 +27,12 @@ private:
 	//GameEngine* mapGame;
 
 
+	int * ID;
 
 public:
     // Player Constructor and Destructor
-    Player();
-	Player(string* _name);
+	Player();
+	Player(string * _name);
 	Player(vector<Country*>* playerCountries, Dice* playerDice, Hand* hand, string* playerName);
 
     ~Player();
@@ -47,7 +53,7 @@ public:
     //void addCards(Card * newCard);
     //void collectionOfRiskCards();
     
-    // name
+    
     string getName() {
         return *name;
     }

@@ -1,13 +1,9 @@
-#include "Player.h"
-#include "Map.h"
-#include "MapLoader.h"
-#include "Cards.h"
-#include "Dice.h"
+#include "GameEngine.h"
 
 class Driver {
 
 private:
-
+	GameEngine* game;
 
 public:
 	Driver();
