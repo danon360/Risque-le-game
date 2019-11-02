@@ -56,6 +56,8 @@ public:
 	void addAdjacencyList(vector<Country* > * adjacentCountriesList);
 	vector<Country*> * getAdjacencyList(); // returns the list of neighbours
 	void addCountry(Country * toAdd); // adds a country to the list of neighbours
+	int getOwnerID();
+	void setOwnerID(int id);
 
 	// Utility functions
 	bool isCountryAdjacentToMe(Country * otherCountry); // 'true' if otherCountry is in this->neighbours

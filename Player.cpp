@@ -86,6 +86,8 @@ int Player::continentBonus() {
 
 	vector<int> continentCntr();
 
+	return 0; // DELETE THIS LINE - ADDED SO THAT PROGRAM COMPILES
+
 }
 
 void Player::reinforce(Player* player) {

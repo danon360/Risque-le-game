@@ -49,6 +49,7 @@ Country::~Country() {
 	}
 }
 
+
 string Country::toString() {
 	string str = "Name: " + *name + ", ID: " + std::to_string(*ID) + ", Troops: " + std::to_string(*troopCount);
 	return str;
@@ -87,6 +88,14 @@ int Country::getTroopCount() {
 
 void Country::addAdjacencyList(vector<Country* > * adjacentCountriesList) {
 	neighbours = adjacentCountriesList;
+}
+
+int Country::getOwnerID() {
+	return *ownerID;
+}
+
+void Country::setOwnerID(int id) {
+	ownerID = new int(id);
 }
 
 vector<Country*> * Country::getAdjacencyList() {
