@@ -121,7 +121,6 @@ int Player::continentBonus() {
 	return bonusTally;
 }
 
-
 void Player::reinforce() {
 
 	int armiesFromExchange = 0;

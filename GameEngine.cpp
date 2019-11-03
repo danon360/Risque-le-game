@@ -1,4 +1,4 @@
-#include "Game.h"
+#include "GameEngine.h"
 
 GameEngine::GameEngine(string filePathToMapFolder)
 	{
@@ -31,19 +31,25 @@ GameEngine::~GameEngine()
 
 void GameEngine::intitializeGame(string filePathToMapFolder) {
 
-	// 1) get info from user (must be done before creating as per assignment)
-	string selectedMapPath = getSelectedMapPath();
-	selectNumberOfPlayers();
+	string selectedMapPath;
+	bool isValidMap = false;
 
-	// 2) create and populate game objects (done after as per assignment)
-	// there is an order to these methods (makeMap before makeDeck -> need map size in makeDeck)
-	makeMap(selectedMapPath);
+	do {
+
+		selectedMapPath = getSelectedMapPath();
+		isValidMap = makeMap(selectedMapPath);
+
+	} while (!isValidMap);
+
+	selectNumberOfPlayers();
 	makePlayers();
+	
+	
 	makeDeck();
 }
 
 
-void GameEngine::makeMap(string filePathToMap) {
+bool GameEngine::makeMap(string filePathToMap) {
 
 	bool isValid = false;
 
@@ -58,15 +64,17 @@ void GameEngine::makeMap(string filePathToMap) {
 			if (!isValid) {
 				std::cout << "Error: Map at " << filePathToMap << " is not connected. Please fix map file or try another map file." << std::endl;
 				delete GameEngine::gameMap;
+				return false;
 			}
 		}
 		catch (std::exception & e) {
-			std::cout << "Problem reading map file, please fix file of try another one." << std::endl;
+			std::cout << "Problem reading map file, please fix file or try another one." << std::endl;
+			return false;
 		}
 
 	} while (!isValid);
 
-
+	return true;
 }
 
 void GameEngine::selectNumberOfPlayers() {
