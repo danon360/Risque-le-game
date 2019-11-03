@@ -8,6 +8,7 @@
 #include "Map.h"
 #include "Dice.h"
 #include "Cards.h"
+#include <iostream>
 //#include "GameEngine.h"
 
 
@@ -24,14 +25,14 @@ private:
 	Hand* playerHand;
 	string* name;
 	int* ID;
-	//GameEngine* mapGame;
 
+	//GameEngine* mapGame;
 
 
 public:
     // Player Constructor and Destructor
 	Player();
-	Player(string * _name);
+	Player(string * _name, int id);
 	Player(vector<Country*>* playerCountries, Dice* playerDice, Hand* hand, string* playerName);
 
     ~Player();

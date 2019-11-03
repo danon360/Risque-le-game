@@ -1,7 +1,5 @@
 #include "Player.h"
-#include "Cards.h"
-#include "Map.h"
-#include <iostream>
+
 using namespace std;
 using std::vector;
 
@@ -13,7 +11,7 @@ Player::Player() {
 	Dice myDice;
 }
 
-Player::Player(string * _name) {
+Player::Player(string * _name, int id) {
     countriesOwned = new vector<Country*>;
 	playerHand = new Hand; 
 	name = _name;
@@ -86,6 +84,8 @@ int Player::selectArmiesToReinforce( Country& source, int remainingArmies) {
 int Player::continentBonus() {
 
 	vector<int> continentCntr();
+
+	return 0; // DELETE THIS LINE - ADDED SO THAT PROGRAM COMPILES
 
 }
 
@@ -164,7 +164,7 @@ void Player::collectionOfCountries() {
 
 // DICE METHODS
 void Player::diceObject() {
-    myDice->rollDice();
+    //myDice->rollDice();
 }
 
 

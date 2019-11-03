@@ -27,6 +27,10 @@ void startUpPhase::distributeCountries(vector<Country*>* inputVec) {
 	//distributing the shuffled countries to th eplayers in a rounf robbin fashion
 	for (int i = 0; i < inputVec->size(); i++) {
 		startUpPhase::playerVec->at((i) % startUpPhase::playerVec->size())->addCountries(inputVec->at(int(i)));
+		
+		
+		inputVec->at(i)->owner = playerVec->at((i) % startUpPhase::playerVec->size());
+		//cout << (static_cast<Player*>(inputVec->at(i)->owner))->getName() << endl;
 	}
 }
 void startUpPhase::assignArmies() {
@@ -39,8 +43,6 @@ void startUpPhase::assignArmies() {
 	int* countryID = new int();
 	
 	vector<int>* countriesRecord = new vector<int>(playerVec->size());
-	
-	//int* numOfCountries = new int();
 	
 	vector<int>* troopCount = new vector<int>(playerVec->size());
 	

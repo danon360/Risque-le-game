@@ -31,7 +31,23 @@ private:
 	int * ownerID;
 	vector<Country*> * neighbours;
 
+
 public:
+
+	/*
+		Ok, this is mental but it had to be done due to circular imports we couldn't get around.
+		This comes with some complications. Here is how you set/get. You need to do it each time.
+
+		to get:
+			Country* c1 = new Country();
+			Player * ownerOfC1 = static_cast<Player *>(c1->owner); // how to get owner
+
+		to set:
+			Country* c1 = new Country();
+			Player* p1 = new Player();
+			c1.owner = p1; // how to set
+	*/
+	void * owner;
 
 	// Constructor / Destructor
 	Country(string nm, int id, int continentNum, int ownerPlayer);
@@ -56,6 +72,8 @@ public:
 	void addAdjacencyList(vector<Country* > * adjacentCountriesList);
 	vector<Country*> * getAdjacencyList(); // returns the list of neighbours
 	void addCountry(Country * toAdd); // adds a country to the list of neighbours
+	int getOwnerID();
+	void setOwnerID(int id);
 
 	// Utility functions
 	bool isCountryAdjacentToMe(Country * otherCountry); // 'true' if otherCountry is in this->neighbours

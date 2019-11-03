@@ -1,10 +1,7 @@
 #pragma once
 
 #include "Player.h"
-#include "Map.h"
 #include "MapLoader.h"
-#include "Cards.h"
-#include "Dice.h"
 
 #include <iostream>
 #include <fstream>

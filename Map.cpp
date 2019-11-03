@@ -47,7 +47,18 @@ Country::~Country() {
 		neighbours->clear();
 		neighbours = nullptr;
 	}
+	// note: do not need to delete the owner as it is a country that was deleted just above
 }
+
+
+int Country::getOwnerID() {
+	return *ownerID;
+}
+
+void Country::setOwnerID(int id) {
+	ownerID = new int(id);
+}
+
 
 string Country::toString() {
 	string str = "Name: " + *name + ", ID: " + std::to_string(*ID) + ", Troops: " + std::to_string(*troopCount);

@@ -26,7 +26,7 @@ int main() {
 	std::cout << "There should be " << game.getPlayers()->size() << " players" << std::endl;
 	std::cout << "Printing player names:" << std::endl;
 	for (int i = 0; i < game.getPlayers()->size(); ++i) {
-		std::cout << "    Country " << i+1 << ": " << game.getPlayers()->at(i)->getName() << std::endl;
+		std::cout << "    " << game.getPlayers()->at(i)->getName() << std::endl;
 	}
 	std::cout << std::endl;
 
