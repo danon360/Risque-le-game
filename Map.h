@@ -34,6 +34,21 @@ private:
 
 public:
 
+	/*
+		Ok, this is mental but it had to be done due to circular imports we couldn't get around.
+		This comes with some complications. Here is how you set/get. You need to do it each time.
+
+		to get:
+			Country* c1 = new Country();
+			static_cast<Player *>(c1->owner); // how to get
+
+		to set:
+			Country* c1 = new Country();
+			Player* p1 = new Player();
+			c1.owner = p1; // how to set
+	*/
+	void * owner;
+
 	// Constructor / Destructor
 	Country(string nm, int id, int continentNum, int ownerPlayer);
 	Country(string nm, int id, int continentNum, int ownerPlayer, vector<Country*> * adjacentCountries);  // with a prefilled vector

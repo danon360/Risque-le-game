@@ -163,7 +163,7 @@ void Player::collectionOfCountries() {
 
 // DICE METHODS
 void Player::diceObject() {
-    myDice->rollDice();
+    //myDice->rollDice();
 }
 
 

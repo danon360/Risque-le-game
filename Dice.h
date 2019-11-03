@@ -23,7 +23,7 @@ public:
     
     // Methods
     void compareDiceRolls(Dice* newDice);
-    void rollDice(int* maxRoll);
+	void rollDice(int* maxRoll);
     void sortContainer();
     void valueTracker();
     void percentageTracker();
