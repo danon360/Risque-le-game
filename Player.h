@@ -13,7 +13,7 @@
 
 
 class Player  {
-    
+
 private:
 	// Vector that has countriesOwned
 	vector<Country*>* countriesOwned;

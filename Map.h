@@ -187,5 +187,3 @@ public:
 	bool subclassSpecificMapConnectionCheck(Country * aCountry);
 	// vector<Country*> * neighbourListForRecursive(Country * aCountry);
 };
-
-

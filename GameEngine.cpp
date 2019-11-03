@@ -100,7 +100,7 @@ void GameEngine::makePlayers() {
 		
 		std::cout << "Please enter player " << i+1 << "'s name: ";
 		std::getline(std::cin, name);
-		gamePlayers->push_back(new Player(new string(name), i+1)); // set name and unique ID
+		gamePlayers->push_back(new Player(new string(name), i+1, gameMap)); // set name and unique ID and give it gameMap
 	}
 
 }
