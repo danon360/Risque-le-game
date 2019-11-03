@@ -47,6 +47,16 @@ Country::~Country() {
 		neighbours->clear();
 		neighbours = nullptr;
 	}
+	// note: do not need to delete the owner as it is a country that was deleted just above
+}
+
+
+int Country::getOwnerID() {
+	return *ownerID;
+}
+
+void Country::setOwnerID(int id) {
+	ownerID = new int(id);
 }
 
 
@@ -88,14 +98,6 @@ int Country::getTroopCount() {
 
 void Country::addAdjacencyList(vector<Country* > * adjacentCountriesList) {
 	neighbours = adjacentCountriesList;
-}
-
-int Country::getOwnerID() {
-	return *ownerID;
-}
-
-void Country::setOwnerID(int id) {
-	ownerID = new int(id);
 }
 
 vector<Country*> * Country::getAdjacencyList() {
