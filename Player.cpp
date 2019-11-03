@@ -11,11 +11,11 @@ Player::Player() {
 	Dice myDice;
 }
 
-Player::Player(string * _name, int id, Map* map) {
-    countriesOwned = new vector<Country*>;
-	playerHand = new Hand; 
+Player::Player(string* _name, int id, Map* map) {
+	countriesOwned = new vector<Country*>;
+	playerHand = new Hand;
 	name = _name;
-	Dice myDice; 
+	Dice myDice;
 	gameMap = map;
 }
 
@@ -32,10 +32,10 @@ Player::Player(vector<Country*>* playerCountries, Dice* playerDice, Hand* hand, 
 
 // Destructor
 Player::~Player() {
-    
-    delete countriesOwned;
-    countriesOwned = NULL;
-   
+
+	delete countriesOwned;
+	countriesOwned = NULL;
+
 }
 
 Hand* Player::getHand() {
@@ -65,12 +65,16 @@ Country* Player::selectCountry(std::vector<Country*>* countries) {
 
 	do {
 		std::cin >> userChoice;
+		if ((userChoice < 1) || (userChoice > countries->size())) {
+			cout << " Please enter a valid number " << endl;
+		}
 	} while ((userChoice < 1) || (userChoice > countries->size()));
+
 	return countries->at(userChoice - 1);
 }
 
 
-int Player::selectArmiesToReinforce( Country& source, int remainingArmies) {
+int Player::selectArmiesToReinforce(Country& source, int remainingArmies) {
 	int nArmies;
 
 	std::cout << source.getName() << " has " << source.getTroopCount() << " armies." << std::endl;
@@ -80,9 +84,11 @@ int Player::selectArmiesToReinforce( Country& source, int remainingArmies) {
 
 	do {
 		std::cin >> nArmies;
+		if ((nArmies < 1) || nArmies > remainingArmies){
+			cout << " Please select a valid armies number " << endl;
+        }
 
 	} while ((nArmies < 1) || nArmies > remainingArmies); 
-		std::cin >> nArmies;
 	
 	return nArmies;
 }
@@ -153,7 +159,7 @@ void Player::reinforce() {
 
 		// Select country to reinforce
 		std::cout << "\nYou have " << totalArmies << " remaining soldiers to add. ";
-		std::cout << "Please select the country you would like to add soldiers to.\n";
+		std::cout << "Please select the country you would like to add armies to.\n";
 
 		Country* country = selectCountry(getCountriesOwned());
 
