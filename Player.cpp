@@ -20,14 +20,7 @@ Player::Player(string * _name) {
 	Dice myDice; 
 }
 
-Player::Player(string* _name) {
 
-	countriesOwned = new vector<Country*>;
-	name = _name;
-	playerHand = new Hand;
-	Dice myDice;
-
-}
 
 Player::Player(vector<Country*>* playerCountries, Dice* playerDice, Hand* hand, string* playerName) {
 	countriesOwned = playerCountries;
@@ -185,6 +178,40 @@ void Player::attack(Player* player) {
    
  }
 
+/*void Player::fortify(Player* player) {
+
+	int armiesToMove;
+
+	Country* countryFrom;
+	do {
+		cout << "Select a country to move armies from" << endl;
+		 countryFrom = selectCountry(player->getCountriesOwned());
+
+	} while (countryFrom->getTroopCount() > 1);
+
+	armiesToMove = countryFrom->getTroopCount() - 1;
+
+	Country* countryTo;
+
+	cout << "Select a country to move armies to" << endl;
+	countryTo = selectCountry(player->getCountriesOwned());
+
+
+		vector <Country*>* cntry = countryFrom->getAdjacencyList();
+
+	for (auto& c : *cntry) {
+			if (c->getName() == countryTo->getName()) {
+
+				c->addToTroopCount(armies);
+				std::cout << c->getName() << " now has " << c->getTroopCount() << " armies after reinforcing. " << std::endl;
+			}
+		}
+
+
+
+
+
+}*/
 
 
 

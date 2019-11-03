@@ -27,7 +27,6 @@ private:
 	//GameEngine* mapGame;
 
 
-	int * ID;
 
 public:
     // Player Constructor and Destructor
