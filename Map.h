@@ -40,7 +40,7 @@ public:
 
 		to get:
 			Country* c1 = new Country();
-			static_cast<Player *>(c1->owner); // how to get
+			Player * ownerOfC1 = static_cast<Player *>(c1->owner); // how to get owner
 
 		to set:
 			Country* c1 = new Country();
