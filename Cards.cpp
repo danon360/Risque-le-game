@@ -3,6 +3,8 @@
 #include <vector>
 #include <cstdlib>
 #include <ctime>
+#include <algorithm>
+
 using std::cin;
 using std::cout;
 using std::endl;
@@ -19,11 +21,6 @@ Card::~Card() {
 	cardType = NULL;
 }
 
-/*std::string Card::getCardTypeAsString() const {       
-	if (*cardType == INFANTRY) return "infantry";
-	if (*cardType == ARTILLERY) return "artillery";
-	if (*cardType == CAVALRY) return "cavalry";
-}*/
 
 void Card::setCardType(CardType cardType) {
 	this->cardType = new CardType(cardType);
@@ -122,18 +119,21 @@ int Hand::exchange()
 			|| AreThreeDifferent(cards->at(card_1), cards->at(card_2), cards->at(card_3))
 			) {
 
-	/*	cards->erase(cards->begin() + card_1 );       // removing the card from the hand vector
-		cards->erase(cards->begin() + card_2 );
-		cards->erase(cards->begin() + card_3 );
-		*/
+
+		vector<int> v{card_1, card_2, card_3};
+		sort(v.begin(), v.end());
+
+
+
+	    cards->erase(cards->begin() + v.at(v.size()-1) );       // removing the card from the hand vector
+		cards->erase(cards->begin() + v.at(v.size()-2));
+		cards->erase(cards->begin() + v.at(v.size()-3));
+		
 		cout << Hand::getArmies() << " Armies " << endl;
 		return Hand::getArmies();
 
 		Deck::incNExchanges();   // increment the number of exchanges each time a player exchanges
 
-		
-	
-		
 		
 
 	}
