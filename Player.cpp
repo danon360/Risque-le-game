@@ -11,11 +11,12 @@ Player::Player() {
 	Dice myDice;
 }
 
-Player::Player(string * _name, int id) {
+Player::Player(string * _name, int id, Map* map) {
     countriesOwned = new vector<Country*>;
 	playerHand = new Hand; 
 	name = _name;
 	Dice myDice; 
+	gameMap = map;
 }
 
 
@@ -83,11 +84,12 @@ int Player::selectArmiesToReinforce( Country& source, int remainingArmies) {
 }
 int Player::continentBonus() {
 
-	vector<int> continentCntr();
+	vector<int> continentCounter();
 
 	return 0; // DELETE THIS LINE - ADDED SO THAT PROGRAM COMPILES
 
 }
+
 
 void Player::reinforce(Player* player) {
 
