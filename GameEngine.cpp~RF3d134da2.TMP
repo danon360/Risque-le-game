@@ -58,7 +58,7 @@ void GameEngine::makeMap(string filePathToMap) {
 				delete GameEngine::gameMap;
 			}
 		}
-		catch (std::exception& e) {
+		catch (exception& e) {
 			std::cout << "Problem reading map file, please fix file of try another one." << std::endl;
 		}
 
@@ -93,8 +93,6 @@ void GameEngine::makePlayers() {
 	GameEngine::gamePlayers = new std::vector<Player*>();
 	
 	std::string name;
-
-	std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n'); // skip endline from previous 'cin'
 
 	// Create new players and put in vector
 	for (int i = 0; i < *GameEngine::playerCount; ++i) {

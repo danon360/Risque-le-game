@@ -23,6 +23,14 @@ int main() {
 
 	// 2) The right number of players is created, a deck with the right number of cards is created.
 
+	std::cout << "Printing coutries continents " << std::endl;
+
+	for (int i = 0; i < game.getMap()->countries->size() ; ++i) {
+
+		std::cout << "Owner ID: " << game.getMap()->countries->at(i)->getOwnerID() << std::endl;
+	}
+
+
 	std::cout << "There should be " << game.getPlayers()->size() << " players" << std::endl;
 	std::cout << "Printing player names:" << std::endl;
 	for (int i = 0; i < game.getPlayers()->size(); ++i) {
