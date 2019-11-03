@@ -70,7 +70,7 @@ public:
 	Hand* getHand();
     
     // Game methods
-    void reinforce(Player* player);
+    void reinforce();
     void attack(Player* player);
     void fortify(Player* player);
 

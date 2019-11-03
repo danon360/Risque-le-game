@@ -32,8 +32,8 @@ int main()
 	Card* card4 = new Card(ptr4);
 	Card* card5 = new Card(ptr5);
 
-
-	player1->getHand()->add(card1);     // adding the cards created to the hand object
+	// adding the cards created to the hand of the player 
+	player1->getHand()->add(card1);     
 	player1->getHand()->add(card2);
 	player1->getHand()->add(card3);
 	player1->getHand()->add(card4);
@@ -113,9 +113,10 @@ int main()
 	player1->addCountries(country_e);
 	player1->addCountries(country_f);
 
+	//set the map to the player 
 	player1->setMap(&myMap);
 
-	player1->reinforce(player1);
+	player1->reinforce();
 
 
 

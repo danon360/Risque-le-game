@@ -108,7 +108,7 @@ int Player::continentBonus() {
 
 		if (continentCounter.at(i) == c->countries->size()) {
 			bonusTally += c->getTroopBonus();
-		}
+		} 
 		
 	}
 
@@ -116,7 +116,7 @@ int Player::continentBonus() {
 }
 
 
-void Player::reinforce(Player* player) {
+void Player::reinforce() {
 
 	int armiesFromExchange = 0;
 	int armiesFromContinent = 0;
@@ -144,7 +144,7 @@ void Player::reinforce(Player* player) {
 
 	 armiesFromCountry = std::max((int)countriesOwned->size() / 3, 3);
 
-	 armiesFromContinent = player->continentBonus();
+	 armiesFromContinent = continentBonus();
 
 
 	int totalArmies = armiesFromCountry + armiesFromExchange + armiesFromContinent;
@@ -155,12 +155,12 @@ void Player::reinforce(Player* player) {
 		std::cout << "\nYou have " << totalArmies << " remaining soldiers to add. ";
 		std::cout << "Please select the country you would like to add soldiers to.\n";
 
-		Country* country = selectCountry(player->getCountriesOwned());
+		Country* country = selectCountry(getCountriesOwned());
 
 		// Select number of armies to reinforce for the selected country
 		int armies = selectArmiesToReinforce(*country, totalArmies);
 
-		vector<Country*>* cntry = player->getCountriesOwned();
+		vector<Country*>* cntry = getCountriesOwned();
 
 	
 		for (auto& c : *cntry) {
