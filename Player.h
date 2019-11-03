@@ -72,7 +72,7 @@ public:
     // Game methods
     void reinforce();
     void attack(Player* player);
-    void fortify(Player* player);
+    void fortify();
 
 	void setMap(Map* map);
 
@@ -85,7 +85,7 @@ public:
 
 	int continentBonus();
 
-
+	bool equals(Player* other);
 
     
 };

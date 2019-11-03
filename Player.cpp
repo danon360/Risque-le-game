@@ -181,7 +181,9 @@ void Player::reinforce() {
 
   }
   
-
+bool Player::equals(Player* other) {
+	return (*other->getID() == *ID);
+}
 
 // COUNTRY METHODS
 // Method that adds countries
@@ -212,40 +214,108 @@ void Player::attack(Player* player) {
    
  }
 
-/*void Player::fortify(Player* player) {
+void Player::fortify() {
 
-	int armiesToMove;
+	std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n'); // skip endline from previous 'cin'
 
-	Country* countryFrom;
-	do {
-		cout << "Select a country to move armies from" << endl;
-		 countryFrom = selectCountry(player->getCountriesOwned());
+	string answer;
 
-	} while (countryFrom->getTroopCount() > 1);
+	// does user want to fortify this turn? -----------------------------------------------------------------
 
-	armiesToMove = countryFrom->getTroopCount() - 1;
+	std::cout << "Do you want to fortify (yes/no)?" << std::endl;
+	cin >> answer;
+
+	if (answer.compare("no") || answer.compare("NO"))
+		return;
+
+	// get the country to move troops from -----------------------------------------------------------------
+
+	vector<Country*> validMoveCountries;
+
+	for (int i = 0; i < countriesOwned->size(); ++i) {
+
+		Country * current = countriesOwned->at(i);
+
+		if (current->getTroopCount() > 1) {
+			validMoveCountries.push_back(current);
+		}
+	}
+
+	for (int i = 0; i < validMoveCountries.size(); ++i) {
+		std::cout << i+1 << ": " << validMoveCountries.at(i)->toString() << std::endl;
+	}
+
+	int input = 0;
+
+	std::cout << "Please select the country you would like to add soldiers to.\n";
+	cin >> input;
+	//in case the user proviedes an invalid input or out of range
+	while (std::cin.fail() || input < 1 || input > validMoveCountries.size())
+	{
+		std::cout << "Invalid input, please choose a number in the range" << std::endl;
+		std::cin.clear();
+		std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+		std::cin >> input;
+	}
+
+	Country* countryFrom = validMoveCountries.at(input-1);
+
+	// get country to move to -------------------------------------------------------------------------------
 
 	Country* countryTo;
 
-	cout << "Select a country to move armies to" << endl;
-	countryTo = selectCountry(player->getCountriesOwned());
+	validMoveCountries.clear();
 
+	for (int i = 0; i < countryFrom->getAdjacencyList()->size(); ++i) {
 
-		vector <Country*>* cntry = countryFrom->getAdjacencyList();
+		Country * current = countriesOwned->at(i);
 
-	for (auto& c : *cntry) {
-			if (c->getName() == countryTo->getName()) {
-
-				c->addToTroopCount(armies);
-				std::cout << c->getName() << " now has " << c->getTroopCount() << " armies after reinforcing. " << std::endl;
-			}
+		if (equals(static_cast<Player*>(current->owner))) {
+			validMoveCountries.push_back(current);
 		}
+	}
 
+	std::cout << "Please select a destination country to move ( moving from: " << countryFrom->getName() << " ):" << std::endl;
+	std::cout << std::endl;
+	for (int i = 0; i < validMoveCountries.size(); ++i) {
+		std::cout << i + 1 << ": " << validMoveCountries.at(i)->toString() << std::endl;
+	}
 
+	cin >> input;
+	//in case the user proviedes an invalid input or out of range
+	while (std::cin.fail() || input < 1 || input > validMoveCountries.size())
+	{
+		std::cout << "Invalid input, please choose a number in the range" << std::endl;
+		std::cin.clear();
+		std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+		std::cin >> input;
+	}
 
+	countryTo = validMoveCountries.at(input - 1);
 
+	//  get troop count to move ------------------------------------------------------------------------------------
 
-}*/
+	int maxTroopsToMove = countryFrom->getTroopCount() - 1;
+
+	std::cout << "How many troops to move (you can move up to " << maxTroopsToMove << " troops)"  << std::endl;
+
+	cin >> input;
+	//in case the user proviedes an invalid input or out of range
+	while (std::cin.fail() || input < 0 || input > maxTroopsToMove)
+	{
+		std::cout << "Invalid input, please choose a number in the range" << std::endl;
+		std::cin.clear();
+		std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+		std::cin >> input;
+	}
+
+	countryTo->addToTroopCount(input);
+	countryFrom->addToTroopCount(-input);
+
+	std::cout << "You moved " << input << " troops from " << countryFrom->getName() << " to " 
+		<< countryTo->getName() << std::endl;
+
+}
 
 
 
