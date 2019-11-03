@@ -64,6 +64,7 @@ bool GameEngine::makeMap(string filePathToMap) {
 			if (!isValid) {
 				std::cout << "Error: Map at " << filePathToMap << " is not connected. Please fix map file or try another map file." << std::endl;
 				delete GameEngine::gameMap;
+				return false;
 			}
 		}
 		catch (std::exception & e) {
