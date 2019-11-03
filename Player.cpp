@@ -48,6 +48,10 @@ vector<Country*>* Player::getCountriesOwned()
 	return countriesOwned;
 }
 
+void Player::setMap(Map* map) {
+	gameMap = map;
+}
+
 Country* Player::selectCountry(std::vector<Country*>* countries) {
 
 	int userChoice;
@@ -82,18 +86,41 @@ int Player::selectArmiesToReinforce( Country& source, int remainingArmies) {
 	
 	return nArmies;
 }
+
+
 int Player::continentBonus() {
 
-	vector<int> continentCounter();
+	int bonusTally = 0;
 
-	return 0; // DELETE THIS LINE - ADDED SO THAT PROGRAM COMPILES
+	vector<int> continentCounter(gameMap->continents->size());
 
+	for (int i = 0; i < continentCounter.size(); i++) {
+		continentCounter[i] = 0;
+	}
+
+	for (int i = 0; i < getCountriesOwned()->size(); i++) {
+		continentCounter[(countriesOwned->at(i)->getContinentNumber() - 1)]++;
+	}
+
+	for (int i = 0; i < continentCounter.size(); i++) {
+
+		Continent* c = gameMap->continents->at(i);
+
+		if (continentCounter.at(i) == c->countries->size()) {
+			bonusTally += c->getTroopBonus();
+		}
+		
+	}
+
+	return bonusTally;
 }
 
 
 void Player::reinforce(Player* player) {
 
-	int armiesFromExchange=0;
+	int armiesFromExchange = 0;
+	int armiesFromContinent = 0;
+	int armiesFromCountry = 0;
 	int user;
 
 	if (playerHand->size() > 4) {
@@ -115,9 +142,9 @@ void Player::reinforce(Player* player) {
 	}
 
 
-	int armiesFromCountry = std::max((int)countriesOwned->size() / 3, 3);
+	 armiesFromCountry = std::max((int)countriesOwned->size() / 3, 3);
 
-	int armiesFromContinent=0;
+	 armiesFromContinent = player->continentBonus();
 
 
 	int totalArmies = armiesFromCountry + armiesFromExchange + armiesFromContinent;

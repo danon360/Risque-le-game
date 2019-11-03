@@ -74,6 +74,8 @@ public:
     void attack(Player* player);
     void fortify(Player* player);
 
+	void setMap(Map* map);
+
 
 	vector<Country*>* getCountriesOwned();
 
