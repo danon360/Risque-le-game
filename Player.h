@@ -8,6 +8,7 @@
 #include "Map.h"
 #include "Dice.h"
 #include "Cards.h"
+#include <iostream>
 //#include "GameEngine.h"
 
 

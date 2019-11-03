@@ -1,7 +1,5 @@
 #include "Player.h"
-#include "Cards.h"
-#include "Map.h"
-#include <iostream>
+
 using namespace std;
 using std::vector;
 

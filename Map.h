@@ -31,6 +31,7 @@ private:
 	int * ownerID;
 	vector<Country*> * neighbours;
 
+
 public:
 
 	// Constructor / Destructor
