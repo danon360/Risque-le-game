@@ -48,7 +48,7 @@ private:
 
 	void intitializeGame(string filePathToMapFolder);
 
-	void makeMap(string filePathToMap);
+	bool makeMap(string filePathToMap);
 	void makePlayers();
 	void makeDeck();
 

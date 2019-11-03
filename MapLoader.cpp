@@ -24,7 +24,8 @@
 		*noError = loadFileToStrings(fileLocation, strContinents, strCountries, strBorders);
 
 		if (!*noError) {
-			//throw error
+			MapLoaderException ex;
+			throw ex;
 		}
 
 		contVec = continentLoader(*strContinents);
