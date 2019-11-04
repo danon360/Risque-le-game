@@ -11,11 +11,11 @@ Player::Player() {
 	Dice myDice;
 }
 
-Player::Player(string* _name, int id, Map* map) {
-	countriesOwned = new vector<Country*>;
-	playerHand = new Hand;
+Player::Player(string * _name, int id, Map* map) {
+    countriesOwned = new vector<Country*>;
+	playerHand = new Hand; 
 	name = _name;
-	Dice myDice;
+	Dice myDice; 
 	gameMap = map;
 }
 
@@ -32,10 +32,10 @@ Player::Player(vector<Country*>* playerCountries, Dice* playerDice, Hand* hand, 
 
 // Destructor
 Player::~Player() {
-
-	delete countriesOwned;
-	countriesOwned = NULL;
-
+    
+    delete countriesOwned;
+    countriesOwned = NULL;
+   
 }
 
 Hand* Player::getHand() {
@@ -58,37 +58,44 @@ Country* Player::selectCountry(std::vector<Country*>* countries) {
 	std::cout << "Source countries with available target countries:" << std::endl;
 
 	for (int i = 0; i < countries->size(); i++) {
-		std::cout << i + 1 << ". " << countries->at(i)->getName() << std::endl;
+		std::cout << i + 1 << ". " << countries->at(i)->toString() << std::endl;
 	}
 	std::cout << std::endl;
 	std::cout << ">>> ";
 
 	do {
-		std::cin >> userChoice;
-		if ((userChoice < 1) || (userChoice > countries->size())) {
-			cout << " Please enter a valid number " << endl;
-		}
-	} while ((userChoice < 1) || (userChoice > countries->size()));
 
+		
+		std::cin >> userChoice;
+		while (std::cin.fail())// || (nArmies < 1) || nArmies > remainingArmies)
+		{
+			std::cout << "Invalid input: enter a country in range above." << std::endl;
+			std::cin.clear();
+			std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+			std::cin >> userChoice;
+		}
+
+	} while ((userChoice < 1) || (userChoice > countries->size()));
 	return countries->at(userChoice - 1);
 }
 
 
-int Player::selectArmiesToReinforce(Country& source, int remainingArmies) {
+int Player::selectArmiesToReinforce( Country& source, int remainingArmies) {
 	int nArmies;
 
 	std::cout << source.getName() << " has " << source.getTroopCount() << " armies." << std::endl;
-	std::cout << "Enter the number of armies you want to move to your target country." << std::endl;
+	std::cout << "Enter the number of armies you want to move to " << source.getName() << " (max " << remainingArmies << ")." << std::endl;
 
 	std::cout << ">>> ";
 
-	do {
+	std::cin >> nArmies;
+	while (std::cin.fail())// || (nArmies < 1) || nArmies > remainingArmies)
+	{
+		std::cout << "Invalid input: must be a number between 0 and " << remainingArmies << std::endl;
+		std::cin.clear();
+		std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
 		std::cin >> nArmies;
-		if ((nArmies < 1) || nArmies > remainingArmies){
-			cout << " Please select a valid armies number " << endl;
-        }
-
-	} while ((nArmies < 1) || nArmies > remainingArmies); 
+	}
 	
 	return nArmies;
 }
@@ -101,11 +108,12 @@ int Player::continentBonus() {
 	vector<int> continentCounter(gameMap->continents->size());
 
 	for (int i = 0; i < continentCounter.size(); i++) {
-		continentCounter[i] = 0;
+		continentCounter.at(i) = 0;
 	}
-
+	int h;
 	for (int i = 0; i < getCountriesOwned()->size(); i++) {
-		continentCounter[(countriesOwned->at(i)->getContinentNumber() - 1)]++;
+		h = countriesOwned->at(i)->getContinentNumber();
+		continentCounter.at(h);
 	}
 
 	for (int i = 0; i < continentCounter.size(); i++) {
@@ -129,13 +137,16 @@ void Player::reinforce() {
 	int user;
 
 	if (playerHand->size() > 4) {
-
-		cout << " You have more than 4 cards so you have to exchange " << endl;
-		armiesFromExchange = playerHand->exchange();
+		
+		while (playerHand->size() > 4) { // to cover the case of killing off other players and getting a ton of cards
+			cout << " You have more than 4 cards so you have to exchange " << endl;
+			armiesFromExchange = playerHand->exchange();
+		}
 	}
-	else {
+	else if(playerHand->size() > 2){
 		do {
 			cout << "Do you want to exchange? press 1 for Yes and 0 for NO" << endl;
+
 			cin >> user;
 			if (user == 0) {
 				armiesFromExchange = 0;
@@ -158,7 +169,7 @@ void Player::reinforce() {
 
 		// Select country to reinforce
 		std::cout << "\nYou have " << totalArmies << " remaining soldiers to add. ";
-		std::cout << "Please select the country you would like to add armies to.\n";
+		std::cout << "Please select the country you would like to add soldiers to.\n";
 
 		Country* country = selectCountry(getCountriesOwned());
 

@@ -32,6 +32,9 @@ private:
 
 	//assigns armies to every country of every player
 	static void assignArmies();
+
+	// to speed up testing
+	static void TESTautoAssignTroops();
 };
 
 

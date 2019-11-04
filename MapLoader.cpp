@@ -291,7 +291,7 @@
 		//loading the country name from the input string to its variable
 		*countryName = trim(input.substr(*idEnd, *nameEnd - *idEnd));
 		//loading the last country intothe map
-		(*countryMap).emplace((*ID), new Country(*countryName, *ID, *continentNum, 0));
+		(*countryMap).emplace((*ID), new Country(*countryName, *ID, *continentNum-1, 0));
 
 		contVec->at(*continentNum - 1)->addCountry(new Country(*countryName, *ID, *continentNum, 0));
 		//TODO:delete pointers
