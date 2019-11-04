@@ -23,6 +23,7 @@ private:
 	string* name;
 	int* ID;
 	Map* gameMap;
+	bool* hasConqueredThisTurn;
 
 	//GameEngine* mapGame;
 
@@ -31,7 +32,6 @@ public:
     // Player Constructor and Destructor
 	Player();
 	Player(string * _name, int id, Map* map);
-	//Player(vector<Country*>* playerCountries, Dice* playerDice, Hand* hand, string* playerName);
 
     ~Player();
     
@@ -73,6 +73,13 @@ public:
 
 	void setMap(Map* map);
 
+	bool getHasConqueredThisTurn() {
+		return *hasConqueredThisTurn;
+	}
+
+	void resetHasConqueredThisTurn() {
+		*hasConqueredThisTurn = false;
+	}
 
 	vector<Country*>* getCountriesOwned();
 

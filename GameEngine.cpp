@@ -2,8 +2,10 @@
 
 GameEngine::GameEngine(string filePathToMapFolder)
 {
-		intitializeGame(filePathToMapFolder);
-		startUpPhase::startUp(gameMap, gamePlayers);
+	turnNumber = new int(1);
+
+	intitializeGame(filePathToMapFolder);
+	startUpPhase::startUp(gameMap, gamePlayers);
 }
 
 GameEngine::~GameEngine()
@@ -82,6 +84,8 @@ void GameEngine::selectNumberOfPlayers() {
 
 	std::cout << "How many players today?" << std::endl;
 	do {
+
+		std::cout << std::endl << ">>> ";
 		std::cin >> *GameEngine::playerCount;
 		while (std::cin.fail())
 		{
@@ -90,6 +94,7 @@ void GameEngine::selectNumberOfPlayers() {
 			std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
 			std::cin >> *GameEngine::playerCount;
 		}
+		std::cout << std::endl;
 
 	} while (*GameEngine::playerCount < minPlayers || *GameEngine::playerCount > maxPlayers);
 }
@@ -103,12 +108,13 @@ void GameEngine::makePlayers() {
 	std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n'); // skip endline from previous 'cin'
 
 	// Create new players and put in vector
-	for (int i = 0; i < *GameEngine::playerCount; ++i) {
+	for (int i = 1; i <= *GameEngine::playerCount; ++i) {
 
-		std::cout << "Please enter player " << i + 1 << "'s name: ";
+		std::cout << "Please enter player " << i << "'s name: ";
 		std::getline(std::cin, name);
-		gamePlayers->push_back(new Player(new string(name), i + 1, gameMap)); // set name and unique ID and give it gameMap
+		gamePlayers->push_back(new Player(new string(name), i, gameMap)); // set name and unique ID and give it gameMap
 	}
+	std::cout << std::endl;
 
 }
 
@@ -149,6 +155,7 @@ string GameEngine::getSelectedMapPath() {
 			std::cout << i + 1 << ": " << v.at(i) << std::endl;
 		}
 
+		std::cout << std::endl << ">>> ";
 		std::cin >> userMapSelection;
 		while (std::cin.fail())
 		{
@@ -157,6 +164,7 @@ string GameEngine::getSelectedMapPath() {
 			std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
 			std::cin >> userMapSelection;
 		}
+		std::cout << std::endl;
 
 		if (userMapSelection < 1 || userMapSelection > v.size()) {
 			std::cout << "**Please ensure your number is between 1 and " << v.size() << " -> ";
@@ -203,23 +211,44 @@ void GameEngine::start() {
 
 	while (!done) {
 
+		std::cout << "**********************************************************************************" << std::endl;
+		std::cout << "**********************************************************************************" << std::endl;
+		std::cout << "                                 Turn: " << *turnNumber << std::endl;
+		std::cout << "**********************************************************************************" << std::endl;
+		std::cout << "**********************************************************************************" << std::endl;
+		std::cout << std::endl;
+
 		for (int i = 0; i < gamePlayers->size(); i++) {
 
 			currentPlayer = gamePlayers->at(i);
+
 
 			currentPlayer->reinforce();
 			currentPlayer->attack();
 			currentPlayer->fortify();
 
+			// if player has conquered at least 1 country, he draws a card
+			if (currentPlayer->getHasConqueredThisTurn()) {
+				std::cout << currentPlayer->getName() << " has been given a card for having conquered a country this turn" << std::endl;
+				currentPlayer->getHand()->add(gameDeck->draw());
+				currentPlayer->resetHasConqueredThisTurn();
+			}
 
+			// end game condition
 			if (gamePlayers->size() == 1) {
-				cout << "Congratulations " << gamePlayers->at(0) << " !!!. You won the game!!" << endl;
+				std::cout << "**********************************************************************************" << std::endl;
+				std::cout << "**********************************************************************************" << std::endl;
+				std::cout << "     Congratulations " << gamePlayers->at(0) << " !!!. You won the game!!" << std::endl;
+				std::cout << "**********************************************************************************" << std::endl;
+				std::cout << "**********************************************************************************" << std::endl;
 				done = true;
 				break;
 			}
 		}
 	}
 	
+	++*turnNumber;
+
 }
 
 //initialising playerVec vector
@@ -445,29 +474,3 @@ int main() {
 	G1.start();
 
 }
-	/*
-	vector<Player*>* players = G1.getPlayers();
-	vector<Country*>* currentCountries;
-
-	bool done = false;
-	Player* currentPlayer;
-	string* ansswer = new string();
-	while (!done) {
-
-		for (int i = 0; i < players->size(); i++) {
-
-			currentPlayer = players->at(i);
-
-			currentPlayer->reinforce();
-			//currentPlayer->attack();
-			//currentPlayer->fortify(currentPlayer);
-
-
-			if (players->size() == 1) {
-				cout << "Congratulations " << players->at(0) << " !!!. You won the game!!" << endl;
-				done = true;
-				break;
-			}
-		}
-	}
-	*/

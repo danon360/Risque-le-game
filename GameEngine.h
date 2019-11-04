@@ -49,6 +49,8 @@ private:
 	Map * gameMap;
 	Deck * gameDeck;
 
+	int* turnNumber;
+
 	void intitializeGame(string filePathToMapFolder);
 
 	bool makeMap(string filePathToMap);

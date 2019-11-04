@@ -5,32 +5,25 @@ using std::vector;
 
 // Default Constructor
 Player::Player() {
+	ID = new int(-1);
 	countriesOwned = new vector<Country*>;
 	playerHand = new Hand;
 	name = new string();
 	Dice myDice;
-	myCountry = new Country();						  
+	myCountry = new Country();
+	hasConqueredThisTurn = new bool(false);
 }
 
 Player::Player(string * _name, int id, Map* map) {
+	ID = new int(id);
     countriesOwned = new vector<Country*>;
 	myCountry = new Country();						  
 	playerHand = new Hand; 
 	name = _name;
 	Dice myDice; 
 	gameMap = map;
+	hasConqueredThisTurn = new bool(false);
 }
-
-
-/*
-Player::Player(vector<Country*>* playerCountries, Dice* playerDice, Hand* hand, string* playerName) {
-	countriesOwned = playerCountries;
-	myDice = playerDice;
-	playerHand = hand;
-	name = playerName;
-
-}
-*/
 
 // Destructor
 Player::~Player() {
@@ -46,6 +39,11 @@ Player::~Player() {
 
 // Attack Method
 void Player::attack(){
+
+	std::cout << "************************************************************************" << std::endl;
+	std::cout << "                      Attack : " << getName() << std::endl;
+	std::cout << "************************************************************************" << std::endl;
+
     // Pointers willAttack decides if the player will attack or not
     Player* defendingPlayer;
     Country* defendingCountry;
@@ -77,7 +75,18 @@ void Player::attack(){
         // Initializing all the valid attacking countries and display them
         for(int i = 0; i < this->countriesOwned->size(); ++i) {
             Country* current = countriesOwned->at(i);
-            if(current->getTroopCount() > 1){
+
+			// check if country has at least one enemy country
+			bool hasEnemies = false;
+			for (int j = 0; j < current->getAdjacencyList()->size(); ++j) {
+				if (current->getAdjacencyList()->at(j)->getOwnerID() != current->getOwnerID()) {
+					hasEnemies = true;
+					break;
+				}
+			}
+			
+
+            if(current->getTroopCount() > 1 && hasEnemies){
                 validAttackCountries->push_back(current);
             }
             // TODO: check if a country's neighbours are all owned by us
@@ -164,15 +173,20 @@ void Player::attack(){
             break;
         }
         
+		// change ownership of countries
         if(defendingCountry->getTroopCount() == 0) {
-            this->addCountries(defendingCountry);
-            
+
+			*hasConqueredThisTurn = true;
+
+            this->addCountries(defendingCountry); // add country to my list of owned
+			defendingCountry->setOwnerID(*ID); // change its ownerID to my ID
+
             vector<Country *> * v = defendingPlayer->getCountriesOwned();
             
             int i = 0;
             for(vector<Country*>::iterator it = v->begin(); it != v->end(); ++it){
                 if(v->at(i)->equals(defendingCountry) ) {
-                    v->erase(it);
+                    v->erase(it); // remove country from looser's owned county list
                 }
                 ++i;
             }
@@ -304,6 +318,10 @@ void Player::reinforce() {
 	int armiesFromCountry = 0;
 	int user;
 
+	std::cout << "**********************************************************************************" << std::endl;
+	std::cout << "                               Reinforce : " << getName() << std::endl;
+	std::cout << "**********************************************************************************" << std::endl;
+
 	if (playerHand->size() > 4) {
 		
 		while (playerHand->size() > 4) { // to cover the case of killing off other players and getting a ton of cards
@@ -336,7 +354,6 @@ void Player::reinforce() {
 	do {
 
 		// Select country to reinforce
-		std::cout << *name << std::endl;
 		std::cout << "\nYou have " << totalArmies << " remaining soldiers to add. ";
 		std::cout << "Please select the country you would like to add soldiers to.\n";
 
@@ -355,6 +372,7 @@ void Player::reinforce() {
 			}
 		}
 		totalArmies -= armies;
+		std::cout << std::endl;
 
 		
 	} while (totalArmies > 0);
@@ -362,7 +380,7 @@ void Player::reinforce() {
   }
   
 bool Player::equals(Player* other) {
-	return (*other->getID() == *ID);
+	return (*ID == *(other->getID()));
 }
 
 // COUNTRY METHODS
@@ -380,16 +398,20 @@ void Player::collectionOfCountries() {
 
 void Player::fortify() {
 
+	std::cout << "************************************************************************" << std::endl;
+	std::cout << "                      Fortify : " << getName() << std::endl;
+	std::cout << "************************************************************************" << std::endl;
+
 	std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n'); // skip endline from previous 'cin'
 
 	string answer;
 
 	// does user want to fortify this turn? -----------------------------------------------------------------
 
-	std::cout << "Do you want to fortify (yes/no)?" << std::endl;
+	std::cout << "Do you want to fortify (yes/no)? ";
 	cin >> answer;
 
-	if (answer.compare("no") || answer.compare("NO"))
+	if (answer.compare("no") == 0 || answer.compare("NO") == 0)
 		return;
 
 	// get the country to move troops from -----------------------------------------------------------------
@@ -411,7 +433,10 @@ void Player::fortify() {
 
 	int input = 0;
 
-	std::cout << "Please select the country you would like to add soldiers to.\n";
+	std::cout << std::endl << "Please select the country you want to move armies from.\n";
+	std::cout << ">>> ";
+	std::cout << std::endl;
+
 	cin >> input;
 	//in case the user proviedes an invalid input or out of range
 	while (std::cin.fail() || input < 1 || input > validMoveCountries.size())
@@ -432,19 +457,22 @@ void Player::fortify() {
 
 	for (int i = 0; i < countryFrom->getAdjacencyList()->size(); ++i) {
 
-		Country * current = countriesOwned->at(i);
+		// each neigbour of a country that I own
+		Country * current = countryFrom->getAdjacencyList()->at(i);
 
-		if (equals(static_cast<Player*>(current->owner))) {
+		if (this->equals(static_cast<Player*>(current->owner))) {
 			validMoveCountries.push_back(current);
 		}
 	}
 
-	std::cout << "Please select a destination country to move ( moving from: " << countryFrom->getName() << " ):" << std::endl;
+	std::cout << "Please select a destination country to move troop to (moving from: " << countryFrom->getName() << "):" << std::endl;
+	
 	std::cout << std::endl;
 	for (int i = 0; i < validMoveCountries.size(); ++i) {
 		std::cout << i + 1 << ": " << validMoveCountries.at(i)->toString() << std::endl;
 	}
 
+	std::cout << ">>> ";
 	cin >> input;
 	//in case the user proviedes an invalid input or out of range
 	while (std::cin.fail() || input < 1 || input > validMoveCountries.size())
@@ -454,6 +482,7 @@ void Player::fortify() {
 		std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
 		std::cin >> input;
 	}
+	std::cout << std::endl;
 
 	countryTo = validMoveCountries.at(input - 1);
 
@@ -462,7 +491,7 @@ void Player::fortify() {
 	int maxTroopsToMove = countryFrom->getTroopCount() - 1;
 
 	std::cout << "How many troops to move (you can move up to " << maxTroopsToMove << " troops)"  << std::endl;
-
+	std::cout << ">>> ";
 	cin >> input;
 	//in case the user proviedes an invalid input or out of range
 	while (std::cin.fail() || input < 0 || input > maxTroopsToMove)
@@ -472,12 +501,13 @@ void Player::fortify() {
 		std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
 		std::cin >> input;
 	}
+	std::cout << std::endl;
 
 	countryTo->addToTroopCount(input);
 	countryFrom->addToTroopCount(-input);
 
 	std::cout << "You moved " << input << " troops from " << countryFrom->getName() << " to " 
-		<< countryTo->getName() << std::endl;
+		<< countryTo->getName() << std::endl << std::endl;
 
 }
 
