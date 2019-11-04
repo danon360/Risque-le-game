@@ -1,15 +1,11 @@
 
-/*
-	THIS IS GARBAGE CLASS, DO NOT MERGE! USE THE VERSION ON THE REPO!!!!
-*/
-
+// local
 #pragma once
 #include <string>
 #include "Map.h"
 #include "Dice.h"
 #include "Cards.h"
 #include <iostream>
-//#include "GameEngine.h"
 
 
 class Player  {
@@ -17,6 +13,7 @@ class Player  {
 private:
 	// Vector that has countriesOwned
 	vector<Country*>* countriesOwned;
+	Country* myCountry;				   
 
 	// Dice Object
 	Dice* myDice;
@@ -34,13 +31,13 @@ public:
     // Player Constructor and Destructor
 	Player();
 	Player(string * _name, int id, Map* map);
-	Player(vector<Country*>* playerCountries, Dice* playerDice, Hand* hand, string* playerName);
+	//Player(vector<Country*>* playerCountries, Dice* playerDice, Hand* hand, string* playerName);
 
     ~Player();
     
     // DICE METHODS
-    void diceObject();
-
+	void diceFacility(int* maxRoll, int* numOfArmies);
+	
 	void setID(int* id) {
 		ID = id;
 	}
@@ -54,8 +51,8 @@ public:
     void collectionOfCountries();
     
     // CARDS METHODS
-    //void addCards(Card * newCard);
-    //void collectionOfRiskCards();
+    void addCards(Card * newCard);
+    void collectionOfRiskCards();
     
     
     string getName() {
@@ -71,7 +68,7 @@ public:
     
     // Game methods
     void reinforce();
-    void attack(Player* player);
+    void attack();
     void fortify();
 
 	void setMap(Map* map);
@@ -86,6 +83,16 @@ public:
 	int continentBonus();
 
 	bool equals(Player* other);
+	
+	void addAdjacentCountries(Country* country);
+    
+    bool isAdjacentCountry(Country* country);
+    
+    void setTroopCount(int troop, Country* myCountry);
+    int getTroopCount(Country* country);
+    
+    void compareDiceObjects(Player* player, Country* attackingCountry, Country* defendingCountry);
+    
 
     
 };

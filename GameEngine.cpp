@@ -1,12 +1,10 @@
 #include "GameEngine.h"
 
 GameEngine::GameEngine(string filePathToMapFolder)
-	{
+{
 		intitializeGame(filePathToMapFolder);
 		startUpPhase::startUp(gameMap, gamePlayers);
-	}
-
-
+}
 
 GameEngine::~GameEngine()
 {
@@ -210,7 +208,7 @@ void GameEngine::start() {
 			currentPlayer = gamePlayers->at(i);
 
 			currentPlayer->reinforce();
-			//currentPlayer->attack();
+			currentPlayer->attack();
 			currentPlayer->fortify();
 
 
@@ -258,56 +256,11 @@ void startUpPhase::distributeCountries(vector<Country*>* inputVec) {
 	}
 }
 
-// round-robin assign 1 troop to each country
+// round-robin assign 10 troops to each country
 void startUpPhase::TESTautoAssignTroops() {
-	//variable to keep track of the number of armies each player should be given
-	int* numOfArmies = new int();
-	//variable to keep track of the current player
-	Player* currentPlayer;
-	//variable to keep track of the countries owned by the current player
-	vector<Country*>* currentCountries;
-	int* countryID = new int();
-
-	vector<int>* countriesRecord = new vector<int>(playerVec->size());
-
-	vector<int>* troopCount = new vector<int>(playerVec->size());
-
-	//vector to keep track of which players have 
-	//vector<bool>* warning = new vector<bool>(playerVec->size());
-	bool* warning = new bool(false);
-	//boolean variable 
-	bool* repeat = new bool(false);
-
-	//determining the number of armies each player gets 
-	switch (startUpPhase::playerVec->size()) {
-
-	case 1:
-		std::cerr << "Invalid number of players. The game will now exit" << endl;
-		break;
-	case 2:
-		*numOfArmies = 40;
-		break;
-	case 3:
-		*numOfArmies = 35;
-		break;
-	case 4:
-		*numOfArmies = 30;
-		break;
-	case 5:
-		*numOfArmies = 25;
-		break;
-	case 6:
-		*numOfArmies = 20;
-		break;
-	default:
-		std::cerr << "Invalid number of players. The game will now exit" << endl;
-		exit(1);
-		break;
-	}
-	for (int i = 0; i < (*numOfArmies * startUpPhase::playerVec->size()); i++) {
-
-		//variable to keep track of the current player
-		currentPlayer = startUpPhase::playerVec->at((i) % startUpPhase::playerVec->size());
+	
+	for (int i = 0; i < _map->countries->size(); ++i) {
+		_map->countries->at(i)->setTroopCount(10);
 	}
 }
 
@@ -479,7 +432,8 @@ void startUpPhase::assignArmies() {
 	delete warning;
 	cout << "Thank you. The game will start shortly.\n";
 }
-void startUpPhase::startUp(const Map* map, vector<Player*>* inputVec) {
+void startUpPhase::startUp(Map* map, vector<Player*>* inputVec) {
+	_map = map;
 	startUpPhase::playerVec = inputVec;
 	shuffle();
 	distributeCountries(map->countries);
