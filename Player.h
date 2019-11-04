@@ -7,7 +7,7 @@
 #include <string>
 #include "Map.h"
 #include "Dice.h"
-#include "Cards.h"
+//#include "Cards.h"
 #include <iostream>
 //#include "GameEngine.h"
 
@@ -15,14 +15,17 @@
 class Player  {
 
 private:
+    
 	// Vector that has countriesOwned
 	vector<Country*>* countriesOwned;
+    Country* myCountry;
 
 	// Dice Object
-	Dice* myDice;
+	//Dice* myDice;
+    Dice* myDice;
 
 	// Hand object for each player
-	Hand* playerHand;
+	// Hand* playerHand;
 	string* name;
 	int* ID;
 	Map* gameMap;
@@ -31,15 +34,16 @@ private:
 
 
 public:
+    
     // Player Constructor and Destructor
 	Player();
 	Player(string * _name, int id, Map* map);
-	Player(vector<Country*>* playerCountries, Dice* playerDice, Hand* hand, string* playerName);
+	//Player(vector<Country*>* playerCountries, Dice* playerDice, Hand* hand, string* playerName);
 
     ~Player();
     
     // DICE METHODS
-    void diceObject();
+    void diceFacility(int* maxRoll, int* numOfArmies);
 
 	void setID(int* id) {
 		ID = id;
@@ -67,11 +71,10 @@ public:
         
     }
 
-	Hand* getHand();
+	//Hand* getHand();
     
     // Game methods
     void reinforce(Player* player);
-    void attack(Player* player);
     void fortify(Player* player);
 
 
@@ -82,6 +85,34 @@ public:
     int selectArmiesToReinforce( Country& country, int armiesRemaining);
 
 	int continentBonus();
+
+    void addAdjacentCountries(Country* country);
+    
+    bool isAdjacentCountry(Country* country);
+    
+    void setTroopCount(int troop, Country* myCountry);
+    int getTroopCount(Country* country);
+    
+    void compareDiceObjects(Player* player, Country* attackingCountry, Country* defendingCountry);
+    
+    // DICE METHODS
+    
+  
+    // CARDS METHODS
+    //void addCards(Card * newCard);
+    //void collectionOfRiskCards();
+    
+    
+  
+    
+    // Game methods
+   
+    void attack();
+   
+    
+    
+    
+    
 
 
 

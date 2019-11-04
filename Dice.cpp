@@ -9,10 +9,8 @@ using namespace std;
 Dice::Dice() {
     
     // Initializes totalRolls
-    maxRoll = new int();
     container = new int[0];
-    totalRolls = new int;
-    *totalRolls = 0;
+    totalRolls = new int(0);
     
     // Initializes value and valuePercentage
     value = new int[6];
@@ -26,14 +24,12 @@ Dice::Dice() {
 Dice::~Dice() {
     
     // Delete pointers
-    delete maxRoll;
     delete container;
     delete totalRolls;
     delete []value;
     delete []valuePercentage;
     
     // setting pointers to NULL
-    maxRoll = NULL;
     container = NULL;
     totalRolls = NULL;
     value = NULL;
@@ -42,23 +38,27 @@ Dice::~Dice() {
 
 
 // Implementing all the methods
-void Dice::rollDice(int* maxRoll) {
+void Dice::rollDice(int* maxRoll, int* numOfArmies) {
     
-    // Int variable to initialize numOfRolls
     int temp;
     
+    // Int variable to initialize numOfRolls
+
+    
     // Prompting user for number of dice to roll
-    cout << "How many dices do you want to roll? ";
+    cout << "Roll a dice from 1 and upto ( " << *numOfArmies << " & " << *maxRoll << " )" << endl;
     cin >> temp;
     
-    while (temp > *maxRoll) {
-        cout << "Please roll a dice from 1 to 3" << endl;
+    while (temp > *maxRoll || temp > *numOfArmies) {
+        cout << "Please roll a dice from 1 and upto ( " << *numOfArmies << " & " << *maxRoll << " )" << endl;
         cin >> temp;
     }
     
-    // Initializing number of rolls
+
+    
+    // Initializing the total roll
     numOfRolls = &temp;
-    *totalRolls += temp;
+    *totalRolls += *numOfRolls;
     
     // Initializing the container
     container = new int[*numOfRolls];
@@ -74,7 +74,7 @@ void Dice::rollDice(int* maxRoll) {
     valueTracker();
     percentageTracker();
     showPercentages();
- 
+    
     cout << " " << endl;
     
 }
@@ -104,27 +104,27 @@ void Dice::valueTracker() {
     // For loop to increment the value that is rolled
     for(int i = 0; i < *numOfRolls; i++) {
         
-    switch (container[i])
-    {
-        case 1:
-            value[0] = value[0]+1;
-            break;
-        case 2: // code to be executed if n = 2;
-            value[1] = value[1]+1;
-            break;
-        case 3:
-            value[2] = value[2]+1;
-            break;
-        case 4: // code to be executed if n = 2;
-            value[3] = value[3]+1;
-            break;
-        case 5:
-            value[4] = value[4]+1;
-            break;
-        case 6:
-            value[5] = value[5]+1;
-            break;
-      }
+        switch (container[i])
+        {
+            case 1:
+                value[0] = value[0]+1;
+                break;
+            case 2: // code to be executed if n = 2;
+                value[1] = value[1]+1;
+                break;
+            case 3:
+                value[2] = value[2]+1;
+                break;
+            case 4: // code to be executed if n = 2;
+                value[3] = value[3]+1;
+                break;
+            case 5:
+                value[4] = value[4]+1;
+                break;
+            case 6:
+                value[5] = value[5]+1;
+                break;
+        }
     }
     
     // For loop that displays number of times each value was rolled
@@ -154,7 +154,7 @@ void Dice::showPercentages() {
         cout << i+1;
         cout << " rolled: ";
         cout << valuePercentage[i] << endl;
- }
+    }
 }
 // Shows the values rolled
 void Dice::showValues() {
@@ -164,14 +164,8 @@ void Dice::showValues() {
     }
 }
 
-void Dice::compareDiceRolls(Dice* newDice) {
-    if(this->container[0] <= newDice->container[0]) {
-        cout << "Attacking country has lost" << endl;
-    }
-    else {
-        cout << "Defending country has lost" << endl;
-    }
-}
 
 
-   
+
+
+

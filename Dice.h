@@ -6,11 +6,10 @@
 // Start of class Dice
 class Dice {
     
-// Public methods
+    // Public methods
 public:
     // Variables
     const int NUM_OF_VALUES = 6;
-    int* maxRoll;
     int* numOfRolls;
     int* totalRolls;
     int* container;
@@ -22,12 +21,12 @@ public:
     ~Dice();
     
     // Methods
-    void compareDiceRolls(Dice* newDice);
-	void rollDice(int* maxRoll);
+    void rollDice(int* maxRoll, int *numOfArmies);
     void sortContainer();
     void valueTracker();
     void percentageTracker();
     void showValues();
     void showPercentages();
-  
+    
 };
+
