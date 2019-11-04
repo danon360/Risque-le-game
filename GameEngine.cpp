@@ -198,11 +198,33 @@ Player* GameEngine::getPlayerAt(int index) { return GameEngine::gamePlayers->at(
 
 Deck* GameEngine::getDeck() { return GameEngine::gameDeck; }
 
-//Player * GameEngine::nextPlayer() {
-//
-//	return GameEngine::gamePlayers->at(++(*GameEngine::currentPlayer) % *GameEngine::playerCount);
-//
-//}
+
+void GameEngine::start() {
+
+	bool done = false;
+	Player* currentPlayer;
+	string* ansswer = new string();
+
+	while (!done) {
+
+		for (int i = 0; i < gamePlayers->size(); i++) {
+
+			currentPlayer = gamePlayers->at(i);
+
+			currentPlayer->reinforce();
+			//currentPlayer->attack();
+			//currentPlayer->fortify(currentPlayer);
+
+
+			if (gamePlayers->size() == 1) {
+				cout << "Congratulations " << gamePlayers->at(0) << " !!!. You won the game!!" << endl;
+				done = true;
+				break;
+			}
+		}
+	}
+	
+}
 
 //initialising playerVec vector
 vector<Player*>* startUpPhase::playerVec = new vector<Player*>();
@@ -412,19 +434,35 @@ void startUpPhase::startUp(const Map* map, vector<Player*>* inputVec) {
 	assignArmies();
 }
 
-//main game loop 
 int main() {
+
 	GameEngine G1(".\\Maps");
-	
-	vector<Player*>* tempVec = G1.getPlayers();
+	G1.start();
+
+}
+	/*
+	vector<Player*>* players = G1.getPlayers();
 	vector<Country*>* currentCountries;
 
-	for (int i = 0; i < tempVec->size(); i++) {
-		cout << tempVec->at(i)->getName() << " : \n" << endl;
-		currentCountries = tempVec->at(i)->getCountriesOwned();
-		for (int j = 0; j < tempVec->at(i)->getCountriesOwned()->size(); j++) {
+	bool done = false;
+	Player* currentPlayer;
+	string* ansswer = new string();
+	while (!done) {
 
-			cout << " country number : " << j + 1 << " , Name: " << currentCountries->at(j)->getName() << " owned by : " << static_cast<Player*>(currentCountries->at(j)->owner)->getName() << " Troop count : " << currentCountries->at(j)->getTroopCount() << endl;
+		for (int i = 0; i < players->size(); i++) {
+
+			currentPlayer = players->at(i);
+
+			currentPlayer->reinforce();
+			//currentPlayer->attack();
+			//currentPlayer->fortify(currentPlayer);
+
+
+			if (players->size() == 1) {
+				cout << "Congratulations " << players->at(0) << " !!!. You won the game!!" << endl;
+				done = true;
+				break;
+			}
 		}
 	}
-}
+	*/

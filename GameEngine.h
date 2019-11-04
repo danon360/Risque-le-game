@@ -68,6 +68,7 @@ public:
 	std::vector<Player *> * getPlayers();
 	Player * getPlayerAt(int index);
 	Deck * getDeck();
+	void start();
 
 	// game methods:
 	//Player * nextPlayer(); // just call this to move to the next player
