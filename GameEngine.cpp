@@ -255,15 +255,6 @@ void startUpPhase::distributeCountries(vector<Country*>* inputVec) {
 		//cout << (static_cast<Player*>(inputVec->at(i)->owner))->getName() << endl;
 	}
 }
-
-// round-robin assign 10 troops to each country
-void startUpPhase::TESTautoAssignTroops() {
-	
-	for (int i = 0; i < _map->countries->size(); ++i) {
-		_map->countries->at(i)->setTroopCount(10);
-	}
-}
-
 void startUpPhase::assignArmies() {
 	//variable to keep track of the number of armies each player should be given
 	int* numOfArmies = new int();
@@ -432,14 +423,21 @@ void startUpPhase::assignArmies() {
 	delete warning;
 	cout << "Thank you. The game will start shortly.\n";
 }
-void startUpPhase::startUp(Map* map, vector<Player*>* inputVec) {
-	_map = map;
+void startUpPhase::TESTautoAssignTroops() {
+	for (int i = 0; i < playerVec->size(); i++) {
+		for (int j = 0; j < playerVec->at(i)->getCountriesOwned()->size(); j++) {
+			playerVec->at(i)->getCountriesOwned()->at(j)->setTroopCount((rand() % 10) + 1);
+		}
+	}
+}
+void startUpPhase::startUp(const Map* map, vector<Player*>* inputVec) {
 	startUpPhase::playerVec = inputVec;
 	shuffle();
 	distributeCountries(map->countries);
 	//assignArmies();
 	TESTautoAssignTroops();
 }
+
 
 int main() {
 
