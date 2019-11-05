@@ -57,8 +57,6 @@ void Dice::rollDice(int* maxRoll, int* numOfArmies) {
         cin >> temp;
     }
     
-
-    
     // Initializing the total roll
     numOfRolls = new int(temp);
     *totalRolls += *numOfRolls;

@@ -94,116 +94,118 @@ void Player::attack(){
     cin >> *willAttack;
     
     // Main attack loop
-    while (*willAttack == "yes") {
-        cout << "Attacking..." << endl;;
-        
-        /** ----- SELECTING COUNTRIES TO ATTACK FROM AND THE DEFENDING COUNTRY -----*/
-        // ----- SELECTING THE VALID COUNTRY TO ATTACK FROM -----
-        
+	while (*willAttack == "yes") {
+		cout << "Attacking..." << endl;;
+
+		/** ----- SELECTING COUNTRIES TO ATTACK FROM AND THE DEFENDING COUNTRY -----*/
+		// ----- SELECTING THE VALID COUNTRY TO ATTACK FROM -----
+
 		cout << "These are the countries that you can attack from: " << endl;
 
 		for (int i = 0; i < validAttackCountries->size(); ++i) {
 			cout << i + 1 << " " << validAttackCountries->at(i)->toString() << endl;
 		}
-        
-        cout << "Please selected an option " << "(1 to " << validAttackCountries->size() << "): ";
-        
-        do {
-            cin >> *selectedAttackCountry;
-        } while(*selectedAttackCountry < 1 || *selectedAttackCountry > validAttackCountries->size());
-        
-        cout << " " << endl;
-        
-        // The attacking country that was chosen and initializing the size of it's neighbours
-        attackingCountry = validAttackCountries->at(*selectedAttackCountry-1);
-        *sizeOfNeighbours = attackingCountry->getAdjacencyList()->size();
-        
-        // ----------- SELECTING THE VALID COUNTRY TO DEFEND ------------
-        
-        std::cout << "Choose the country you want to attack " << std::endl;
-        
-        // For loop that fills up validDefendCountries vector with valid neighbours that we can attack (ie. we do not own the country we are attacking)
-        for(int i = 0; i < *sizeOfNeighbours; ++i) {
 
-            Country* current = attackingCountry->getAdjacencyList()->at(i);
+		cout << "Please selected an option " << "(1 to " << validAttackCountries->size() << "): ";
+
+		do {
+			cin >> *selectedAttackCountry;
+		} while (*selectedAttackCountry < 1 || *selectedAttackCountry > validAttackCountries->size());
+
+		cout << " " << endl;
+
+		// The attacking country that was chosen and initializing the size of it's neighbours
+		attackingCountry = validAttackCountries->at(*selectedAttackCountry - 1);
+		*sizeOfNeighbours = attackingCountry->getAdjacencyList()->size();
+
+		// ----------- SELECTING THE VALID COUNTRY TO DEFEND ------------
+
+		std::cout << "Choose the country you want to attack " << std::endl;
+
+		// For loop that fills up validDefendCountries vector with valid neighbours that we can attack (ie. we do not own the country we are attacking)
+		for (int i = 0; i < *sizeOfNeighbours; ++i) {
+
+			Country* current = attackingCountry->getAdjacencyList()->at(i);
 
 			// check that we do not own the country || the country is adjacent to the attackingFrom country
-            if(current->getOwnerID() != attackingCountry->getOwnerID() || attackingCountry->isCountryAdjacentToMe(current)) {
-                validDefendCountries->push_back(current);
-            }
-        }
+			if (current->getOwnerID() != attackingCountry->getOwnerID() || attackingCountry->isCountryAdjacentToMe(current)) {
+				validDefendCountries->push_back(current);
+			}
+		}
 
 
 		// Printing out the countries that are valid to attack
 		for (int i = 0; i < validDefendCountries->size(); ++i) {
 			cout << i + 1 << ": " << validDefendCountries->at(i)->toString() << endl;
 		}
-        
-        cout << "Please selected an option " << "(1 to " << *sizeOfNeighbours << "): ";
-        
-        
-        // Takes in a valid country
-        do {
-            cin >> *selectedDefendCountry;
-        } while(*selectedDefendCountry < 1 || *selectedDefendCountry > validDefendCountries->size());
-        
-        cout << " " << endl;
-        
-        // The defending country is chosen
-        defendingCountry = validDefendCountries->at(*selectedDefendCountry-1);
-        
-        /** ----- CALLING THE DICE OBJECT FOR THE ATTACKING AND DEFENDING PLAYER -----*/
-        
-        // Setting the defending country's player
-        defendingPlayer = static_cast<Player* > (defendingCountry->owner);
-        
-        // Setting the armies
-        
-        *attackingArmies = this->getTroopCount(attackingCountry)-1;
-        *defendingArmies = defendingPlayer->getTroopCount(defendingCountry);
+
+		cout << "Please selected an option " << "(1 to " << *sizeOfNeighbours << "): ";
+
+
+		// Takes in a valid country
+		do {
+			cin >> *selectedDefendCountry;
+		} while (*selectedDefendCountry < 1 || *selectedDefendCountry > validDefendCountries->size());
+
+		cout << " " << endl;
+
+		// The defending country is chosen
+		defendingCountry = validDefendCountries->at(*selectedDefendCountry - 1);
+
+		/** ----- CALLING THE DICE OBJECT FOR THE ATTACKING AND DEFENDING PLAYER -----*/
+
+		// Setting the defending country's player
+		defendingPlayer = static_cast<Player*> (defendingCountry->owner);
+
+		// Setting the armies
+
+		*attackingArmies = this->getTroopCount(attackingCountry) - 1;
+		*defendingArmies = defendingPlayer->getTroopCount(defendingCountry);
 
 		std::cout << "[" << this->getName() << "] " << attackingCountry->getName() << *attackingArmies << " troops >>>> ";
 		std::cout << "[" << defendingPlayer->getName() << "] " << defendingCountry->getName() << *defendingArmies << " troops" << std::endl;
-        
-        // Rolling dice of attacking and defending players respectively
-        cout << "Attacking Player's turn to roll dice..." << endl;
-        this->diceFacility(attackerRoll, attackingArmies);
-        cout << " " << endl;
-        cout << "Defending Player's turn to roll dice..." << endl;
-        
-        // Compares both dice to select winner
-        defendingPlayer->diceFacility(defenderRoll, defendingArmies);
-        
-        this->compareDiceObjects(defendingPlayer, attackingCountry, defendingCountry);
-    
-        if(this->getTroopCount(attackingCountry) <= 1) {
-            cout << "Not enough troops to keep on attacking " << endl;
-            break;
-        }
-        
+
+		// Rolling dice of attacking and defending players respectively
+		cout << "Attacking Player's turn to roll dice..." << endl;
+		this->diceFacility(attackerRoll, attackingArmies);
+		cout << " " << endl;
+		cout << "Defending Player's turn to roll dice..." << endl;
+
+		// Compares both dice to select winner
+		defendingPlayer->diceFacility(defenderRoll, defendingArmies);
+
+		this->compareDiceObjects(defendingPlayer, attackingCountry, defendingCountry);
+
 		// change ownership of countries
-        if(defendingCountry->getTroopCount() == 0) {
+		if (defendingCountry->getTroopCount() == 0) {
+
+			std::cout << "Congratulations " << this->getName() << ", you have conquered " << defendingCountry->getName() << std::endl;
 
 			*hasConqueredThisTurn = true; // will be reset in GameEngine main game loop after attack() phase
 
-            this->addCountries(defendingCountry); // add country to my list of owned
+			this->addCountries(defendingCountry); // add country to my list of owned
 			defendingCountry->setOwnerID(*ID); // change its ownerID to my ID
 
-            vector<Country *> * v = defendingPlayer->getCountriesOwned();
-            
-            int i = 0;
-            for(vector<Country*>::iterator it = v->begin(); it != v->end(); ++it){
-                if(v->at(i)->equals(defendingCountry) ) {
-                    v->erase(it); // remove country from looser's owned county list
-                }
-                ++i;
-            }
-            
-        }
-        
-        
-        cout << "Do you want to attack further? (yes/no): ";
-        cin >> *willAttack;
+			vector<Country *> * v = defendingPlayer->getCountriesOwned();
+
+			int i = 0;
+			for (vector<Country*>::iterator it = v->begin(); it != v->end(); ++it) {
+				if (v->at(i)->equals(defendingCountry)) {
+					v->erase(it); // remove country from looser's owned county list
+				}
+				++i;
+			}
+
+		}
+
+		if (this->getTroopCount(attackingCountry) <= 1) {
+			cout << "Not enough troops to keep on attacking " << endl;
+			break;
+		}
+		else {
+			cout << "Do you want to attack further? (yes/no): ";
+			cin >> *willAttack;
+		}
     }
     
     
