@@ -9,7 +9,7 @@ Player::Player() {
 	countriesOwned = new vector<Country*>;
 	playerHand = new Hand;
 	name = new string();
-	Dice myDice;
+	myDice = new Dice();
 	myCountry = new Country();
 	hasConqueredThisTurn = new bool(false);
 }
@@ -20,7 +20,7 @@ Player::Player(string * _name, int id, Map* map) {
 	myCountry = new Country();						  
 	playerHand = new Hand; 
 	name = _name;
-	Dice myDice; 
+	myDice = new Dice();
 	gameMap = map;
 	hasConqueredThisTurn = new bool(false);
 }
@@ -122,8 +122,7 @@ void Player::attack(){
         
         std::cout << "Choose the country you want to attack " << std::endl;
         
-        // For loop that fills up validDefendCountries vector with valid neighbours
-        // Printing out the countries that are valid to attack
+        // For loop that fills up validDefendCountries vector with valid neighbours that we can attack (ie. we do not own the country we are attacking)
         for(int i = 0; i < *sizeOfNeighbours; ++i) {
 
             Country* current = attackingCountry->getAdjacencyList()->at(i);
@@ -132,10 +131,10 @@ void Player::attack(){
             if(current->getOwnerID() != attackingCountry->getOwnerID() || attackingCountry->isCountryAdjacentToMe(current)) {
                 validDefendCountries->push_back(current);
             }
-
-            // TODO: check if a country's neighbours are all owned by us
         }
 
+
+		// Printing out the countries that are valid to attack
 		for (int i = 0; i < validDefendCountries->size(); ++i) {
 			cout << i + 1 << ": " << validDefendCountries->at(i)->toString() << endl;
 		}
@@ -163,8 +162,8 @@ void Player::attack(){
         *attackingArmies = this->getTroopCount(attackingCountry)-1;
         *defendingArmies = defendingPlayer->getTroopCount(defendingCountry);
 
-		std::cout << "[" << this->getName() << "]" << attackingCountry->getName() << *attackingArmies << " >>>> ";
-		std::cout << "[" << defendingPlayer->getName() << "]" << defendingCountry->getName() << *defendingArmies << std::endl;
+		std::cout << "[" << this->getName() << "] " << attackingCountry->getName() << *attackingArmies << " troops >>>> ";
+		std::cout << "[" << defendingPlayer->getName() << "] " << defendingCountry->getName() << *defendingArmies << " troops" << std::endl;
         
         // Rolling dice of attacking and defending players respectively
         cout << "Attacking Player's turn to roll dice..." << endl;

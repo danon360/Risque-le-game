@@ -467,7 +467,7 @@ void startUpPhase::TESTautoAssignTroops() {
 
 			if (i % playerCount == 0) {
 				currentCountry->setOwnerID(*(currentPlayer->getID())); // set ID to current player's
-				currentCountry->owner = currentCountry; // set the country owner
+				currentCountry->owner = currentPlayer; // set the country's owner
 			}
 
 		}

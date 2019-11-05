@@ -10,7 +10,7 @@ using namespace std;
 Dice::Dice() {
 
     // Initializes totalRolls
-    container = new int[0];
+    container;
     totalRolls = new int(0);
     
     // Initializes value and valuePercentage
@@ -43,7 +43,7 @@ Dice::~Dice() {
 // Implementing all the methods
 void Dice::rollDice(int* maxRoll, int* numOfArmies) {
     
-	int temp = 0;
+    int temp;
     
     // Int variable to initialize numOfRolls
 
@@ -57,6 +57,7 @@ void Dice::rollDice(int* maxRoll, int* numOfArmies) {
         cin >> temp;
     }
     
+
     
     // Initializing the total roll
     numOfRolls = new int(temp);
@@ -73,9 +74,11 @@ void Dice::rollDice(int* maxRoll, int* numOfArmies) {
     // Sorts the container array from highest to lowest
     sortContainer();
     showValues();
+	/*
     valueTracker();
     percentageTracker();
     showPercentages();
+	*/
     
     cout << " " << endl;
     
