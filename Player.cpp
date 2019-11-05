@@ -162,8 +162,8 @@ void Player::attack(){
 		*attackingArmies = this->getTroopCount(attackingCountry) - 1;
 		*defendingArmies = defendingPlayer->getTroopCount(defendingCountry);
 
-		std::cout << "[" << this->getName() << "] " << attackingCountry->getName() << *attackingArmies << " troops >>>> ";
-		std::cout << "[" << defendingPlayer->getName() << "] " << defendingCountry->getName() << *defendingArmies << " troops" << std::endl;
+		std::cout << "[" << this->getName() << "] " << attackingCountry->getName() << " with " << *attackingArmies << " troops >>>> ";
+		std::cout << "[" << defendingPlayer->getName() << "] " << defendingCountry->getName() << " with " << *defendingArmies << " troops" << std::endl;
 
 		// Rolling dice of attacking and defending players respectively
 		cout << "Attacking Player's turn to roll dice..." << endl;

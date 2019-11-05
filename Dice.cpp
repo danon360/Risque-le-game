@@ -72,11 +72,10 @@ void Dice::rollDice(int* maxRoll, int* numOfArmies) {
     // Sorts the container array from highest to lowest
     sortContainer();
     showValues();
-	/*
     valueTracker();
-    percentageTracker();
+    //percentageTracker();
     showPercentages();
-	*/
+
     
     cout << " " << endl;
     
@@ -129,7 +128,7 @@ void Dice::valueTracker() {
                 break;
         }
     }
-    
+    /*
     // For loop that displays number of times each value was rolled
     for(int i = 0; i < NUM_OF_VALUES; i++) {
         cout << i+1;
@@ -137,6 +136,7 @@ void Dice::valueTracker() {
         cout << value[i];
         cout << " times " << endl;
     }
+	*/
     
 }
 
