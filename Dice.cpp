@@ -73,8 +73,8 @@ void Dice::rollDice(int* maxRoll, int* numOfArmies) {
     sortContainer();
     showValues();
     valueTracker();
-    //percentageTracker();
-    showPercentages();
+    percentageTracker();
+    //showPercentages();
 
     
     cout << " " << endl;

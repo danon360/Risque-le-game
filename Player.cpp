@@ -122,13 +122,16 @@ void Player::attack(){
 
 		std::cout << "Choose the country you want to attack " << std::endl;
 
+		validDefendCountries->clear(); // empty vector of old countries
+
 		// For loop that fills up validDefendCountries vector with valid neighbours that we can attack (ie. we do not own the country we are attacking)
 		for (int i = 0; i < *sizeOfNeighbours; ++i) {
 
 			Country* current = attackingCountry->getAdjacencyList()->at(i);
+			
 
 			// check that we do not own the country || the country is adjacent to the attackingFrom country
-			if (current->getOwnerID() != attackingCountry->getOwnerID() || attackingCountry->isCountryAdjacentToMe(current)) {
+			if (current->getOwnerID() != attackingCountry->getOwnerID() && attackingCountry->isCountryAdjacentToMe(current)) {
 				validDefendCountries->push_back(current);
 			}
 		}
@@ -185,6 +188,7 @@ void Player::attack(){
 
 			this->addCountries(defendingCountry); // add country to my list of owned
 			defendingCountry->setOwnerID(*ID); // change its ownerID to my ID
+			defendingCountry->owner = attackingCountry->owner;
 
 			vector<Country *> * v = defendingPlayer->getCountriesOwned();
 

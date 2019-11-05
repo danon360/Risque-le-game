@@ -59,7 +59,6 @@ void Country::setOwnerID(int id) {
 	*ownerID = id;
 }
 
-
 string Country::toString() {
 	string str = "Name: " + *name + ", Owner: " + std::to_string(*ownerID) + ", Continent: " + std::to_string(*continentNumber) + ", Troops: " + std::to_string(*troopCount);
 	return str;
