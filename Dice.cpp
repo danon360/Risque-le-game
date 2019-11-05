@@ -8,12 +8,10 @@ using namespace std;
 	   
 // Constructor
 Dice::Dice() {
-    
+
     // Initializes totalRolls
-						
     container = new int[0];
     totalRolls = new int(0);
-					
     
     // Initializes value and valuePercentage
     value = new int[6];
@@ -45,24 +43,23 @@ Dice::~Dice() {
 // Implementing all the methods
 void Dice::rollDice(int* maxRoll, int* numOfArmies) {
     
-    int temp;
+	int temp = 0;
     
     // Int variable to initialize numOfRolls
 
     
     // Prompting user for number of dice to roll
-    cout << "Roll a dice from 1 and upto ( " << *numOfArmies << " & " << *maxRoll << " )" << endl;
+	std::cout << "Roll from 1 to " << *maxRoll  << " dice (you have " <<  *numOfArmies << " armies)" << std::endl;
     cin >> temp;
 
     while (temp > *maxRoll || temp > *numOfArmies) {
-        cout << "Please choose the number of dice to attack with (1 to " << *maxRoll << ") - you have " << *numOfArmies << " troops." << endl;
+		std::cout << "Roll from 1 to " << *maxRoll << " dice (you have " << *numOfArmies << " armies)" << std::endl;
         cin >> temp;
     }
     
-
     
     // Initializing the total roll
-    numOfRolls = &temp;
+    numOfRolls = new int(temp);
     *totalRolls += *numOfRolls;
     
     // Initializing the container

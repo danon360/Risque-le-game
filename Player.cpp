@@ -59,6 +59,36 @@ void Player::attack(){
     vector<Country *> *validAttackCountries = new vector<Country *>;
     vector<Country *> *validDefendCountries = new vector<Country *>;
     
+	// Initializing all the valid attacking countries and display them
+	for (int i = 0; i < countriesOwned->size(); ++i) {
+
+		Country* current = countriesOwned->at(i);
+		int currentOwnerId = current->getOwnerID();
+
+		// This checks if the country in question has at least one enemy neighbour (someone we can attack)
+		vector<Country*>* neighbours = current->getAdjacencyList();
+		bool hasEnemies = false;
+
+		for (int j = 0; j < neighbours->size(); ++j) {
+
+			if (currentOwnerId != neighbours->at(j)->getOwnerID()) {
+				hasEnemies = true;
+				break;
+			}
+		}
+
+		// add the country to the attack from list if troop count > 1 AND it has at least one enemy neighbour
+		if (current->getTroopCount() > 1 && hasEnemies) {
+			validAttackCountries->push_back(current);
+		}
+
+		// if there are no countris you can attack from, tell player and proceed to Fortify phase.
+		if (validAttackCountries->size() == 0) {
+			std::cout << "There are no countries you can currently attack from -> proceeding to Fortify phase\n" << std::endl;
+			return;
+		}
+	}
+
     // Prompts the user for attack
     cout << "Do you want to attack? (yes/no): ";
     cin >> *willAttack;
@@ -70,27 +100,7 @@ void Player::attack(){
         /** ----- SELECTING COUNTRIES TO ATTACK FROM AND THE DEFENDING COUNTRY -----*/
         // ----- SELECTING THE VALID COUNTRY TO ATTACK FROM -----
         
-        cout << "These are the countries that you can attack from: " << endl;
-        
-        // Initializing all the valid attacking countries and display them
-        for(int i = 0; i < this->countriesOwned->size(); ++i) {
-            Country* current = countriesOwned->at(i);
-
-			// check if country has at least one enemy country
-			bool hasEnemies = false;
-			for (int j = 0; j < current->getAdjacencyList()->size(); ++j) {
-				if (current->getAdjacencyList()->at(j)->getOwnerID() != current->getOwnerID()) {
-					hasEnemies = true;
-					break;
-				}
-			}
-			
-
-            if(current->getTroopCount() > 1 && hasEnemies){
-                validAttackCountries->push_back(current);
-            }
-            // TODO: check if a country's neighbours are all owned by us
-        }
+		cout << "These are the countries that you can attack from: " << endl;
 
 		for (int i = 0; i < validAttackCountries->size(); ++i) {
 			cout << i + 1 << " " << validAttackCountries->at(i)->toString() << endl;
@@ -110,7 +120,7 @@ void Player::attack(){
         
         // ----------- SELECTING THE VALID COUNTRY TO DEFEND ------------
         
-        cout << "Choose the country you want to attack " << endl;
+        std::cout << "Choose the country you want to attack " << std::endl;
         
         // For loop that fills up validDefendCountries vector with valid neighbours
         // Printing out the countries that are valid to attack
@@ -123,7 +133,6 @@ void Player::attack(){
                 validDefendCountries->push_back(current);
             }
 
-            cout << " " << endl;
             // TODO: check if a country's neighbours are all owned by us
         }
 
@@ -147,21 +156,21 @@ void Player::attack(){
         /** ----- CALLING THE DICE OBJECT FOR THE ATTACKING AND DEFENDING PLAYER -----*/
         
         // Setting the defending country's player
-        defendingPlayer =  static_cast<Player* > (defendingCountry->owner);
+        defendingPlayer = static_cast<Player* > (defendingCountry->owner);
         
         // Setting the armies
         
         *attackingArmies = this->getTroopCount(attackingCountry)-1;
         *defendingArmies = defendingPlayer->getTroopCount(defendingCountry);
-        
-        cout << "Attacking country " <<  *attackingArmies << endl;
+
+		std::cout << "[" << this->getName() << "]" << attackingCountry->getName() << *attackingArmies << " >>>> ";
+		std::cout << "[" << defendingPlayer->getName() << "]" << defendingCountry->getName() << *defendingArmies << std::endl;
         
         // Rolling dice of attacking and defending players respectively
         cout << "Attacking Player's turn to roll dice..." << endl;
         this->diceFacility(attackerRoll, attackingArmies);
         cout << " " << endl;
         cout << "Defending Player's turn to roll dice..." << endl;
-        //player->diceFacility(defenderRoll);
         
         // Compares both dice to select winner
         defendingPlayer->diceFacility(defenderRoll, defendingArmies);
@@ -176,7 +185,7 @@ void Player::attack(){
 		// change ownership of countries
         if(defendingCountry->getTroopCount() == 0) {
 
-			*hasConqueredThisTurn = true;
+			*hasConqueredThisTurn = true; // will be reset in GameEngine main game loop after attack() phase
 
             this->addCountries(defendingCountry); // add country to my list of owned
 			defendingCountry->setOwnerID(*ID); // change its ownerID to my ID
@@ -454,11 +463,13 @@ void Player::fortify() {
 	Country* countryTo;
 
 	validMoveCountries.clear();
+	
+	vector<Country*> * neighbours = countryFrom->getAdjacencyList();
 
-	for (int i = 0; i < countryFrom->getAdjacencyList()->size(); ++i) {
+	for (int i = 0; i < neighbours->size(); ++i) {
 
 		// each neigbour of a country that I own
-		Country * current = countryFrom->getAdjacencyList()->at(i);
+		Country * current = neighbours->at(i);
 
 		if (this->equals(static_cast<Player*>(current->owner))) {
 			validMoveCountries.push_back(current);

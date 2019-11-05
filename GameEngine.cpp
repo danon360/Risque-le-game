@@ -222,7 +222,6 @@ void GameEngine::start() {
 
 			currentPlayer = gamePlayers->at(i);
 
-
 			currentPlayer->reinforce();
 			currentPlayer->attack();
 			currentPlayer->fortify();
@@ -453,9 +452,24 @@ void startUpPhase::assignArmies() {
 	cout << "Thank you. The game will start shortly.\n";
 }
 void startUpPhase::TESTautoAssignTroops() {
+
+	int playerCount = 2; // test method only works for 2 players -> change for n players
+
 	for (int i = 0; i < playerVec->size(); i++) {
-		for (int j = 0; j < playerVec->at(i)->getCountriesOwned()->size(); j++) {
-			playerVec->at(i)->getCountriesOwned()->at(j)->setTroopCount((rand() % 10) + 1);
+
+		Player * currentPlayer = playerVec->at(i);
+
+		for (int j = 0; j < currentPlayer->getCountriesOwned()->size(); j++) {
+
+			Country * currentCountry = currentPlayer->getCountriesOwned()->at(j);
+
+			currentCountry->setTroopCount((rand() % 10) + 1); // set troop count to a rand number between 1 and 10
+
+			if (i % playerCount == 0) {
+				currentCountry->setOwnerID(*(currentPlayer->getID())); // set ID to current player's
+				currentCountry->owner = currentCountry; // set the country owner
+			}
+
 		}
 	}
 }
