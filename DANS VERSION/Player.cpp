@@ -37,193 +37,220 @@ Player::~Player() {
 
 }
 
+struct attackPossibilities {
+	Country * source;
+	vector<Country*> * destination;
+
+};
+
 // Attack Method
 void Player::attack() {
+
+	int sourceIndex;
+	Country * source = nullptr;
+	Country * destination = nullptr;
+	vector<struct attackPossibilities*> * attackTree = new vector<struct attackPossibilities*>;
 
 	std::cout << "************************************************************************" << std::endl;
 	std::cout << "                      Attack : " << getName() << std::endl;
 	std::cout << "************************************************************************" << std::endl;
 
-	// Pointers willAttack decides if the player will attack or not
-	Player* defendingPlayer;
-	Country* defendingCountry;
-	Country* attackingCountry;
-	int* attackerRoll = new int(3);
-	int* defenderRoll = new int(2);
-	int* attackingArmies = new int();
-	int* defendingArmies = new int();
-	int* selectedAttackCountry = new int();
-	int* selectedDefendCountry = new int();
-	int* sizeOfNeighbours = new int();
-	string* willAttack = new string();
-	vector<Country*>* validAttackCountries = new vector<Country*>;
-	vector<Country*>* validDefendCountries = new vector<Country*>;
+	string willAttack;
 
-	// Initializing all the valid attacking countries and display them
-	for (int i = 0; i < countriesOwned->size(); ++i) {
-
-		Country* current = countriesOwned->at(i);
-		int currentOwnerId = current->getOwnerID();
-
-		// This checks if the country in question has at least one enemy neighbour (someone we can attack)
-		vector<Country*>* neighbours = current->getAdjacencyList();
-		bool hasEnemies = false;
-
-		for (int j = 0; j < neighbours->size(); ++j) {
-
-			if (currentOwnerId != neighbours->at(j)->getOwnerID()) {
-				hasEnemies = true;
-				break;
-			}
-		}
-
-		// add the country to the attack from list if troop count > 1 AND it has at least one enemy neighbour
-		if (current->getTroopCount() > 1 && hasEnemies) {
-			validAttackCountries->push_back(current);
-		}
-
-		// if there are no countris you can attack from, tell player and proceed to Fortify phase.
-		if (validAttackCountries->size() == 0) {
-			std::cout << "There are no countries you can currently attack from -> proceeding to Fortify phase\n" << std::endl;
-			return;
-		}
+	generateAttackTree(this, attackTree);
+	if (attackTree->size() <= 0) { // if nothing in attack tree then you cannot attack this turn -> skip attack phase
+		std::cout << "No armies in your countries can attack this turn.\n" << std::endl;
+		return;
 	}
 
-	// Prompts the user for attack
-	cout << "Do you want to attack? (yes/no): ";
-	cin >> *willAttack;
+	std::cout << "Do you want to attack? ";
+	std::cin >> willAttack;
+	std::cout << std::endl;
+	
+	while (willAttack.compare("yes") == 0) {
 
-	// Main attack loop
-	while (*willAttack == "yes") {
-		cout << "Attacking..." << endl;;
+		source = chooseSourceCountry(source, attackTree, &sourceIndex);
+		destination = chooseDestinationCountry(destination, attackTree, sourceIndex);
+		fight(source, destination);
 
-		/** ----- SELECTING COUNTRIES TO ATTACK FROM AND THE DEFENDING COUNTRY -----*/
-		// ----- SELECTING THE VALID COUNTRY TO ATTACK FROM -----
+		std::cout << "Do you want to attack again? ";
+		std::cin >> willAttack;
+		std::cout << std::endl;
 
-		cout << "These are the countries that you can attack from: " << endl;
+		deleteAttackTree(attackTree);
+		generateAttackTree(this, attackTree); // need to regenerate tree as countries can change ownership after a fight
 
-		for (int i = 0; i < validAttackCountries->size(); ++i) {
-			cout << i + 1 << " " << validAttackCountries->at(i)->toString() << endl;
+		if (willAttack.compare("yes") != 0) { // delete heap-allocated attackTree if 'no' is selected
+			deleteAttackTree(attackTree);
 		}
+	}
+	
+	std::cout << "Ending attack... proceeding to Reinforce phase.\n" << std::endl;
+	deleteAttackTree(attackTree);
+}
 
-		cout << "Please selected an option " << "(1 to " << validAttackCountries->size() << "): ";
+void Player::fight(Country * source, Country * destination) {
 
-		do {
-			cin >> *selectedAttackCountry;
-		} while (*selectedAttackCountry < 1 || *selectedAttackCountry > validAttackCountries->size());
+	// implement the rest of the fight mechanism
+	Player * defender = static_cast<Player *>(destination->owner);
+	int attackerRoll = 3;
+	int defenderRoll = 2;
+	int attackerTroopCount;
+	int defenderTroopCount;
 
-		cout << " " << endl;
+	string continueAttacking  = "yes";
 
-		// The attacking country that was chosen and initializing the size of it's neighbours
-		attackingCountry = validAttackCountries->at(*selectedAttackCountry - 1);
-		*sizeOfNeighbours = attackingCountry->getAdjacencyList()->size();
+	while (destination->getTroopCount() > 0 && continueAttacking.compare("yes") == 0) {
 
-		// ----------- SELECTING THE VALID COUNTRY TO DEFEND ------------
-
-		std::cout << "Choose the country you want to attack " << std::endl;
-
-		validDefendCountries->clear();
-
-		// For loop that fills up validDefendCountries vector with valid neighbours that we can attack (ie. we do not own the country we are attacking)
-		for (int i = 0; i < *sizeOfNeighbours; ++i) {
-
-			Country* current = attackingCountry->getAdjacencyList()->at(i);
-
-			// check that we do not own the country || the country is adjacent to the attackingFrom country
-			if (current->getOwnerID() != attackingCountry->getOwnerID() && attackingCountry->isCountryAdjacentToMe(current)) {
-				validDefendCountries->push_back(current);
-			}
-		}
-
-
-		// Printing out the countries that are valid to attack
-		for (int i = 0; i < validDefendCountries->size(); ++i) {
-			cout << i + 1 << ": " << validDefendCountries->at(i)->toString() << endl;
-		}
-
-		cout << "Please selected an option " << "(1 to " << *sizeOfNeighbours << "): ";
-
-
-		// Takes in a valid country
-		do {
-			cin >> *selectedDefendCountry;
-		} while (*selectedDefendCountry < 1 || *selectedDefendCountry > validDefendCountries->size());
-
-		cout << " " << endl;
-
-		// The defending country is chosen
-		defendingCountry = validDefendCountries->at(*selectedDefendCountry - 1);
-
-		/** ----- CALLING THE DICE OBJECT FOR THE ATTACKING AND DEFENDING PLAYER -----*/
-
-		// Setting the defending country's player
-		defendingPlayer = static_cast<Player*> (defendingCountry->owner);
-
-		// Setting the armies
-
-		*attackingArmies = this->getTroopCount(attackingCountry) - 1;
-		*defendingArmies = defendingPlayer->getTroopCount(defendingCountry);
-
-		std::cout << "[" << this->getName() << "] " << attackingCountry->getName() << " with " << *attackingArmies << " troops >>>> ";
-		std::cout << "[" << defendingPlayer->getName() << "] " << defendingCountry->getName() << " with " << *defendingArmies << " troops" << std::endl;
+		attackerTroopCount = source->getTroopCount();
+		defenderTroopCount = destination->getTroopCount();
 
 		// Rolling dice of attacking and defending players respectively
-		cout << "Attacking Player's turn to roll dice..." << endl;
-		this->diceFacility(attackerRoll, attackingArmies);
+		cout << getName() << "'s turn to roll dice..." << endl;
+		this->diceFacility(&attackerRoll, &attackerTroopCount);
 		cout << " " << endl;
-		cout << "Defending Player's turn to roll dice..." << endl;
 
-		// Compares both dice to select winner
-		defendingPlayer->diceFacility(defenderRoll, defendingArmies);
+		cout << defender->getName() << "'s turn to roll dice..." << endl;
+		defender->diceFacility(&defenderRoll, &defenderTroopCount);
 
-		this->compareDiceObjects(defendingPlayer, attackingCountry, defendingCountry);
+		this->compareDiceObjects(defender, source, destination);
 
-		// change ownership of countries
-		if (defendingCountry->getTroopCount() == 0) {
+		std::cout << "Do you want to keep attacking " << defender->getName() << " at " << destination->getName() << std::endl;
+		cin >> continueAttacking;
+		std::cout << std::endl;
+	}
 
-			std::cout << "Congratulations " << this->getName() << ", you have conquered " << defendingCountry->getName() << std::endl;
+	// will change the owner and display victory message if troop count is 0.
+	changeOwner(destination);
+}
 
-			*hasConqueredThisTurn = true; // will be reset in GameEngine main game loop after attack() phase
+void Player::changeOwner(Country* conquered) {
 
-			this->addCountries(defendingCountry); // add country to my list of owned
-			defendingCountry->setOwnerID(*ID); // change its ownerID to my ID
-			defendingCountry->owner = attackingCountry->owner;
+	if (conquered->getTroopCount() <= 0) {
+		std::cout << "Glory to " << this->getName() << "!! " << conquered->getName() << " has been conquered!" << std::endl;
+		conquered->setID(*this->getID());
+		conquered->owner = this;
+		*hasConqueredThisTurn = true; // this will get reset in the GameEngine main game loop
+	}
 
-			vector<Country*>* v = defendingPlayer->getCountriesOwned();
+;}
 
-			int i = 0;
-			for (vector<Country*>::iterator it = v->begin(); it != v->end(); ++it) {
-				if (v->at(i)->equals(defendingCountry)) {
-					v->erase(it); // remove country from looser's owned county list
+Country * Player::chooseSourceCountry(Country * eventualSource, vector<struct attackPossibilities*> * attackTree, int* sourceIndex) {
+
+	const int minChoice = 1;
+	const int maxChoice = attackTree->size();
+	int userChoice;
+
+	do {
+		std::cout << "Which country do you want to attack from?" << std::endl;
+		printSourceCountries(attackTree);
+		std::cout << ">>> ";
+		cin >> userChoice;
+		while (std::cin.fail()) // some error check to ensure interger input
+		{
+			std::cout << "Invalid input: enter a country in range (" << minChoice << " to " << maxChoice << ")" << std::endl;
+			std::cin.clear();
+			std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+			std::cin >> userChoice;
+		}
+		std::cout << std::endl;
+		// set the source index and country
+
+	} while (userChoice < minChoice || userChoice >> maxChoice);
+
+	eventualSource = attackTree->at(userChoice - 1)->source; // set the country
+	*sourceIndex = userChoice - 1; // set the index of the chose country (used in chooseDestinationCountry())
+
+	return eventualSource;
+}
+
+Country * Player::chooseDestinationCountry(Country * eventualDestination, vector<struct attackPossibilities*> * attackTree, int sourceIndex) {
+
+	Country * source = attackTree->at(sourceIndex)->source;
+
+	const int minChoice = 1;
+	const int maxChoice = source->getAdjacencyList()->size();
+	int userChoice;
+
+	do {
+		std::cout << "Attacking from " << source->getName() << ". Which country do you want to attack?" << std::endl;
+		printDestinationCountries(attackTree, sourceIndex);
+		std::cout << ">>> ";
+		cin >> userChoice;
+		while (std::cin.fail()) // some error check to ensure interger input
+		{
+			std::cout << "Invalid input: enter a country in range (" << minChoice << " to " << maxChoice << ")" << std::endl;
+			std::cin.clear();
+			std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+			std::cin >> userChoice;
+		}
+		std::cout << std::endl;
+
+		// set the destination to what user selected
+		eventualDestination = attackTree->at(sourceIndex)->destination->at(userChoice - 1);
+
+	} while (userChoice < minChoice || userChoice > maxChoice);
+
+	return eventualDestination;
+}
+
+void Player::deleteAttackTree(vector<struct attackPossibilities*> * attackTree) {
+
+	for (int i = 0; i < attackTree->size(); ++i) {
+		delete attackTree->at(i);
+	}
+}
+
+void Player::generateAttackTree(Player * player, vector<struct attackPossibilities*> * attackTree) {
+
+	vector<Country*> * owned = player->getCountriesOwned();
+
+	Country * source;
+	
+	for (int i = 0; i < owned->size(); ++i) {
+
+		vector<Country*> * destinations = new vector<Country*>;
+		source = owned->at(i);
+
+		if (source->getTroopCount() > 1) { // first check: only owned countries with >1 troop can be source
+
+			vector<Country*> * unvalidatedDestinations = source->getAdjacencyList();
+
+			for (int j = 0; j < unvalidatedDestinations->size(); ++j) {
+
+				Country * destination = unvalidatedDestinations->at(j);
+
+				if (destination->getOwnerID() != source->getOwnerID()) { // second check: only countries not owned by me can be destinations
+					destinations->push_back(destination);
 				}
-				++i;
 			}
 
 		}
-
-		if (this->getTroopCount(attackingCountry) <= 1) {
-			cout << "Not enough troops to keep on attacking " << endl;
-			break;
+		if (destinations->size() > 0) { // only add a possibility if there are countries that can be attacked
+			struct attackPossibilities* possibility = new attackPossibilities{ source, destinations };
+			attackTree->push_back(possibility);
 		}
-		else {
-			cout << "Do you want to attack further? (yes/no): ";
-			cin >> *willAttack;
-		}
+		
 	}
+	
+}
 
+void Player::printSourceCountries(vector<struct attackPossibilities*> * attackTree) {
 
-	// Delete Pointers
-	delete attackerRoll;
-	delete defenderRoll;
-	delete attackingArmies;
-	delete defendingArmies;
-	delete selectedDefendCountry;
-	delete selectedAttackCountry;
-	delete validAttackCountries;
-	delete validDefendCountries;
-	delete sizeOfNeighbours;
-	delete willAttack;
+	for (int i = 0; i < attackTree->size(); ++i) {
+		std::cout << i + 1 << ": " << attackTree->at(i)->source->toString() << std::endl; // print each valid source country
+	}
+}
 
+void Player::printDestinationCountries(vector<struct attackPossibilities*> * attackTree, int sourceIndex) {
+
+	struct attackPossibilities * current = attackTree->at(sourceIndex);
+
+	vector<Country*> * destinationOptions = current->destination;
+
+	for (int i = 0; i < destinationOptions->size(); ++i) {
+		std::cout << (i + 1) << ": " << destinationOptions->at(i)->toString() << std::endl;
+	}
 }
 
 void Player::setTroopCount(int troop, Country* country) {
@@ -260,7 +287,6 @@ Country* Player::selectCountry(std::vector<Country*>* countries) {
 
 	do {
 
-
 		std::cin >> userChoice;
 		while (std::cin.fail())// || (nArmies < 1) || nArmies > remainingArmies)
 		{
@@ -269,6 +295,7 @@ Country* Player::selectCountry(std::vector<Country*>* countries) {
 			std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
 			std::cin >> userChoice;
 		}
+		std::cout << std::endl;
 
 	} while ((userChoice < 1) || (userChoice > countries->size()));
 	return countries->at(userChoice - 1);
@@ -291,6 +318,7 @@ int Player::selectArmiesToReinforce(Country& source, int remainingArmies) {
 		std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
 		std::cin >> nArmies;
 	}
+	std::cout << std::endl;
 
 	return nArmies;
 }
@@ -532,29 +560,22 @@ void Player::diceFacility(int* maxRoll, int* numOfArmies) {
 	myDice->rollDice(maxRoll, numOfArmies);
 }
 
-
 void Player::compareDiceObjects(Player* player, Country* attackingCountry, Country* defendingCountry) {
-	int temp = 0;
+	
+	int numDiceToCompare = std::min(*this->myDice->numOfRolls, *player->myDice->numOfRolls); // take the min to compare that amount of dice
+	int * attackerDice = this->myDice->container;
+	int * defencerDice = player->myDice->container;
 
-	while ((temp < 2) & (temp < defendingCountry->getTroopCount())) {
-		if (defendingCountry->getTroopCount() == 0) {
-			cout << "The defending country has lost all it's countries!!!!" << endl;
-			cout << "The defending country now belongs to the attacking country!!!!" << endl;
+
+	for (int i = 0; i < numDiceToCompare; ++i) {
+		if (attackerDice[i] > defencerDice[i]) {
+			defendingCountry->addToTroopCount(-1);
+			cout << player->getName() << " has lost this round and loses one army " << endl;
 		}
 		else {
-			if (this->myDice->container[temp] <= player->myDice->container[temp]) {
-				cout << "The attacking player has lost this round and loses one army " << endl;
-				// Reducing the number of armies in attacking country
-				attackingCountry->setTroopCount(attackingCountry->getTroopCount() - 1);
-			}
-			else {
-				cout << "The defending player has lost this round and loses one army " << endl;
-				// Reducing the number of armies in defending country
-				defendingCountry->setTroopCount(defendingCountry->getTroopCount() - 1);
-			}
+			attackingCountry->addToTroopCount(-1);
+			cout << this->getName() << " has lost this round and loses one army " << endl;
 		}
-
-		temp++;
 	}
 }
 

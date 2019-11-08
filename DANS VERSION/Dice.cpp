@@ -12,7 +12,6 @@ Dice::Dice() {
     // Initializes totalRolls
     container;
     totalRolls = new int(0);
-    
     // Initializes value and valuePercentage
     value = new int[6];
     valuePercentage = new double[6];
@@ -28,6 +27,7 @@ Dice::~Dice() {
 				   
     delete container;
     delete totalRolls;
+	delete numOfRolls;
     delete []value;
     delete []valuePercentage;
     
@@ -43,8 +43,25 @@ Dice::~Dice() {
 // Implementing all the methods
 void Dice::rollDice(int* maxRoll, int* numOfArmies) {
     
+	int numDice = *numOfArmies;
     int temp;
-    
+
+	if (*maxRoll == 3) { // attacker mode defender will never get here as we pass 2 as a parameter
+		if (numDice > 3)
+			numDice = 3;
+		else if (numDice == 3)
+			numDice = 2;
+		else if (numDice == 2)
+			numDice = 1;
+	}
+
+	if (*maxRoll == 2) { // defender mode
+		if (numDice >= 2)
+			numDice = 2;
+		else if (numDice == 1)
+			numDice = 1;
+	}
+	
     // Int variable to initialize numOfRolls
 
     
@@ -52,10 +69,14 @@ void Dice::rollDice(int* maxRoll, int* numOfArmies) {
 	std::cout << "Roll from 1 to " << *maxRoll  << " dice (you have " <<  *numOfArmies << " armies)" << std::endl;
     cin >> temp;
 
-    while (temp > *maxRoll || temp > *numOfArmies) {
-		std::cout << "Roll from 1 to " << *maxRoll << " dice (you have " << *numOfArmies << " armies)" << std::endl;
-        cin >> temp;
-    }
+	while (std::cin.fail() || temp < 1 || temp > numDice)
+	{
+		std::cout << "Error: Roll from 1 to " << *maxRoll << " dice (you have " << numDice << " armies)" << std::endl;
+		std::cin.clear();
+		std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+		std::cin >> temp;
+	}
+	std::cout << std::endl;
     
     // Initializing the total roll
     numOfRolls = new int(temp);
@@ -161,8 +182,11 @@ void Dice::showPercentages() {
 }
 // Shows the values rolled
 void Dice::showValues() {
+	std::cout << "Dice results: " << std::endl;
     for(int i = 0; i < *numOfRolls; i++) {
-        cout << "The value are : ";
-        cout << container[i] << endl;
+		std::cout << container[i];
+		if (i < *numOfRolls - 1)
+			std::cout << "; ";
     }
+	std::cout << std::endl;
 }

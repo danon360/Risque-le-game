@@ -25,8 +25,15 @@ private:
 	Map* gameMap;
 	bool* hasConqueredThisTurn;
 
-	//GameEngine* mapGame;
-
+	// methods to support attack()
+	void generateAttackTree(Player * player, vector<struct attackPossibilities*> * attackTree);
+	void deleteAttackTree(vector<struct attackPossibilities*> * attackTree);
+	void printSourceCountries(vector<struct attackPossibilities*> * attackTree);
+	void printDestinationCountries(vector<struct attackPossibilities*> * attackTree, int sourceIndex);
+	Country* chooseSourceCountry(Country * eventualSource, vector<struct attackPossibilities*> * attackTree, int* sourceIndex);
+	Country* chooseDestinationCountry(Country * eventualDestination, vector<struct attackPossibilities*> * attackTree, int sourceIndex);
+	void fight(Country * source, Country * destination);
+	void changeOwner(Country* conquered);
 
 public:
     // Player Constructor and Destructor
@@ -54,7 +61,9 @@ public:
     void addCards(Card * newCard);
     void collectionOfRiskCards();
     
-    
+	vector<Country*>* getCountriesOwned();
+
+
     string getName() {
         return *name;
     }
@@ -71,6 +80,10 @@ public:
     void attack();
     void fortify();
 
+
+
+
+
 	void setMap(Map* map);
 
 	bool getHasConqueredThisTurn() {
@@ -80,8 +93,6 @@ public:
 	void resetHasConqueredThisTurn() {
 		*hasConqueredThisTurn = false;
 	}
-
-	vector<Country*>* getCountriesOwned();
 
 	Country* selectCountry(std::vector<Country*>* countries);
 
