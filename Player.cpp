@@ -384,33 +384,12 @@ void Player::reinforce() {
 	int armiesFromExchange = 0;
 	int armiesFromContinent = 0;
 	int armiesFromCountry = 0;
-	int user;
 
 	std::cout << "**********************************************************************************" << std::endl;
 	std::cout << "                               Reinforce : " << getName() << std::endl;
 	std::cout << "**********************************************************************************" << std::endl;
 
-	if (playerHand->size() > 4) {
-
-		while (playerHand->size() > 4) { // to cover the case of killing off other players and getting a ton of cards
-			cout << " You have more than 4 cards so you have to exchange " << endl;
-			armiesFromExchange = playerHand->exchange();
-		}
-	}
-	else if (playerHand->size() > 2) {
-		do {
-			cout << "Do you want to exchange? press 1 for Yes and 0 for NO" << endl;
-
-			cin >> user;
-			if (user == 0) {
-				armiesFromExchange = 0;
-			}
-			if (user == 1) {
-				armiesFromExchange = playerHand->exchange();
-			}
-		} while (user != 0 && user != 1);
-	}
-
+	armiesFromCountry = strategy->doExchangeOfCards(this);
 
 	armiesFromCountry = std::max((int)countriesOwned->size() / 3, 3);
 
@@ -649,7 +628,36 @@ HumanStrategy::~HumanStrategy() {
 
 
 // Reinforce methods -----------------------------------------------------------------
+int HumanStrategy::doExchangeOfCards(Player * player) {
 
+	int armiesFromExchange = 0;
+	int user;
+	Hand* playerHand = player->getHand();
+
+	if (playerHand->size() > 4) {
+
+		while (playerHand->size() > 4) { // to cover the case of killing off other players and getting a ton of cards
+			cout << " You have more than 4 cards so you have to exchange " << endl;
+			armiesFromExchange = playerHand->exchange();
+		}
+	}
+	else if (playerHand->isExchangePossible()) {
+		do {
+			cout << "Do you want to exchange? press 1 for Yes and 0 for NO" << endl;
+
+			cin >> user;
+			if (user == 0) {
+				armiesFromExchange = 0;
+			}
+			if (user == 1) {
+				armiesFromExchange = playerHand->exchange();
+			}
+		} while (user != 0 && user != 1);
+	}
+
+	return armiesFromExchange;
+
+}
 
 // Attack methods --------------------------------------------------------------------
 

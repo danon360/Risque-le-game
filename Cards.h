@@ -101,6 +101,6 @@ public:
 
 	bool AreThreeDifferent(Card* card_1, Card* card_2, Card* card_3);
 
-
+	bool isExchangePossible();
 
 };

@@ -46,15 +46,13 @@ void Dice::rollDice(int* maxRoll, int* numOfArmies) {
 
     
     // Prompting user for number of dice to roll
-    cout << "Roll a dice from 1 and upto ( " << *numOfArmies << " & " << *maxRoll << " )" << endl;
+    cout << "Roll a dice from 1 and up to ( " << 1 << " & " << *maxRoll << " )" << endl;
     cin >> temp;
     
     while (temp > *maxRoll || temp > *numOfArmies) {
-        cout << "Please roll a dice from 1 and upto ( " << *numOfArmies << " & " << *maxRoll << " )" << endl;
+        cout << "Please roll a dice from 1 and upto ( " << 1 << " & " << *maxRoll << " )" << endl;
         cin >> temp;
     }
-    
-
     
     // Initializing the total roll
     numOfRolls = &temp;

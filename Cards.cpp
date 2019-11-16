@@ -87,7 +87,31 @@ std::vector<Card*>* Hand::getCards() const {
 	return cards;
 }
 
+// This will return true if there is at least 1 possibility of a trade of 3 cards of identical type.
+bool Hand::isExchangePossible() {
 
+	int counter;
+	int numCardsInHand = cards->size();
+	enum CardType currentCardType;
+	enum CardType otherCardType;
+
+	for (int i = 0; i < numCardsInHand - 1; ++i) {
+
+		counter = 1; // current card is the first
+		currentCardType = cards->at(i)->getCardType();
+
+		for (int j = i + 1; j < numCardsInHand; ) {
+
+			otherCardType = cards->at(j)->getCardType();
+
+			if (currentCardType == otherCardType)
+				++counter;
+			if (counter >= 3)
+				return true;
+		}
+	}
+	return false;
+}
 
 
 void Hand::add(Card* card) {
