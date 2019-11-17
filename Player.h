@@ -24,6 +24,7 @@ public:
 
 	// Reinforce methods -----------------------------------
 	virtual int doExchangeOfCards(Player* player) = 0;
+	virtual void whereToAssignReiforceArmies(Player* player, int totalArmies) = 0;
 
 	// Attack methods --------------------------------------
 	virtual void attackDecision() = 0;
@@ -44,7 +45,8 @@ public:
 
 
 	// Reinforce methods -----------------------------------
-	int doExchangeOfCards(Player * player);
+	int doExchangeOfCards(Player* player);
+	void whereToAssignReiforceArmies(Player* player, int totalArmies);
 
 	// Attack methods --------------------------------------
 
@@ -119,10 +121,6 @@ private:
 	// DICE METHODS
 	void diceFacility(int* maxRoll, int* numOfArmies);
 
-	// Reiforce helper methods
-	int selectArmiesToReinforce(Country& country, int armiesRemaining);
-	int continentBonus();
-
 	// Attack helper methods
 	void generateAttackTree(Player* player, vector<struct attackPossibilities*>* attackTree);
 	void deleteAttackTree(vector<struct attackPossibilities*>* attackTree);
@@ -149,6 +147,10 @@ public:
 	void addCountries(Country* newCountry);
 	void addACountry(Country* toAdd);
 	void collectionOfCountries();
+
+	// Reiforce helper methods
+	int selectArmiesToReinforce(Country& country, int armiesRemaining);
+	int continentBonus();
 
 	// Set/Get/Equals/toString
 	vector<Country*>* getCountriesOwned();

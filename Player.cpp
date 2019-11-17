@@ -138,33 +138,30 @@ void Player::fight(Country* source, Country* destination) {
 	}
 
 	// will change the owner and display victory message if troop count is 0.
-	changeOwner(destination,source);
+	if (destination->getTroopCount() <= 0) {
+		changeOwner(destination, source);
+	}
 }
 
 void Player::changeOwner(Country* conquered, Country* winner) {
 
-	if (conquered->getTroopCount() <= 0) {
+	int armiesToTransfer;
 
-		int armiesToTransfer;
+	std::cout << "Glory to " << this->getName() << "!! " << conquered->getName() << " has been conquered!" << std::endl;
 
-		std::cout << "Glory to " << this->getName() << "!! " << conquered->getName() << " has been conquered!" << std::endl;
+	conquered->setID(*this->getID());
+	conquered->owner = this;
+	this->addACountry(conquered);
 
-		conquered->setID(*this->getID());
-		conquered->owner = this;
-		this->addACountry(conquered);
-
-		*hasConqueredThisTurn = true; // this will get reset in the GameEngine main game loop
-		cout << "Please select how many armies you'd like to transfer from " << winner->getName() << " to " << conquered->getName() << " (minimum: " << 1 <<", maximum: "<< winner->getTroopCount()-1<<  " )" << endl;
+	*hasConqueredThisTurn = true; // this will get reset in the GameEngine main game loop
+	cout << "Please select how many armies you'd like to transfer from " << winner->getName() << " to " << conquered->getName() << " (minimum: " << 1 <<", maximum: "<< winner->getTroopCount()-1<<  " )" << endl;
+	cin >> armiesToTransfer;
+	while (cin.fail() || armiesToTransfer < *this->myDice->numOfRolls || armiesToTransfer >= winner->getTroopCount()) {
+		cout << "Error: Invalid number. Please try again." << endl;
 		cin >> armiesToTransfer;
-		while (cin.fail() || armiesToTransfer < *this->myDice->numOfRolls || armiesToTransfer >= winner->getTroopCount()) {
-			cout << "Error: Invalid number. Please try again." << endl;
-			cin >> armiesToTransfer;
-		}
-		winner->addToTroopCount(-armiesToTransfer);
-		conquered->addToTroopCount(armiesToTransfer);
 	}
-
-	;
+	winner->addToTroopCount(-armiesToTransfer);
+	conquered->addToTroopCount(armiesToTransfer);
 }
 
 Country* Player::chooseSourceCountry(Country* eventualSource, vector<struct attackPossibilities*>* attackTree, int* sourceIndex) {
@@ -389,40 +386,17 @@ void Player::reinforce() {
 	std::cout << "                               Reinforce : " << getName() << std::endl;
 	std::cout << "**********************************************************************************" << std::endl;
 
+	// Strategy pattern decision point: Does player want to exchange cards this turn
 	armiesFromCountry = strategy->doExchangeOfCards(this);
 
 	armiesFromCountry = std::max((int)countriesOwned->size() / 3, 3);
 
 	armiesFromContinent = continentBonus();
 
-
 	int totalArmies = armiesFromCountry + armiesFromExchange + armiesFromContinent;
 
-	do {
-
-		// Select country to reinforce
-		std::cout << "\nYou have " << totalArmies << " remaining soldiers to add. ";
-		std::cout << "Please select the country you would like to add soldiers to.\n";
-
-		Country* country = selectCountry(getCountriesOwned());
-
-		// Select number of armies to reinforce for the selected country
-		int armies = selectArmiesToReinforce(*country, totalArmies);
-
-		vector<Country*>* cntry = getCountriesOwned();
-
-
-		for (auto& c : *cntry) {
-			if (c->getName() == country->getName()) {
-				c->addToTroopCount(armies);
-				std::cout << c->getName() << " now has " << c->getTroopCount() << " armies after reinforcing. " << std::endl;
-			}
-		}
-		totalArmies -= armies;
-		std::cout << std::endl;
-
-
-	} while (totalArmies > 0);
+	// Strategy pattern decision point: what Country to assign the bonus troop
+	strategy->whereToAssignReiforceArmies(this, totalArmies);
 
 }
 
@@ -455,6 +429,7 @@ void Player::fortify() {
 
 	// does user want to fortify this turn? -----------------------------------------------------------------
 
+	// 
 	std::cout << "Do you want to fortify (yes/no)? ";
 	cin >> answer;
 
@@ -656,6 +631,35 @@ int HumanStrategy::doExchangeOfCards(Player * player) {
 	}
 
 	return armiesFromExchange;
+
+}
+
+void HumanStrategy::whereToAssignReiforceArmies(Player* player, int totalArmies) {
+
+	do {
+
+		// Select country to reinforce
+		std::cout << "\nYou have " << totalArmies << " remaining soldiers to add. ";
+		std::cout << "Please select the country you would like to add soldiers to.\n";
+
+		Country* country = player->selectCountry(player->getCountriesOwned());
+
+		// Select number of armies to reinforce for the selected country
+		int armies = player->selectArmiesToReinforce(*country, totalArmies);
+
+		vector<Country*>* cntry = player->getCountriesOwned();
+
+
+		for (auto& c : *cntry) {
+			if (c->getName() == country->getName()) {
+				c->addToTroopCount(armies);
+				std::cout << c->getName() << " now has " << c->getTroopCount() << " armies after reinforcing. " << std::endl;
+			}
+		}
+		totalArmies -= armies;
+		std::cout << std::endl;
+
+	} while (totalArmies > 0);
 
 }
 
