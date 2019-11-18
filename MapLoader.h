@@ -2,6 +2,7 @@
 #include"Map.h";
 #include <map>;
 #include <regex>
+#include <ctype.h>
 
 using std::exception;
 using std::map;
@@ -16,7 +17,7 @@ public:
 	MapLoader(string location);
 	Map* init();
 	//function that takes a string containing the file location, and then procedes to load the file content into 3 seperate string pointers provided to it in the parameters
-	bool loadFileToStrings(string* fileLocation, string* continent, string* country, string* borders);
+	virtual bool loadFileToStrings(string* fileLocation, string* continent, string* country, string* borders);
 
 	//function that when given a string loads the continents into a vector and returns it
 	vector<Continent*>* continentLoader(string input);
@@ -41,3 +42,11 @@ class MapLoaderException : public exception
 	}
 };
 
+class MapLoaderAdapter : public MapLoader {
+public:
+	//void init();
+	MapLoaderAdapter(string location);
+	bool loadFileToStrings(string* fileLocation, string* continent, string* country, string* borders);
+
+
+};

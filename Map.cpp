@@ -61,7 +61,7 @@ void Country::setOwnerID(int id) {
 
 
 string Country::toString() {
-	string str = "Name: " + *name + ", ID: " + std::to_string(*ID) + ", Troops: " + std::to_string(*troopCount);
+	string str = "Name: " + *name + ", ownerID: " + std::to_string(*ownerID) + ", Troops: " + std::to_string(*troopCount);
 	return str;
 }
 bool Country::equals(Country* otherCountry) {

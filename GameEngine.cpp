@@ -108,11 +108,36 @@ void GameEngine::makePlayers() {
 	std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n'); // skip endline from previous 'cin'
 
 	// Create new players and put in vector
-	for (int i = 1; i <= *GameEngine::playerCount; ++i) {
+	for (int i = 0; i < *GameEngine::playerCount; ++i) {
 
-		std::cout << "Please enter player " << i << "'s name: ";
+		std::cout << "Please enter player " << i+1 << "'s name: ";
 		std::getline(std::cin, name);
-		gamePlayers->push_back(new Player(new string(name), i, gameMap)); // set name and unique ID and give it gameMap
+		std::cout << std::endl;
+		gamePlayers->push_back(new Player(new string(name), i+1, gameMap)); // set name and unique ID and give it gameMap
+
+		// set the strategy of each player
+		std::cout << "What type of player is " << name << " going to be?" << std::endl;
+		std::cout << "\t1. Human" << std::endl;
+		std::cout << "\t2. Aggressive Bot" << std::endl;
+		std::cout << "\t3. Benevolent Bot" << std::endl;
+		int playerTypeChoice;
+		do {
+			std::cin >> playerTypeChoice;
+			switch (playerTypeChoice) {
+			case 1:
+				gamePlayers->at(i)->setStrategy(new HumanStrategy());
+				break;
+			case 2:
+				gamePlayers->at(i)->setStrategy(new AgressiveStrategy());
+				break;
+			case 3:
+				gamePlayers->at(i)->setStrategy(new BenevolentStrategy());
+				break;
+			}
+			std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+		} while (playerTypeChoice < 1 || playerTypeChoice > 3);
+		std::cout << std::endl;
+
 	}
 	std::cout << std::endl;
 
@@ -128,7 +153,7 @@ void GameEngine::makeDeck() {
 
 struct path_leaf_string
 {
-	std::string operator()(const std::filesystem::directory_entry& entry) const
+	std::string operator()(const std::experimental::filesystem::directory_entry& entry) const
 	{
 		return entry.path().string();
 	}
@@ -177,9 +202,9 @@ string GameEngine::getSelectedMapPath() {
 
 void GameEngine::read_directory(const std::string& name, stringvec& v)
 {
-	std::filesystem::path p(name);
-	std::filesystem::directory_iterator start(p);
-	std::filesystem::directory_iterator end;
+	std::experimental::filesystem::path p(name);
+	std::experimental::filesystem::directory_iterator start(p);
+	std::experimental::filesystem::directory_iterator end;
 	std::transform(start, end, std::back_inserter(v), path_leaf_string());
 }
 
@@ -222,7 +247,7 @@ void GameEngine::start() {
 
 			currentPlayer = gamePlayers->at(i);
 
-			// currentPlayer->reinforce();
+			currentPlayer->reinforce();
 			currentPlayer->attack();
 			currentPlayer->fortify();
 

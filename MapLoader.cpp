@@ -24,7 +24,8 @@
 		*noError = loadFileToStrings(fileLocation, strContinents, strCountries, strBorders);
 
 		if (!*noError) {
-			//throw error
+			MapLoaderException ex;
+			throw ex;
 		}
 
 		contVec = continentLoader(*strContinents);
@@ -290,7 +291,9 @@
 		//loading the country name from the input string to its variable
 		*countryName = trim(input.substr(*idEnd, *nameEnd - *idEnd));
 		//loading the last country intothe map
-		(*countryMap).emplace((*ID), new Country(*countryName, *ID, *continentNum, 0));
+		addedCountry = new Country(*countryName, *ID, *continentNum - 1, 0);
+		(*countryMap).emplace((*ID), addedCountry);
+		contVec->at(*continentNum - 1)->addCountry(addedCountry);
 
 		contVec->at(*continentNum - 1)->addCountry(new Country(*countryName, *ID, *continentNum, 0));
 		//TODO:delete pointers
@@ -382,4 +385,226 @@ static inline string trim(string input) {
 		(*returnStr) = (*returnStr).substr(1, (*returnStr).length());
 	}
 	return *returnStr;
+}
+
+//constructor for the adapter class
+MapLoaderAdapter::MapLoaderAdapter(string location) : MapLoader(location) {} 
+/*
+void MapLoaderAdapter::init() {
+	vector<Continent*>* contVec = new vector < Continent*>();
+	map<int, Country*>* countryMap = new map<int, Country*>();
+	string* strContinents = new string();
+	string* strCountries = new string();
+	string* strBorders = new string();
+
+	string* localfileLocation = fileLocation;
+	bool* noError = new bool();
+	Map* map;
+	//convert(localfileLocation, strContinents, strCountries, strBorders);
+	
+	//*noError = true;
+	*noError = loadFileToStrings(fileLocation, strContinents, strCountries, strBorders);
+
+	if (!*noError) {
+		MapLoaderException ex;
+		throw ex;
+	}
+	
+	contVec = continentLoader(*strContinents);
+
+	countryMap = countryLoader(*strCountries, contVec);
+
+	addBorders(*strBorders, countryMap);
+
+	map = new Map(countryMap, contVec);
+
+
+	//return map;
+}
+*/
+bool MapLoaderAdapter::loadFileToStrings(string* fileLocation, string* continent, string* country, string* borders) {
+	ifstream* infile;
+	string* indata;
+	stringstream* stream1;
+	int* indexCountries, * indexContinents, * indexBorders;
+	string* buffer = new string();
+	int startIndex,endIndex;
+	vector<Continent*>* contVec;
+	//initialising the objects infile and stream1
+	infile = new ifstream();
+	stream1 = new stringstream();
+	int startLine = 0,counter =1;
+	//mke of countries to be able to search through them quickly
+	map<string, int> countMap1 = map<string, int>();
+	//openning the file MAKE SURE FILE LOCATION IS CORRECT
+	(*infile).open(*fileLocation);
+	//variable that stores the number that refers to a continent
+	int contNum;
+	//map of the continents and there respective numbers 
+	map<string,int> contMap = map<string, int>();
+	//strings for countries and continents
+	string countries,conts;
+
+	//making sure that the file is actually open
+	if (!(*infile).is_open()) {
+		cout << "problem with openning the map file.\nThe program will now terminate.";
+		MapLoaderException ex;
+		throw ex;
+		//exit(1);
+	}
+
+
+
+	//loading file contents into stream
+	*stream1 << (*infile).rdbuf();
+
+	//assigning indata pointer to the newly created string containing the data of the .map file
+	indata = new string((*stream1).str());
+	
+
+	//finding the starting and ending index of the continent list
+	startIndex = indata->find("[Continents]", 0) + 13;		//13 is to skip over the continents  list
+	endIndex = indata->find("[Territories]", 0);
+	
+	//emplacing the list of continents into a buffer to rewrite them into the desired format
+	*buffer = indata->substr(startIndex,endIndex - startIndex);
+
+	//reformating the buffer
+	trim(*buffer);
+	std::replace(buffer->begin(), buffer->end(), ' ', '-');
+	std::replace(buffer->begin(), buffer->end(), '=', ' ');
+
+	//setting continent = to buffer
+	*continent = *buffer;
+
+	//reusing the continent loader function to load the continent map with continents
+	contVec = continentLoader(*buffer);
+	for (int i = 1; i <= contVec->size(); i++) {
+		contMap.emplace(contVec->at(i - 1)->getName(), i);
+	}
+
+	
+	//loading the buffer with the list of countries
+	*buffer = indata->substr(endIndex + 13);
+
+	//initialising startLine to the very begining of the list
+	startLine = 0;
+
+
+	//while loop that will iterate through every line of the list
+	while (startLine < buffer->size()-1) {
+		
+		endIndex = buffer->find(',', startLine);
+		
+		//extracting the country
+		countries = buffer->substr(startLine + 1, endIndex - startLine -1);
+
+		//calculating the starting point of the continent, which should be after the first 3 ',' in a line
+		startIndex = buffer->find(',', buffer->find(',', endIndex + 1) +1)+1;
+		endIndex = buffer->find(',', startIndex + 1);
+
+		//extracting the continent
+		conts = buffer->substr(startIndex, endIndex - startIndex);
+
+		//making sure continents and countries dont have space in their names 
+		std::replace(countries.begin(), countries.end(), ' ', '-');
+		std::replace(conts.begin(), conts.end(), ' ', '-');
+
+		//cout << startLine << " " << startIndex << " " << buffer->substr(startLine, 5) << endl;
+		//cout << countries << "  " << conts << endl;
+		//trimming of whitespace
+		countries = trim(countries);
+
+		//emplacing the countries and there counters into the map 
+		countMap1.emplace(countries,counter);
+		contNum = contMap.at(conts);
+		country->append(std::to_string(counter) + " " + countries + " " + std::to_string(contNum) + " \n");
+		
+		//finding the next index of new line '\n'
+		startLine = buffer->find('\n',startLine+1);
+
+		//if thereare more than one adjacent \n , set it to the last one
+		while (buffer->at(startLine + 1) == '\n') {
+			startLine++;
+			//making sure the startLine does not keep incrementing outside hte bounds of the file 
+			if (startLine == buffer->size() - 1) {
+				break;
+			}
+		}
+		//incrementing the counter
+		counter++;
+	}
+	
+	//finding the starting and ending index of the continent list
+	startIndex = indata->find("[Territories]", 0) + 13;
+
+	//emplacing the list of continents into a buffer to rewrite them into the desired format
+	*buffer = indata->substr(startIndex);
+
+	string  line;
+	startLine = 0;
+	startIndex = 0;
+	while (startLine < buffer->size() - 1) {
+		
+		endIndex = buffer->find(',', startLine);
+		//cout << startLine <<"   "<< endIndex << endl;
+
+		//extracting the country
+		countries = buffer->substr(startLine + 1, endIndex - startLine - 1);
+
+		//making sure continents and countries dont have space in their names 
+		std::replace(countries.begin(), countries.end(), ' ', '-');
+
+		//calculating the starting point of the bordering countries, which should be after the first 4 ',' in a line
+		endIndex = buffer->find('\n', startLine + 1);
+		startIndex = buffer->find(',', buffer->find(',', buffer->find(',', buffer->find(',', startLine + 1) + 1) + 1) + 1) + 1;
+		
+		//holds the string of neighbouring countries
+		line = buffer->substr(startIndex, endIndex - startIndex);
+		//cout << countMap1.at(countries)<<" : "<<line << endl;
+
+		startIndex = 0;
+		endIndex = line.find(',', startIndex);
+		
+		std::regex e("([^,]+)");   // matches delimiters or consecutive non-delimiters
+
+		std::regex_iterator<std::string::iterator> rit(line.begin(), line.end(), e);
+		std::regex_iterator<std::string::iterator> rend;
+		
+		//appending the country to the string
+		borders->append(std::to_string(countMap1.at(countries)));
+		//cout << countMap1.at(countries) ;
+		while (rit != rend) {
+			
+			countries = rit->str();
+			replace(countries.begin(), countries.end(), ' ', '-');
+			//cout << " " << countMap1.at(countries);
+			borders->append(" " + std::to_string(countMap1.at(countries)));
+			++rit;
+		}
+		//cout << endl;
+		borders->append("\n");
+		/*
+		while (endIndex != -1) {
+
+
+		}*/
+		
+		std::replace(conts.begin(), conts.end(), ' ', '-');
+
+		//finding the next index of new line '\n'
+		startLine = buffer->find('\n', startLine + 1);
+
+		//if thereare more than one adjacent \n , set it to the last one
+		while (buffer->at(startLine + 1) == '\n') {
+			startLine++;
+			//making sure the startLine does not keep incrementing outside hte bounds of the file 
+			if (startLine == buffer->size() - 1) {
+				break;
+			}
+		}
+
+	}
+	return true;
+	//cout << *borders << endl;
 }
