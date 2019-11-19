@@ -461,6 +461,9 @@ bool MapLoaderAdapter::loadFileToStrings(string* fileLocation, string* continent
 	//assigning indata pointer to the newly created string containing the data of the .map file
 	indata = new string((*stream1).str());
 	
+	if (indata->find("[Territories]", 0) == -1) {
+		return MapLoader::loadFileToStrings(fileLocation, continent, country, borders);
+	}
 
 	//finding the starting and ending index of the continent list
 	startIndex = indata->find("[Continents]", 0) + 13;		//13 is to skip over the continents  list

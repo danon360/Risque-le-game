@@ -35,3 +35,10 @@ void Subject::Notify() {
     for(; i != _observers->end(); ++i)
         (*i)->Update();
 }
+
+// This is for the PhaseObserverView
+void Subject::Notify(int playerID, string phase, string action) {
+    list<Observer*>::iterator i = _observers->begin();
+    for(; i != _observers->end(); ++i)
+        (*i)->Update(playerID, phase, action);
+}

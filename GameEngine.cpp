@@ -54,7 +54,7 @@ bool GameEngine::makeMap(string filePathToMap) {
 	do {
 		// create map
 		try {
-			MapLoader ml(filePathToMap);
+			MapLoaderAdapter ml(filePathToMap);
 			GameEngine::gameMap = ml.init();
 
 			// check if map is valid
