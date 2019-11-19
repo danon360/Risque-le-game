@@ -69,6 +69,8 @@ void Player::attack() {
 	}
 
 	bool continueAttacking = strategy->attackDecision(this);
+    
+     Notify(*this->getID(), "Attacking", " and selecting countries to attack from");
 
 	while (continueAttacking) {
 		
@@ -327,6 +329,8 @@ void Player::reinforce() {
 	std::cout << "                               Reinforce : " << getName() << std::endl;
 	std::cout << "**********************************************************************************" << std::endl;
 
+     Notify(*this->getID(), "Reinforcing", "");
+    
 	// Strategy pattern decision point: Does player want to exchange cards this turn
 	armiesFromCountry = strategy->doExchangeOfCards(this);
 
@@ -369,6 +373,8 @@ void Player::fortify() {
 
 	// does user want to fortify this turn? -----------------------------------------------------------------
 	if (strategy->fortifyDecision(this)) {
+        
+         Notify(*this->getID(), "Fortifying", "");
 
 		// get the country to move troops from -----------------------------------------------------------------
 		Country* countryFrom = strategy->whereToFortifyFrom(this);

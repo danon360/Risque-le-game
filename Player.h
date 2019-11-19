@@ -1,5 +1,6 @@
 
 #pragma once
+#include "Subject.hpp"
 #include <string>
 #include "Map.h"
 #include "Dice.h"
@@ -153,7 +154,7 @@ private:
 
 };
 
-class Player {
+class Player : public Subject{
 
 private:
 
