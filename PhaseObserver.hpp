@@ -15,7 +15,7 @@ public:
     PhaseObserver();
     PhaseObserver(Player* currentPlayer);
     ~PhaseObserver();
-    void Update();
+	void Update() {};
     void Update(int playerID, string phase, string action);
     void Display(int playerID, string phase, string action);
 private:

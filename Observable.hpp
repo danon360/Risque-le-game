@@ -19,7 +19,7 @@ public:
     virtual void Attach(Observer *) = 0;
     virtual void Detach(Observer *) = 0;
     virtual void Notify() = 0;
-    virtual void Notify(int playerID, string phase, string action); // This is for the PhaseObserver View 
+    virtual void Notify(int playerID, string phase, string action) = 0; // This is for the PhaseObserver View 
 protected:
     Observable() {};
 private:
