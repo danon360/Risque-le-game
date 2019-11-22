@@ -6,6 +6,7 @@
 #include "Dice.h"
 #include "Cards.h"
 #include <iostream>
+#include "Subject.hpp"
 
 // Forward declaration
 class Player;
@@ -97,7 +98,7 @@ public:
 };
 
 
-class Player {
+class Player: public Subject {
 
 private:
 
