@@ -54,7 +54,7 @@ bool GameEngine::makeMap(string filePathToMap) {
 	do {
 		// create map
 		try {
-			MapLoader ml(filePathToMap);
+			MapLoaderAdapter ml(filePathToMap);
 			GameEngine::gameMap = ml.init();
 
 			// check if map is valid
@@ -108,11 +108,36 @@ void GameEngine::makePlayers() {
 	std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n'); // skip endline from previous 'cin'
 
 	// Create new players and put in vector
-	for (int i = 1; i <= *GameEngine::playerCount; ++i) {
+	for (int i = 0; i < *GameEngine::playerCount; ++i) {
 
-		std::cout << "Please enter player " << i << "'s name: ";
+		std::cout << "Please enter player " << i+1 << "'s name: ";
 		std::getline(std::cin, name);
-		gamePlayers->push_back(new Player(new string(name), i, gameMap)); // set name and unique ID and give it gameMap
+		std::cout << std::endl;
+		gamePlayers->push_back(new Player(new string(name), i+1, gameMap)); // set name and unique ID and give it gameMap
+
+		// set the strategy of each player
+		std::cout << "What type of player is " << name << " going to be?" << std::endl;
+		std::cout << "\t1. Human" << std::endl;
+		std::cout << "\t2. Aggressive Bot" << std::endl;
+		std::cout << "\t3. Benevolent Bot" << std::endl;
+		int playerTypeChoice;
+		do {
+			std::cin >> playerTypeChoice;
+			switch (playerTypeChoice) {
+			case 1:
+				gamePlayers->at(i)->setStrategy(new HumanStrategy());
+				break;
+			case 2:
+				gamePlayers->at(i)->setStrategy(new AgressiveStrategy());
+				break;
+			case 3:
+				gamePlayers->at(i)->setStrategy(new BenevolentStrategy());
+				break;
+			}
+			std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+		} while (playerTypeChoice < 1 || playerTypeChoice > 3);
+		std::cout << std::endl;
+
 	}
 	std::cout << std::endl;
 
@@ -128,7 +153,7 @@ void GameEngine::makeDeck() {
 
 struct path_leaf_string
 {
-	std::string operator()(const std::filesystem::directory_entry& entry) const
+	std::string operator()(const std::experimental::filesystem::directory_entry& entry) const
 	{
 		return entry.path().string();
 	}
@@ -177,9 +202,9 @@ string GameEngine::getSelectedMapPath() {
 
 void GameEngine::read_directory(const std::string& name, stringvec& v)
 {
-	std::filesystem::path p(name);
-	std::filesystem::directory_iterator start(p);
-	std::filesystem::directory_iterator end;
+	std::experimental::filesystem::path p(name);
+	std::experimental::filesystem::directory_iterator start(p);
+	std::experimental::filesystem::directory_iterator end;
 	std::transform(start, end, std::back_inserter(v), path_leaf_string());
 }
 
@@ -224,6 +249,9 @@ void GameEngine::start() {
 
 			currentPlayer->reinforce();
 			currentPlayer->attack();
+			done = checkVictory(); // breaks out of loop
+			if (done)
+				break;
 			currentPlayer->fortify();
 
 			// if player has conquered at least 1 country, he draws a card
@@ -232,22 +260,45 @@ void GameEngine::start() {
 				currentPlayer->getHand()->add(gameDeck->draw());
 				currentPlayer->resetHasConqueredThisTurn();
 			}
-
-			// end game condition
-			if (gamePlayers->size() == 1) {
-				std::cout << "**********************************************************************************" << std::endl;
-				std::cout << "**********************************************************************************" << std::endl;
-				std::cout << "     Congratulations " << gamePlayers->at(0) << " !!!. You won the game!!" << std::endl;
-				std::cout << "**********************************************************************************" << std::endl;
-				std::cout << "**********************************************************************************" << std::endl;
-				done = true;
-				break;
-			}
 		}
+
+		++*turnNumber;
 	}
 
-	++* turnNumber;
+	
 
+}
+
+bool GameEngine::checkVictory() {
+
+	// end game condition: if n-1 players have no countries;
+
+	const int playerCount = gamePlayers->size();
+	int playersWithNoCountries = 0;
+
+	Player* winner = gamePlayers->at(0); // initialized to calm compiler
+	Country* current;
+	Player* currentPlayer;
+	// check every player for having 0 countries
+	for (int i = 0; i < playerCount; ++i) {
+		currentPlayer = gamePlayers->at(i);
+
+		if (currentPlayer->getCountriesOwned()->size() == 0) // player has no countries
+			++playersWithNoCountries;
+		else
+			winner = currentPlayer;
+	}
+
+	if (playersWithNoCountries == playerCount - 1) { // there is only 1 player left with any countries
+		std::cout << "**********************************************************************************" << std::endl;
+		std::cout << "**********************************************************************************" << std::endl;
+		std::cout << "     Congratulations " << winner->getName() << " !!!. You won the game!!" << std::endl;
+		std::cout << "**********************************************************************************" << std::endl;
+		std::cout << "**********************************************************************************" << std::endl;
+		return true;
+	}
+	
+	return false;
 }
 
 //initialising playerVec vector
@@ -454,6 +505,21 @@ void startUpPhase::TESTautoAssignTroops() {
 
 	int playerCount = 2; // test method only works for 2 players -> change for n players
 
+	
+
+	Player* player1 = playerVec->at(0);
+	player1->getCountriesOwned()->at(0)->setOwnerID(*player1->getID());
+	player1->getCountriesOwned()->at(0)->setTroopCount(10);
+	player1->getCountriesOwned()->at(1)->setOwnerID(*player1->getID());
+	player1->getCountriesOwned()->at(1)->setTroopCount(2);
+
+	Player* player2 = playerVec->at(1);
+	player2->getCountriesOwned()->at(0)->setOwnerID(*player2->getID());
+	player2->getCountriesOwned()->at(0)->setTroopCount(10);
+	player2->getCountriesOwned()->at(1)->setOwnerID(*player2->getID());
+	player2->getCountriesOwned()->at(1)->setTroopCount(2);
+
+	/*
 	for (int i = 0; i < playerVec->size(); i++) {
 
 		Player* currentPlayer = playerVec->at(i);
@@ -471,6 +537,7 @@ void startUpPhase::TESTautoAssignTroops() {
 
 		}
 	}
+	*/
 }
 void startUpPhase::startUp(const Map* map, vector<Player*>* inputVec) {
 	startUpPhase::playerVec = inputVec;
@@ -483,10 +550,7 @@ void startUpPhase::startUp(const Map* map, vector<Player*>* inputVec) {
 
 int main() {
 
-	//GameEngine G1(".\\Maps");
-	//G1.start();
-
-	MapLoader test = MapLoader("C:\\Users\\win\\source\\repos\\mapRreader\\mapRreader\\Maps\\Atlantis.map");
-	Map* tm = test.init();
+	GameEngine G1(".\\Maps");
+	G1.start();
 	
 }

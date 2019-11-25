@@ -61,7 +61,7 @@ private:
 	string getSelectedMapPath();
 	void selectNumberOfPlayers();
 	void cleanDirectoryVector(stringvec* v);
-
+	bool checkVictory();
 public:
 
 	// constructors:
